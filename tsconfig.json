@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outDir": "./dist/",
+    "declaration": true,
+    "target": "es6",
+    "experimentalDecorators": true
+  }
+}

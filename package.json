@@ -2,10 +2,9 @@
   "name": "sakura-node-ts",
   "version": "1.0.0",
   "description": "Helpful startup framework for Frank from 2016 to 2017",
-  "main": "index.js",
-  "types": "index.d.ts",
-  "scripts": {
-  },
+  "main": "./lib/js/index.js",
+  "types": "./lib/definitions/index.d.ts",
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/DaYeSquad/sakura-node-ts.git"
@@ -47,6 +46,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^3.0.2",
+    "merge2": "^1.0.2",
     "mocha": "^3.0.2",
     "sinon": "^1.17.6",
     "supertest": "^2.0.0",

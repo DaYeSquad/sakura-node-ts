@@ -1,0 +1,1 @@
+{"version":3,"sources":["../index.ts"],"names":[],"mappings":";AACA,+BAA+B,2BAA2B,CAAC;AAAlD,yDAAkD","file":"index.js","sourcesContent":["\nexport { BaseController } from \"./src/base/basecontroller\";"]}

@@ -5,6 +5,7 @@ var gulp = require('gulp');
 var rename = require('gulp-rename');
 var ts = require('gulp-typescript');
 var tsSourcemaps = require('gulp-sourcemaps');
+var merge = require('merge2');
 var spawn = require('child_process').spawn;
 var node;
 
@@ -13,14 +14,19 @@ var node;
  *
  * Compile TypeScript files into 'dist/'.
  */
-var tsProject = ts.createProject('src/tsconfig.json');
+var tsProject = ts.createProject('./tsconfig.json');
 gulp.task('ts', function() {
   var tsResult = tsProject.src()
     .pipe(tsSourcemaps.init())
     .pipe(tsProject());
-  return tsResult.js
-    .pipe(tsSourcemaps.write('.'))
-    .pipe(gulp.dest('dist/'));
+  return merge([
+    tsResult.js
+      .pipe(tsSourcemaps.write('.'))
+      .pipe(gulp.dest('./lib/js')),
+    tsResult.dts
+      .pipe(gulp.dest('./lib/definitions'))
+  ]);
+
 });
 
 /**
