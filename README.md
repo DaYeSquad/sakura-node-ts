@@ -1,12 +1,14 @@
 # OVERVIEW
 
-gagodata is Gago data service providing NDVI, weather forecast and etc.
+sakura-node-ts is a quick start project, it stores most of data in PostgreSQL, logs in MongoDB and it uses Redis to keep
+user login token.
 
 # BEFORE BUILD
 
-1. Install npm
+1. Install node and npm
 2. Install PostgreSQL
 3. Install Redis
+4. Install MongoDB
 
 # SET ENVIRONMENT
 
@@ -32,7 +34,7 @@ TypeScript 2.x
 
 # GULP
 
-1. `gulp ts` to compile TypeScript into JavaScript under `./dist` folder.
+1. `gulp publish` to compile TypeScript into JavaScript under `./dist` folder.
 2. `gulp server` to serve `./dist/app.js`.
 
 # TEST

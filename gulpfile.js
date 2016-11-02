@@ -15,7 +15,7 @@ var node;
  * Compile TypeScript files into 'dist/'.
  */
 var tsProject = ts.createProject('./tsconfig.json');
-gulp.task('ts', function() {
+gulp.task('publish', function() {
   var tsResult = tsProject.src()
     .pipe(tsSourcemaps.init())
     .pipe(tsProject());
@@ -26,7 +26,6 @@ gulp.task('ts', function() {
     tsResult.dts
       .pipe(gulp.dest('./lib/definitions'))
   ]);
-
 });
 
 /**

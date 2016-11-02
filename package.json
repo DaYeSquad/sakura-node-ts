@@ -1,10 +1,11 @@
 {
   "name": "sakura-node-ts",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Helpful startup framework for Frank from 2016 to 2017",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
-  "scripts": {},
+  "scripts": {
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/DaYeSquad/sakura-node-ts.git"

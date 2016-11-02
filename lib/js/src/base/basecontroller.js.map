@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/base/basecontroller.ts"],"names":[],"mappings":";AAAA;IACE,OAAO,KAAK;QACV,MAAM,CAAC,IAAI,CAAC;IACd,CAAC;AACH,CAAC;AAJY,sBAAc,iBAI1B,CAAA","file":"basecontroller.js","sourcesContent":["export class BaseController {\n  static sayHi(): string {\n    return 'hi';\n  }\n}"]}
