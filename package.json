@@ -4,7 +4,10 @@
   "description": "Helpful startup framework for building RESTful service with PostgreSQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
-  "scripts": {},
+  "scripts": {
+    "pretest": "rm -rf ./lib; gulp ts;",
+    "test": "mocha ./lib --recursive"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/DaYeSquad/sakura-node-ts.git"
