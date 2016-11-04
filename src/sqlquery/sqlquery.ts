@@ -2,7 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {Model, SqlField, SqlType, SqlFlag} from "../base/model";
-import {applicationContext} from "../util/applicationcontext";
+import {sqlContext} from "../util/sqlcontext";
 import {DateFormatter, DateFormtOption} from "../util/dateformatter";
 
 export interface ModelSqlInfo {
@@ -24,7 +24,7 @@ export class SqlQuery {
   static getSqlInfoFromDefinition(model: Model): ModelSqlInfo {
     let modelInfo: ModelSqlInfo = {primaryKey: '', keys: [], values: []};
 
-    const sqlDefinitions: Array<SqlField> = applicationContext.findSqlFields(model.constructor);
+    const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(model.constructor);
 
     for (let sqlField of sqlDefinitions) {
       if (sqlField.flag === SqlFlag.PRIMARY_KEY) {

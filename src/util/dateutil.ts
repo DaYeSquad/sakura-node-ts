@@ -6,6 +6,9 @@ export enum DateEqualityPrecision {
   SECOND
 }
 
+/**
+ * Includes some useful methods.
+ */
 export class DateUtil {
 
   /**
@@ -25,12 +28,21 @@ export class DateUtil {
     }
   }
 
+  /**
+   * Casts millisecond to timestamp.
+   * @param ms Millisecond
+   * @returns {number} Timestamp.
+   */
   static millisecondToTimestamp(ms: number): timestamp {
     return Math.floor(ms / 1000);
   }
 
+  /**
+   * Casts timestamp to millisecond.
+   * @param ts Timestamp.
+   * @returns {number} Millisecond.
+   */
   static timestampToMillisecond(ts: timestamp): number {
     return ts * 1000;
   }
-  
 }

@@ -2,7 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {Model, SqlType, SqlFlag} from "./model";
-import {applicationContext} from "../util/applicationcontext";
+import {sqlContext} from "../util/sqlcontext";
 
 /**
  * Class decorator for defining a table name, the class should inherits from {@link Model}.
@@ -11,7 +11,7 @@ import {applicationContext} from "../util/applicationcontext";
 export function TableName(name: string): Function {
   return function(target: Function) {
     if (target.prototype instanceof Model) {
-      applicationContext.addSqlTableRelation({target: target, name: name});
+      sqlContext.addSqlTableRelation({target: target, name: name});
     }
   }
 }
@@ -25,7 +25,7 @@ export function TableName(name: string): Function {
 export function Column(name: string, type: SqlType, flag: SqlFlag): Function {
   return function (target: Object, propertyName: string) {
     if (target instanceof Model) {
-      applicationContext.addSqlField(target.constructor,
+      sqlContext.addSqlField(target.constructor,
         { name: propertyName, columnName: name, type: type, flag: flag });
     }
   }

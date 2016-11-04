@@ -1,7 +1,7 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {applicationContext} from "../util/applicationcontext";
+import {sqlContext} from "../util/sqlcontext";
 import {SqlType} from "../base/model";
 import {SqlQuery} from "./sqlquery";
 
@@ -18,7 +18,7 @@ export class ReplaceQuery {
   private newValues_: {key: string, value: any, sqlType: SqlType}[] = [];
 
   fromClass(cls: Function): this {
-    let table: string = applicationContext.findTableByClass(cls);
+    let table: string = sqlContext.findTableByClass(cls);
     if (table) {
       this.table_ = table;
     }

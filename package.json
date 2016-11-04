@@ -1,11 +1,10 @@
 {
-  "name": "sakura-node-ts",
+  "name": "sakura",
   "version": "1.0.0",
-  "description": "Helpful startup framework for Frank from 2016 to 2017",
+  "description": "Helpful startup framework for building RESTful service with PostgreSQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://github.com/DaYeSquad/sakura-node-ts.git"
@@ -44,6 +43,7 @@
     "chai": "^3.5.0",
     "child_process": "^1.0.2",
     "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^3.0.2",

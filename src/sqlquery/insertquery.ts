@@ -2,7 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {Model} from "../base/model";
-import {applicationContext} from "../util/applicationcontext";
+import {sqlContext} from "../util/sqlcontext";
 import {ModelSqlInfo, SqlQuery} from "./sqlquery";
 
 /**
@@ -33,7 +33,7 @@ export class InsertQuery {
       const keysStr: string = keys.join(',');
       const valuesStr: string = values.join(',');
 
-      const tableName: string = applicationContext.findTableByClass(this.model_.constructor);
+      const tableName: string = sqlContext.findTableByClass(this.model_.constructor);
 
       if (this.returnId_ && primaryKey) {
         return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr}) RETURNING ${primaryKey}`;

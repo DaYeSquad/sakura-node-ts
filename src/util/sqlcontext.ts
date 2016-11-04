@@ -6,7 +6,7 @@ import {SqlField} from "../base/model";
 /**
  * Application context for some metadata storage.
  */
-export class ApplicationContext {
+export class SqlContext {
   private tables_: Map<Function, string> = new Map();
   private sqlDefinitions_: Map<Function, Array<SqlField>> = new Map();
 
@@ -58,4 +58,4 @@ export interface SqlTableRelation {
   name: string; // table name
 }
 
-export let applicationContext = new ApplicationContext();
+export let sqlContext = new SqlContext();

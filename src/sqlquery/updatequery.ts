@@ -1,7 +1,7 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {applicationContext} from "../util/applicationcontext";
+import {sqlContext} from "../util/sqlcontext";
 import {Model, SqlField, SqlFlag, SqlType} from "../base/model";
 import {DateFormatter, DateFormtOption} from "../util/dateformatter";
 
@@ -35,7 +35,7 @@ export class UpdateQuery {
   }
 
   tableNameFromClass(cls: Function): this {
-    let table: string = applicationContext.findTableByClass(cls);
+    let table: string = sqlContext.findTableByClass(cls);
     if (table) {
       this.table_ = table;
     }
@@ -51,7 +51,7 @@ export class UpdateQuery {
     this.model_ = model;
 
     let updatesAry: string[] = [];
-    const sqlDefinitions: Array<SqlField> = applicationContext.findSqlFields(this.model_.constructor);
+    const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(this.model_.constructor);
 
     for (let sqlField of sqlDefinitions) {
       if (sqlField.flag === SqlFlag.PRIMARY_KEY) {

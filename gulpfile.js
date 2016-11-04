@@ -6,8 +6,7 @@ var rename = require('gulp-rename');
 var ts = require('gulp-typescript');
 var tsSourcemaps = require('gulp-sourcemaps');
 var merge = require('merge2');
-var spawn = require('child_process').spawn;
-var node;
+var clean = require('gulp-clean');
 
 /**
  * $ gulp ts
@@ -15,7 +14,7 @@ var node;
  * Compile TypeScript files into 'dist/'.
  */
 var tsProject = ts.createProject('./tsconfig.json');
-gulp.task('publish', function() {
+gulp.task('ts', function() {
   var tsResult = tsProject.src()
     .pipe(tsSourcemaps.init())
     .pipe(tsProject());
@@ -29,32 +28,18 @@ gulp.task('publish', function() {
 });
 
 /**
- * $ gulp server
+ * $ gulp clean
  *
- * Start the server.
+ * Clean ./lib folder.
  */
-gulp.task('server', function() {
-  if (node) node.kill();
-  node = spawn('node', ['dist/app.js'], {stdio: 'inherit'});
-  node.on('close', function (code) {
-    if (code === 8) {
-      gulp.log('Error detected, waiting for changes');
-    }
-  })
+gulp.task('clean', function() {
+  return gulp.src('./lib', {read: false})
+    .pipe(clean({force: true}));
 });
 
 /**
  * $ gulp
  *
- * Watch *.ts changes => recompile => restart the server.
+ * Clean ./lib and rebuild.
  */
-gulp.task('default', ['server'], function () {
-  gulp.watch('src/**/*.ts', ['ts']);
-
-  gulp.watch('dist/**/*.js', ['server']);
-});
-
-// clean up if an error goes unhandled.
-process.on('exit', function() {
-  if (node) node.kill()
-});
+gulp.task('default', ['clean', 'ts']);
