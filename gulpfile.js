@@ -7,6 +7,7 @@ var ts = require('gulp-typescript');
 var tsSourcemaps = require('gulp-sourcemaps');
 var merge = require('merge2');
 var clean = require('gulp-clean');
+var runSequence = require('run-sequence');
 
 /**
  * $ gulp ts
@@ -42,4 +43,6 @@ gulp.task('clean', function() {
  *
  * Clean ./lib and rebuild.
  */
-gulp.task('default', ['clean', 'ts']);
+gulp.task('default', function() {
+  runSequence('clean', 'ts');
+});

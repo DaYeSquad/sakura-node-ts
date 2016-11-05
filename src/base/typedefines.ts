@@ -3,6 +3,6 @@
 
 import * as pg from "pg";
 
-type timestamp = number;
+export type timestamp = number;
 
-type PgQueryResult = pg.QueryResult;
+export type PgQueryResult = pg.QueryResult;

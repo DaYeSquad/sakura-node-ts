@@ -6,6 +6,7 @@ import * as chai from "chai";
 import {ReplaceQuery} from "../../sqlquery/replacequery";
 import {SqlType, Model, SqlFlag} from "../../base/model";
 import {TableName, Column} from "../../base/decorator";
+import {timestamp} from "../../base/typedefines";
 
 @TableName('_weather_caches')
 class WeatherCacheInfo extends Model {

@@ -1,3 +1,4 @@
+import { timestamp } from "../base/typedefines";
 export declare enum DateEqualityPrecision {
     DAY = 0,
     SECOND = 1,

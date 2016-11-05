@@ -40,6 +40,7 @@
     "gulp-typescript": "^3.0.2",
     "merge2": "^1.0.2",
     "mocha": "^3.0.2",
+    "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
     "supertest": "^2.0.0",
     "typescript": "^2.0.3"
