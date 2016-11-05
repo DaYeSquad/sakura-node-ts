@@ -9,6 +9,6 @@ describe('Test delete query', () => {
 
   it('Test build from named table', () => {
     let sql: string = new DeleteQuery().from('users').build();
-    chai.expect(sql).to.equal('DELETE * FROM users');
+    chai.expect(sql).to.equal('DELETE FROM users');
   });
 });

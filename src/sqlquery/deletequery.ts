@@ -32,7 +32,7 @@ export class DeleteQuery {
   }
 
   build(): string {
-    let sql: string = `DELETE * FROM ${this.table_}`;
+    let sql: string = `DELETE FROM ${this.table_}`;
     if (this.where_) {
       sql = `${sql} WHERE ${this.where_}`;
     }
