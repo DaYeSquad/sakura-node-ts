@@ -9,7 +9,7 @@ export { corsAllowAll, corsAllowOnce } from "./src/middleware/cors";
 export { haltOnTimedout } from "./src/middleware/timeout";
 
 // -------------------------------------------------------------------------
-// SQL Query
+// PostgeSQL
 // -------------------------------------------------------------------------
 
 export { SqlQuery } from "./src/sqlquery/sqlquery";
@@ -18,6 +18,8 @@ export { InsertQuery } from "./src/sqlquery/insertquery";
 export { ReplaceQuery } from "./src/sqlquery/replacequery";
 export { SelectQuery } from "./src/sqlquery/selectquery";
 export { UpdateQuery } from "./src/sqlquery/updatequery";
+
+export { PgClient } from "./src/database/pgclient";
 
 // -------------------------------------------------------------------------
 // API
@@ -31,13 +33,13 @@ export { Validator } from "./src/api/validator";
 // Base
 // -------------------------------------------------------------------------
 
-export * from "./src/base/decorator";
-export * from "./src/base/model";
+export { TableName, Column } from "./src/base/decorator";
+export { Model, SqlFlag, SqlType, SqlField } from "./src/base/model";
 
 // -------------------------------------------------------------------------
 // Utils
 // -------------------------------------------------------------------------
 
-export * from "./src/util/dateformatter";
-export * from "./src/util/dateutil";
+export { DateFormatter, DateFormtOption } from "./src/util/dateformatter";
+export { DateUtil, DateEqualityPrecision } from "./src/util/dateutil";
 
