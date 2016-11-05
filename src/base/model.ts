@@ -23,6 +23,20 @@ export class Model {
     }
     return instance;
   }
+
+  /**
+   * Returns instances from SQL rows.
+   * @param rows SQL rows.
+   * @param type Class of T.
+   * @returns {Array<T>} Model (subclass of Model) instances.
+   */
+  static modelsFromRows<T extends Model>(rows: any[], type: { new(): T;}): T[] {
+    let instances: Array<T> = [];
+    for (let row of rows) {
+      instances.push(Model.modelFromRow(row, type));
+    }
+    return instances;
+  }
 }
 
 /**

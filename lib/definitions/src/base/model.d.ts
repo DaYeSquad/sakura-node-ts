@@ -3,6 +3,9 @@ export declare class Model {
     static modelFromRow<T extends Model>(row: any, type: {
         new (): T;
     }): T;
+    static modelsFromRows<T extends Model>(rows: any[], type: {
+        new (): T;
+    }): T[];
 }
 export interface SqlField {
     name?: string;

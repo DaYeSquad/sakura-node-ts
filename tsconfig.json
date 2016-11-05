@@ -5,6 +5,7 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
+    "sourceRoot": "./src/",
     "outDir": "./dist/",
     "declaration": true,
     "target": "es6",
