@@ -8,6 +8,7 @@ export { ReplaceQuery } from "./src/sqlquery/replacequery";
 export { SelectQuery } from "./src/sqlquery/selectquery";
 export { UpdateQuery } from "./src/sqlquery/updatequery";
 export { PgClient } from "./src/database/pgclient";
+export { PgClientConfig } from "./src/database/pgclientconfig";
 export { ApiError } from "./src/api/apierror";
 export { SuccessResponse, BadRequestResponse, NotFoundResponse, RegisterErrorResponse, AuthErrorResponse } from "./src/api/httpresponse";
 export { Validator } from "./src/api/validator";

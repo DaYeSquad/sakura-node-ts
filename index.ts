@@ -26,6 +26,7 @@ export { SelectQuery } from "./src/sqlquery/selectquery";
 export { UpdateQuery } from "./src/sqlquery/updatequery";
 
 export { PgClient } from "./src/database/pgclient";
+export { PgClientConfig } from "./src/database/pgclientconfig";
 
 // -------------------------------------------------------------------------
 // API
