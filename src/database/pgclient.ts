@@ -2,6 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import * as pg from "pg";
+import {PgClientConfig} from "./pgclientconfig";
 
 /**
  * PostgresSQL client using pg.Pool.
@@ -24,6 +25,10 @@ export class PgClient {
     };
 
     this.pool_ = new pg.Pool(config);
+  }
+
+  initWithPgClientConfig(config: PgClientConfig): void {
+    this.init(config.user, config.password, config.datebase, config.host, config.port, 10, 30000);
   }
 
   /**
