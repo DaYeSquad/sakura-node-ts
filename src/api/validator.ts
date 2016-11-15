@@ -71,6 +71,18 @@ export class Validator {
   }
 
   /**
+   * Casts any type to boolean.
+   */
+  toBoolean(param: any, reason: string = "param invalid"): Boolean {
+    if (param === typeof Boolean) {
+      return Boolean(param);
+    } else {
+      this.errors.push(new ApiError(reason, "Bad Request"));
+      return param;
+    }
+  }
+
+  /**
    * Asserts condition is true, otherwise it will records the error.
    * @param cond Condition.
    * @param reason Error reason.
