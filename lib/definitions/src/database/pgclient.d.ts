@@ -1,5 +1,6 @@
 import * as pg from "pg";
 import { PgClientConfig } from "./pgclientconfig";
+import { PgQueryResult } from "../base/typedefines";
 export declare class PgClient {
     private static instance_;
     private pool_;
@@ -8,4 +9,5 @@ export declare class PgClient {
     static getInstance(): PgClient;
     static setInstance(client: PgClient): void;
     query(sql: string): Promise<pg.QueryResult>;
+    queryInTransaction(...sqls: string[]): Promise<PgQueryResult>;
 }

@@ -55,7 +55,8 @@ export enum SqlType {
   INT,
   DATE,
   TIMESTAMP,
-  JSON
+  JSON,
+  NUMBERIC
 }
 
 export enum SqlFlag {

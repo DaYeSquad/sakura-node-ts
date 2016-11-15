@@ -3,6 +3,7 @@
 
 import * as pg from "pg";
 import {PgClientConfig} from "./pgclientconfig";
+import {PgQueryResult} from "../base/typedefines";
 
 /**
  * PostgresSQL client using pg.Pool.
@@ -59,5 +60,20 @@ export class PgClient {
     } finally {
       client.release();
     }
+  }
+
+  /**
+   * Runs queries in transaction.
+   * @param sqls SQLs.
+   * @returns {pg.QueryResult} Result.
+   */
+  async queryInTransaction(...sqls: string[]): Promise<PgQueryResult> {
+    let bigSql: string = 'BEGIN;';
+    for (let sql of sqls) {
+      bigSql += sql;
+    }
+    bigSql += 'COMMIT;';
+
+    return await this.query(bigSql);
   }
 }
