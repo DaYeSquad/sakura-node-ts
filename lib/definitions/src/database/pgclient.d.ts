@@ -9,5 +9,5 @@ export declare class PgClient {
     static getInstance(): PgClient;
     static setInstance(client: PgClient): void;
     query(sql: string): Promise<pg.QueryResult>;
-    queryInTransaction(...sqls: string[]): Promise<PgQueryResult>;
+    queryInTransaction(sqls: string[]): Promise<PgQueryResult>;
 }
