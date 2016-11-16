@@ -67,7 +67,7 @@ export class PgClient {
    * @param sqls SQLs.
    * @returns {pg.QueryResult} Result.
    */
-  async queryInTransaction(...sqls: string[]): Promise<PgQueryResult> {
+  async queryInTransaction(sqls: string[]): Promise<PgQueryResult> {
     let bigSql: string = 'BEGIN;';
     for (let sql of sqls) {
       bigSql += sql;
