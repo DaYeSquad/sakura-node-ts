@@ -30,10 +30,12 @@ export class SqlQuery {
       if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
         modelInfo.primaryKey = sqlField.columnName; // default not pushes primary key to keys array
       } else if (sqlField.name) {
-        modelInfo.keys.push(sqlField.columnName);
-        let value: any = model[sqlField.name];
-        value = SqlQuery.valueAsStringByType(value, sqlField.type);
-        modelInfo.values.push(value);
+        if(model[sqlField.name]){
+          modelInfo.keys.push(sqlField.columnName);
+          let value: any = model[sqlField.name];
+          value = SqlQuery.valueAsStringByType(value, sqlField.type);
+          modelInfo.values.push(value);
+        }
       }
     }
 
