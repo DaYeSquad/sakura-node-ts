@@ -40,7 +40,7 @@ describe('测试查询语句只添加pk条件', () => {
   it('测试查询语句只添加pk条件', () => {
     let user: User = new User();
     user.initPk(111);
-    const sql: string = new SelectQuery().fromClass(User).select().pkwhere(user).build();
+    const sql: string = new SelectQuery().fromClass(User).select().where(user.findPrimaryKeyWhere()).build();
     chai.expect(sql).to.equal(`SELECT * FROM users WHERE  uid = 111 `);
   });
 });
@@ -49,7 +49,7 @@ describe('测试查询语句添加pk条件和普通where条件', () => {
   it('测试查询语句添加pk条件和普通where条件', () => {
     let car: Car = new Car();
     car.initPk(222);
-    const sql: string = new SelectQuery().fromClass(Car).select().pkwhere(car).where(`epid='111'`).build();
+    const sql: string = new SelectQuery().fromClass(Car).select().where(car.findPrimaryKeyWhere()).build();
     chai.expect(sql).to.equal(`SELECT * FROM cars WHERE  cid = 222 `);
   });
 });

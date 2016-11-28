@@ -6,6 +6,7 @@ export declare class Model {
     static modelsFromRows<T extends Model>(rows: any[], type: {
         new (): T;
     }): T[];
+    findPrimaryKeyWhere(): string;
 }
 export interface SqlField {
     name?: string;
