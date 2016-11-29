@@ -34,7 +34,7 @@ describe('UpdateQuery', () => {
   it('更新语句添加set 过滤属性值为空的属性', () => {
     let user: User = new User();
     user.uid = 1;
-    user.username = "hello";
+    user.username = 'hello';
     const sql: string = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`).build();
     chai.expect(sql).to.equal(`UPDATE users SET username='hello' WHERE  uid = 1;`);
   });

@@ -1,4 +1,4 @@
-import { Model } from "../base/model";
+import { Model } from '../base/model';
 export declare class UpdateQuery {
     private table_;
     private where_;

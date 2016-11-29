@@ -1,4 +1,4 @@
-import { SqlType } from "../base/model";
+import { SqlType } from '../base/model';
 export declare class ReplaceQuery {
     private table_;
     private where_;

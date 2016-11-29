@@ -59,7 +59,7 @@ export class UpdateQuery {
       } else if (sqlField.name) {
         let key: string = sqlField.columnName;
         let value: any = this.model_[sqlField.name];
-        if(value){
+        if (value) {
           if (sqlField.type === SqlType.VARCHAR || sqlField.type === SqlType.TEXT) {
             value = `'${value}'`;
           } else if (sqlField.type === SqlType.DATE) {

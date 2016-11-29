@@ -13,6 +13,11 @@ Run `gulp` and all releases will be under `./lib`.
 `npm test`
 
 
+# LINT
+
+Use (tslint)[https://palantir.github.io/tslint/usage/cli/]. Run `sh ./bin/tslint.sh` before commit.
+
+
 # RUNTIME
 
-TypeScript 2.x
+TypeScript 2.0.3
