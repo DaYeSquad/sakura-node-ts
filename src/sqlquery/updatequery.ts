@@ -67,6 +67,12 @@ export class UpdateQuery {
             value = `'${valueAsDateInSql}'::date`;
           } else if (sqlField.type === SqlType.TIMESTAMP) {
             value = `to_timestamp(${value})`;
+          }else if (sqlField.type === SqlType.JSON) {
+            if (typeof value === 'string') {
+              value = `'${value}'::json`;
+            } else {
+              value = `'${JSON.stringify(value)}'::json`;
+            }
           }
           updatesAry.push(`${key}=${value}`);
         }
