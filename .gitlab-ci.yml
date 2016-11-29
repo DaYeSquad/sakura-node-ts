@@ -1,3 +1,0 @@
-check:
-  script:
-    sh ./tslint.sh
