@@ -37,16 +37,6 @@ export class Model {
     }
     return instances;
   }
-
-  findPrimaryKeyWhere(): string{
-    const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(this.constructor);
-    for (let sqlField of sqlDefinitions) {
-      if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
-        return ` ${  sqlField.columnName } = ${ this[sqlField.name] } `;
-      }
-    }
-    throw new Error("PRIMAEY_KEY_NOT_EXISTS");
-  }
 }
 
 /**
