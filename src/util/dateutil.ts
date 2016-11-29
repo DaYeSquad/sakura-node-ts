@@ -1,7 +1,7 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {timestamp} from "../base/typedefines";
+import {timestamp} from '../base/typedefines';
 
 export enum DateEqualityPrecision {
   DAY,

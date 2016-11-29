@@ -1,11 +1,12 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import * as chai from "chai";
+import * as chai from 'chai';
 
-import {UpdateQuery} from "../../sqlquery/updatequery";
-import {TableName, Column} from "../../base/decorator";
-import {Model, SqlFlag, SqlType } from "../../base/model";
+import {UpdateQuery} from '../../sqlquery/updatequery';
+import {TableName, Column} from '../../base/decorator';
+import {Model, SqlFlag, SqlType} from '../../base/model';
+
 
 @TableName('users')
 class User extends Model {
