@@ -4,6 +4,7 @@ export declare class SelectQuery {
     private selectFields_;
     private orderBys_;
     private limit_;
+    private pkwhere_;
     from(table: string): this;
     fromClass(cls: Function): this;
     fromTable(table: string): this;

@@ -2,7 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {sqlContext} from "../util/sqlcontext";
-
+import {SqlField, SqlFlag, Model} from "../base/model";
 /**
  * Builds select sql query.
  */
@@ -12,6 +12,7 @@ export class SelectQuery {
   private selectFields_: string[];
   private orderBys_: {sort: string, order: 'ASC'|'DESC'}[] = [];
   private limit_: number;
+  private pkwhere_: string;
 
   from(table: string): this {
     this.table_ = table;
@@ -60,7 +61,7 @@ export class SelectQuery {
     let sql: string = `SELECT ${fields} FROM ${this.table_}`;
 
     // WHERE
-    if (this.where_) {
+    if (this.where_){
       sql = `${sql} WHERE ${this.where_}`;
     }
 
