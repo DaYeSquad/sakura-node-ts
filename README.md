@@ -15,7 +15,7 @@ Run `gulp` and all releases will be under `./lib`.
 
 # LINT
 
-Use (tslint)[https://palantir.github.io/tslint/usage/cli/]. Run `sh ./bin/tslint.sh` before commit.
+Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint.sh` before commit.
 
 
 # RUNTIME
