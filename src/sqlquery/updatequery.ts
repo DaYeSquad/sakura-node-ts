@@ -59,15 +59,17 @@ export class UpdateQuery {
       } else if (sqlField.name) {
         let key: string = sqlField.columnName;
         let value: any = this.model_[sqlField.name];
-        if (sqlField.type === SqlType.VARCHAR || sqlField.type === SqlType.TEXT) {
-          value = `'${value}'`;
-        } else if (sqlField.type === SqlType.DATE) {
-          let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, '-');
-          value = `'${valueAsDateInSql}'::date`;
-        } else if (sqlField.type === SqlType.TIMESTAMP) {
-          value = `to_timestamp(${value})`;
+        if(value){
+          if (sqlField.type === SqlType.VARCHAR || sqlField.type === SqlType.TEXT) {
+            value = `'${value}'`;
+          } else if (sqlField.type === SqlType.DATE) {
+            let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, '-');
+            value = `'${valueAsDateInSql}'::date`;
+          } else if (sqlField.type === SqlType.TIMESTAMP) {
+            value = `to_timestamp(${value})`;
+          }
+          updatesAry.push(`${key}=${value}`);
         }
-        updatesAry.push(`${key}=${value}`);
       }
     }
 
