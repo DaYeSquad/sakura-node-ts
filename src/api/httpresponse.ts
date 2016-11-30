@@ -1,7 +1,7 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {ApiError} from "./apierror";
+import {ApiError} from './apierror';
 
 /**
  * Represents success response with only 1 page.
@@ -20,7 +20,7 @@ export class SuccessResponse {
 export class BadRequestResponse {
   errors: Array<ApiError>;
   code: number = 400;
-  message: string = "Bad Request";
+  message: string = 'Bad Request';
 
   constructor(errors: Array<ApiError>) {
     this.errors = errors;
@@ -33,7 +33,7 @@ export class BadRequestResponse {
         code: this.code,
         message: this.message
       }
-    }
+    };
   }
 }
 
@@ -42,7 +42,7 @@ export class BadRequestResponse {
  */
 export class NotFoundResponse {
   code: number = 404;
-  message: string = "Not Found";
+  message: string = 'Not Found';
 
   constructor(message: string) {
     this.message = message;
@@ -54,7 +54,7 @@ export class NotFoundResponse {
         code: this.code,
         message: this.message
       }
-    }
+    };
   }
 }
 
@@ -84,9 +84,9 @@ export class RegisterErrorResponse {
  */
 export class AuthErrorResponse {
   code: number = 400; // 400 bad request
-  message: string = "";
+  message: string = '';
 
-  constructor(message: string, code: number=400) {
+  constructor(message: string, code: number = 400) {
     this.message = message;
     this.code = code;
   }

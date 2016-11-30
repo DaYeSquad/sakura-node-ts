@@ -1,4 +1,4 @@
-import { Model, SqlType } from "../base/model";
+import { Model, SqlType } from '../base/model';
 export interface ModelSqlInfo {
     primaryKey: string;
     keys: Array<string>;

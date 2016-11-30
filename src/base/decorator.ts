@@ -1,8 +1,8 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {Model, SqlType, SqlFlag} from "./model";
-import {sqlContext} from "../util/sqlcontext";
+import {Model, SqlType, SqlFlag} from './model';
+import {sqlContext} from '../util/sqlcontext';
 
 /**
  * Class decorator for defining a table name, the class should inherits from {@link Model}.
@@ -13,7 +13,7 @@ export function TableName(name: string): Function {
     if (target.prototype instanceof Model) {
       sqlContext.addSqlTableRelation({target: target, name: name});
     }
-  }
+  };
 }
 
 /**
@@ -28,5 +28,5 @@ export function Column(name: string, type: SqlType, flag: SqlFlag): Function {
       sqlContext.addSqlField(target.constructor,
         { name: propertyName, columnName: name, type: type, flag: flag });
     }
-  }
+  };
 }

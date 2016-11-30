@@ -1,9 +1,9 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {Model} from "../base/model";
-import {sqlContext} from "../util/sqlcontext";
-import {ModelSqlInfo, SqlQuery} from "./sqlquery";
+import {Model} from '../base/model';
+import {sqlContext} from '../util/sqlcontext';
+import {ModelSqlInfo, SqlQuery} from './sqlquery';
 
 /**
  * Builds insert sql query.
@@ -41,6 +41,6 @@ export class InsertQuery {
 
       return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr})`;
     }
-    return "";
+    return '';
   }
 }

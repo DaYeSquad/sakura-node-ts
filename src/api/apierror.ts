@@ -5,7 +5,7 @@
  * Describes API error.
  */
 export class ApiError {
-  domain: string = "ErrorDomain";
+  domain: string = 'ErrorDomain';
   reason: string;
   message: string;
 

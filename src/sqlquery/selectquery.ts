@@ -1,8 +1,10 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {sqlContext} from "../util/sqlcontext";
-import {SqlField, SqlFlag, Model} from "../base/model";
+import {SqlField, SqlFlag, Model} from '../base/model';
+import {sqlContext} from '../util/sqlcontext';
+
+
 /**
  * Builds select sql query.
  */
@@ -61,7 +63,7 @@ export class SelectQuery {
     let sql: string = `SELECT ${fields} FROM ${this.table_}`;
 
     // WHERE
-    if (this.where_){
+    if (this.where_) {
       sql = `${sql} WHERE ${this.where_}`;
     }
 

@@ -1,4 +1,4 @@
-import { SqlField } from "../base/model";
+import { SqlField } from '../base/model';
 export declare class SqlContext {
     private tables_;
     private sqlDefinitions_;

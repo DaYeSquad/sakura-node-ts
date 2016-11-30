@@ -1,4 +1,4 @@
-import { ApiError } from "./apierror";
+import { ApiError } from './apierror';
 export declare class SuccessResponse {
     data: any;
     constructor(data: any);

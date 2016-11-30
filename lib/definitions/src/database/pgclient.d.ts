@@ -1,6 +1,6 @@
-import * as pg from "pg";
-import { PgClientConfig } from "./pgclientconfig";
-import { PgQueryResult } from "../base/typedefines";
+import * as pg from 'pg';
+import { PgClientConfig } from './pgclientconfig';
+import { PgQueryResult } from '../base/typedefines';
 export declare class PgClient {
     private static instance_;
     private pool_;

@@ -1,12 +1,12 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import * as chai from "chai";
+import * as chai from 'chai';
 
-import {ReplaceQuery} from "../../sqlquery/replacequery";
-import {SqlType, Model, SqlFlag} from "../../base/model";
-import {TableName, Column} from "../../base/decorator";
-import {timestamp} from "../../base/typedefines";
+import {ReplaceQuery} from '../../sqlquery/replacequery';
+import {SqlType, Model, SqlFlag} from '../../base/model';
+import {TableName, Column} from '../../base/decorator';
+import {timestamp} from '../../base/typedefines';
 
 @TableName('_weather_caches')
 class WeatherCacheInfo extends Model {
@@ -37,7 +37,7 @@ class WeatherCacheInfo extends Model {
 describe('ReplaceQuery', () => {
   it('Test build', () => {
     let weatherCache: WeatherCacheInfo = new WeatherCacheInfo();
-    weatherCache.init('forecast_temperatures', 'shuye_dikuai_1', {},1476842006);
+    weatherCache.init('forecast_temperatures', 'shuye_dikuai_1', {}, 1476842006);
     const sql: string =
       new ReplaceQuery()
         .fromClass(WeatherCacheInfo)

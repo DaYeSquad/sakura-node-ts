@@ -1,4 +1,4 @@
-import { ApiError } from "./apierror";
+import { ApiError } from './apierror';
 export declare class Validator {
     errors: Array<ApiError>;
     hasErrors(): boolean;

@@ -61,7 +61,7 @@ export class UpdateQuery {
       } else if (sqlField.name) {
         let key: string = sqlField.columnName;
         let value: any = this.model_[sqlField.name];
-        if(value){
+        if (value) {
           if (sqlField.type === SqlType.VARCHAR || sqlField.type === SqlType.TEXT) {
             value = `'${value}'`;
           } else if (sqlField.type === SqlType.DATE) {
@@ -74,9 +74,9 @@ export class UpdateQuery {
               let tmp = Math.floor(new Date(value).getTime() / 1000);
               value = `to_timestamp(${tmp})`;
             }
-          }else if (sqlField.type === SqlType.JSON) {
+          } else if (sqlField.type === SqlType.JSON) {
             if (typeof value === 'string') {
-              value = `'${value}'::json`;
+              value = `${value}::json`;
             } else {
               value = `'${JSON.stringify(value)}'::json`;
             }

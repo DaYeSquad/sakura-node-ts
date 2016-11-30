@@ -1,9 +1,9 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {Model, SqlField, SqlType, SqlFlag} from "../base/model";
-import {sqlContext} from "../util/sqlcontext";
-import {DateFormatter, DateFormtOption} from "../util/dateformatter";
+import {Model, SqlField, SqlType, SqlFlag} from '../base/model';
+import {sqlContext} from '../util/sqlcontext';
+import {DateFormatter, DateFormtOption} from '../util/dateformatter';
 
 export interface ModelSqlInfo {
   primaryKey: string;
@@ -30,7 +30,7 @@ export class SqlQuery {
       if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
         modelInfo.primaryKey = sqlField.columnName; // default not pushes primary key to keys array
       } else if (sqlField.name) {
-        if(model[sqlField.name]){
+        if (model[sqlField.name]) {
           modelInfo.keys.push(sqlField.columnName);
           let value: any = model[sqlField.name];
           value = SqlQuery.valueAsStringByType(value, sqlField.type);

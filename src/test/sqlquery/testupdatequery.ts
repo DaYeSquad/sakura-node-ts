@@ -1,11 +1,12 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import * as chai from "chai";
+import * as chai from 'chai';
 
-import {UpdateQuery} from "../../sqlquery/updatequery";
-import {TableName, Column} from "../../base/decorator";
-import {Model, SqlFlag, SqlType } from "../../base/model";
+import {UpdateQuery} from '../../sqlquery/updatequery';
+import {TableName, Column} from '../../base/decorator';
+import {Model, SqlFlag, SqlType} from '../../base/model';
+
 
 @TableName('users')
 class User extends Model {
@@ -42,7 +43,7 @@ describe('UpdateQuery', () => {
   it('更新语句添加set 过滤属性值为空的属性', () => {
     let user: User = new User();
     user.uid = 1;
-    user.username = "hello";
+    user.username = 'hello';
     const sql: string = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`).build();
     chai.expect(sql).to.equal(`UPDATE users SET username='hello' WHERE  uid = 1;`);
   });
@@ -50,7 +51,7 @@ describe('UpdateQuery', () => {
   it('更新语句 JSON类型字段添加表达式', () => {
     let user: User = new User();
     user.uid = 1;
-    user.meta = {version: 1, test: "aaaa"};
+    user.meta = {version: 1, test: 'aaaa'};
     const sql: string = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`).build();
     chai.expect(sql).to.equal(`UPDATE users SET meta='{"version":1,"test":"aaaa"}'::json WHERE  uid = 1;`);
   });
@@ -65,3 +66,4 @@ describe('UpdateQuery', () => {
     chai.expect(sql).to.equal(`UPDATE users SET created_at=to_timestamp(${user.updatedAt}),updated_at=to_timestamp(${user.updatedAt}) WHERE  uid = 1;`);
   });
 });
+
