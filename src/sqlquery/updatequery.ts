@@ -1,11 +1,11 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {sqlContext} from "../util/sqlcontext";
-import {Model, SqlField, SqlFlag, SqlType} from "../base/model";
-import {DateFormatter, DateFormtOption} from "../util/dateformatter";
-import {isDate} from "util";
-import {isNumber} from "util";
+import {sqlContext} from '../util/sqlcontext';
+import {Model, SqlField, SqlFlag, SqlType} from '../base/model';
+import {DateFormatter, DateFormtOption} from '../util/dateformatter';
+import {isDate} from 'util';
+import {isNumber} from 'util';
 
 /**
  * Update query.
@@ -68,9 +68,9 @@ export class UpdateQuery {
             let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, '-');
             value = `'${valueAsDateInSql}'::date`;
           } else if (sqlField.type === SqlType.TIMESTAMP) {
-            if(isNumber(value)){
+            if (isNumber(value)) {
               value = `to_timestamp(${value})`;
-            }else if(isDate(value)){
+            } else if (isDate(value)) {
               let tmp = Math.floor(new Date(value).getTime() / 1000);
               value = `to_timestamp(${tmp})`;
             }
