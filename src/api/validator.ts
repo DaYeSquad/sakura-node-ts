@@ -63,7 +63,7 @@ export class Validator {
    */
   toUnixTimestamp(param: any, reason: string = 'param invalid'): number {
     let result: any = new Date(param);
-    if (!result) {
+    if (!result || isNaN(result)) {
       this.errors.push(new ApiError(reason, 'Bad Request'));
     }
     result = Math.floor(result.getTime() / 1000);

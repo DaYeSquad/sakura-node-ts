@@ -18,6 +18,9 @@ class User extends Model {
 
   @Column('display_name', SqlType.VARCHAR, SqlFlag.NULLABLE)
   displayName: string;
+
+  @Column('meta', SqlType.JSON, SqlFlag.NULLABLE)
+  meta: any;
 }
 
 describe('UpdateQuery', () => {
@@ -37,5 +40,13 @@ describe('UpdateQuery', () => {
     user.username = 'hello';
     const sql: string = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`).build();
     chai.expect(sql).to.equal(`UPDATE users SET username='hello' WHERE  uid = 1;`);
+  });
+
+  it('更新语句 JSON类型字段添加表达式', () => {
+    let user: User = new User();
+    user.uid = 1;
+    user.meta = {version: 1, test: "aaaa"};
+    const sql: string = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`).build();
+    chai.expect(sql).to.equal(`UPDATE users SET meta='{"version":1,"test":"aaaa"}'::json WHERE  uid = 1;`);
   });
 });
