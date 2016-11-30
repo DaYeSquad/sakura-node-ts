@@ -4,6 +4,8 @@
 import {sqlContext} from '../util/sqlcontext';
 import {Model, SqlField, SqlFlag, SqlType} from '../base/model';
 import {DateFormatter, DateFormtOption} from '../util/dateformatter';
+import {isDate} from 'util';
+import {isNumber} from 'util';
 
 /**
  * Update query.
@@ -66,7 +68,12 @@ export class UpdateQuery {
             let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, '-');
             value = `'${valueAsDateInSql}'::date`;
           } else if (sqlField.type === SqlType.TIMESTAMP) {
-            value = `to_timestamp(${value})`;
+            if (isNumber(value)) {
+              value = `to_timestamp(${value})`;
+            } else if (isDate(value)) {
+              let tmp = Math.floor(new Date(value).getTime() / 1000);
+              value = `to_timestamp(${tmp})`;
+            }
           } else if (sqlField.type === SqlType.JSON) {
             if (typeof value === 'string') {
               value = `${value}::json`;

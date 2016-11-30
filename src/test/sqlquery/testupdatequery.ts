@@ -21,6 +21,12 @@ class User extends Model {
 
   @Column('meta', SqlType.JSON, SqlFlag.NULLABLE)
   meta: any;
+
+  @Column('created_at', SqlType.TIMESTAMP, SqlFlag.NULLABLE)
+  createdAt: Date;
+
+  @Column('updated_at', SqlType.TIMESTAMP, SqlFlag.NULLABLE)
+  updatedAt: number;
 }
 
 describe('UpdateQuery', () => {
@@ -49,4 +55,15 @@ describe('UpdateQuery', () => {
     const sql: string = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`).build();
     chai.expect(sql).to.equal(`UPDATE users SET meta='{"version":1,"test":"aaaa"}'::json WHERE  uid = 1;`);
   });
+
+  it('更新语句 TIMESTAMP类型字段 转换时间戳', () => {
+    let user: User = new User();
+    user.uid = 1;
+    user.createdAt = new Date();
+    user.updatedAt = Math.floor(new Date().getTime() / 1000);
+    const sql: string = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`).build();
+    console.log(sql);
+    chai.expect(sql).to.equal(`UPDATE users SET created_at=to_timestamp(${user.updatedAt}),updated_at=to_timestamp(${user.updatedAt}) WHERE  uid = 1;`);
+  });
 });
+
