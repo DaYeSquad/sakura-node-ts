@@ -62,7 +62,6 @@ describe('UpdateQuery', () => {
     user.createdAt = new Date();
     user.updatedAt = Math.floor(new Date().getTime() / 1000);
     const sql: string = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`).build();
-    console.log(sql);
     chai.expect(sql).to.equal(`UPDATE users SET created_at=to_timestamp(${user.updatedAt}),updated_at=to_timestamp(${user.updatedAt}) WHERE  uid = 1;`);
   });
 });

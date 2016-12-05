@@ -14,7 +14,7 @@ export class SelectQuery {
   private selectFields_: string[];
   private orderBys_: {sort: string, order: 'ASC'|'DESC'}[] = [];
   private limit_: number;
-  private pkwhere_: string;
+  private joinUsings_: string[] = [];
 
   from(table: string): this {
     this.table_ = table;
@@ -31,6 +31,11 @@ export class SelectQuery {
 
   fromTable(table: string): this {
     this.table_ = table;
+    return this;
+  }
+
+  joinUsing(joninStr: string): this {
+    this.joinUsings_.push(joninStr);
     return this;
   }
 
@@ -62,6 +67,12 @@ export class SelectQuery {
 
     let sql: string = `SELECT ${fields} FROM ${this.table_}`;
 
+    // join tableName using(column)
+    if (this.joinUsings_.length > 0){
+      for (let joinUsing of this.joinUsings_) {
+        sql = `${sql} ${joinUsing} `;
+      }
+    }
     // WHERE
     if (this.where_) {
       sql = `${sql} WHERE ${this.where_}`;
