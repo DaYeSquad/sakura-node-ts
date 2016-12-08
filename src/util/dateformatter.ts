@@ -26,6 +26,6 @@ export class DateFormatter {
       return `${year}${symbol}${mm}${symbol}${dd}`;
     }
 
-    return '';
+    return "";
   }
 }
