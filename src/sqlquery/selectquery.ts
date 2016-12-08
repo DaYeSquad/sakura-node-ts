@@ -68,7 +68,7 @@ export class SelectQuery {
     let sql: string = `SELECT ${fields} FROM ${this.table_}`;
 
     // join tableName using(column)
-    if (this.joinUsings_.length > 0){
+    if (this.joinUsings_.length > 0) {
       for (let joinUsing of this.joinUsings_) {
         sql = `${sql} ${joinUsing} `;
       }

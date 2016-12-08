@@ -40,7 +40,7 @@ describe('SelectQuery', () => {
 
   it('查询语句 添加JOIN USING 查询部分属性', () => {
 
-    const sql: string = new SelectQuery().fromClass(User).select(['users.username','enterprises.enterprise_id']).joinUsing(`join enterprise_relationships using(uid)`)
+    const sql: string = new SelectQuery().fromClass(User).select(['users.username', 'enterprises.enterprise_id']).joinUsing(`join enterprise_relationships using(uid)`)
       .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = ${115237134}`).build();
     chai.expect(sql).to.equal(`SELECT users.username,enterprises.enterprise_id FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
   });
