@@ -47,13 +47,14 @@ export interface SqlField {
   type: SqlType; // column type in table
   flag: SqlFlag; // flag to indicate some special thing
   columnName?: string; // column name in table
+  defaultValue?: SqlDefaultValue; // default value of sql
+  comment?: string; // comment of field
 }
 
 /**
  * Sql Type.
  */
 export enum SqlType {
-  RANDOM_ID, // make_random_id()
   TEXT,
   VARCHAR_255, // VARCHAR(255)
   VARCHAR_1024, // VARCHAR(2014)
@@ -71,4 +72,41 @@ export enum SqlFlag {
   PRIMARY_KEY,
   NOT_NULL,
   NULLABLE
+}
+
+/**
+ * Sql default value type.
+ */
+export enum SqlDefaultValueType {
+  MAKE_RANDOM_ID,
+  NUMBER
+}
+
+/**
+ * Default value of sql.
+ */
+export class SqlDefaultValue {
+  type: SqlDefaultValueType;
+  private value_: any;
+
+  /**
+   * Default value type INTEGER and value is random ID.
+   * @constructor
+   */
+  static MAKE_RANDOM_ID(): SqlDefaultValue {
+    let sqlDefaultValue: SqlDefaultValue = new SqlDefaultValue();
+    sqlDefaultValue.type = SqlDefaultValueType.MAKE_RANDOM_ID;
+    return sqlDefaultValue;
+  };
+
+  /**
+   * Default value type INTEGER, FLOAT or other numeric value and value is specific number.
+   * @constructor
+   */
+  static NUMBER(num: number): SqlDefaultValue {
+    let sqlDefaultValue: SqlDefaultValue = new SqlDefaultValue();
+    sqlDefaultValue.type = SqlDefaultValueType.NUMBER;
+    sqlDefaultValue.value_ = num;
+    return sqlDefaultValue;
+  }
 }

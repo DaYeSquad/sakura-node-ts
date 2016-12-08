@@ -45,7 +45,7 @@ export class SqlContext {
    * @param cls Class.
    * @returns {Array<SqlField>} Definition of the class.
    */
-  findSqlFields(cls: Function): Array<SqlField> {
+  findSqlFields(cls: Function): SqlField[] {
     return this.sqlDefinitions_.get(cls);
   }
 }

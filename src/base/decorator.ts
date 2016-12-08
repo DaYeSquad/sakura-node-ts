@@ -1,7 +1,7 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {Model, SqlType, SqlFlag} from './model';
+import {Model, SqlType, SqlFlag, SqlDefaultValue} from './model';
 import {sqlContext} from '../util/sqlcontext';
 
 /**
@@ -21,12 +21,14 @@ export function TableName(name: string): Function {
  * @param name Column name.
  * @param type Column type.
  * @param flag Some other indicator.
+ * @param comment Comment of column.
+ * @param defaultValue Default value of column.
  */
-export function Column(name: string, type: SqlType, flag: SqlFlag): Function {
+export function Column(name: string, type: SqlType, flag: SqlFlag, comment?: string, defaultValue?: SqlDefaultValue): Function {
   return function (target: Object, propertyName: string) {
     if (target instanceof Model) {
       sqlContext.addSqlField(target.constructor,
-        { name: propertyName, columnName: name, type: type, flag: flag });
+        { name: propertyName, columnName: name, type: type, flag: flag, comment: comment, defaultValue: defaultValue });
     }
   };
 }
