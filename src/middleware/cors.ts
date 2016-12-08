@@ -4,46 +4,29 @@
 import * as express from 'express';
 
 /**
- * CORS middleware for allowing restrict request.
- */
-export function corsAllowOnce(): (req: express.Request, res: express.Response, next: express.NextFunction) => void {
-  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const requestOrigin: string = req.header('Origin');
-    if (!requestOrigin) {
-      return next();
-    } else {
-      res.setHeader('Access-Control-Allow-Origin', requestOrigin);
-    }
-
-    const customMethod: string = req.header('Access-Control-Allow-Methods');
-    const customHeaders: string = req.header('Access-Control-Allow-Headers');
-
-    if (customMethod) {
-      res.setHeader('Access-Control-Allow-Methods', customMethod);
-    }
-
-    if (customHeaders) {
-      res.setHeader('Access-Control-Allow-Headers', customHeaders);
-    }
-
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    return next();
-  };
-}
-
-/**
- * Token middleware for parsing token and add 'uid' to express.Request.
- */
-export function corsAllowAll(): (req: express.Request, res: express.Response, next: express.NextFunction) => void {
+ * CORS middleware for 'Access-Control-Allow'.
+ *
+ * @param headers HTTP headers, deafult is 'X-Requested-With', 'content-type', 'Token'.
+ * @param methods HTTP method string, can be one of 'GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE', default is allow all.
+ **/
+export function corsAllowAll(headers?: string[], methods?: string[]): (req: express.Request, res: express.Response, next: express.NextFunction) => void {
   return (req: express.Request, res: express.Response, next: express.NextFunction) => {
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    let allowMethodsStr: string = 'GET, POST, OPTIONS, PUT, PATCH, DELETE';
+    if (methods) {
+      allowMethodsStr = methods.join(',');
+    }
+    res.setHeader('Access-Control-Allow-Methods', allowMethodsStr);
 
     // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Token');
+    let allowHeaderStr: string = 'X-Requested-With,content-type,Token';
+    if (headers) {
+      allowHeaderStr = headers.join(',');
+    }
+    res.setHeader('Access-Control-Allow-Headers', allowHeaderStr);
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
