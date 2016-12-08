@@ -28,17 +28,23 @@ export class SqlGenerator {
         flagWithWhiteSpace = ` ${flag}`;
       }
 
-      let defaultValueWithWhiteSpace: string = '';
-      if (sqlField.defaultValue) {
-        defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(sqlField.defaultValue)}`;
-      }
-
       let comment: string = '';
       if (sqlField.comment) {
         comment = ` --${sqlField.comment}`;
       }
 
       let comma: string = index === (sqlFields.length - 1) ? '' : ',';
+
+      let defaultValueWithWhiteSpace: string = '';
+      if (sqlField.defaultValue) {
+        // if default value type is SERIAL, use SERIAL syntax
+        if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL) {
+          sql += `${sqlField.columnName} SERIAL${comma}${comment}\n`;
+          return;
+        }
+
+        defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(sqlField.defaultValue)}`;
+      }
 
       sql += `${sqlField.columnName} ${type}${flagWithWhiteSpace}${defaultValueWithWhiteSpace}${comma}${comment}\n`;
     });

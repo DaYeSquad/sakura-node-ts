@@ -28,9 +28,18 @@ class User extends Model {
   updatedAt: number;
 }
 
+@TableName('enterprises')
+class Enterprise extends Model {
+  @Column('eid', SqlType.INT, SqlFlag.PRIMARY_KEY, '系统编号，唯一标识', SqlDefaultValue.SERIAL())
+  eid: number;
+
+  @Column('name', SqlType.VARCHAR_255, SqlFlag.NOT_NULL, '企业名')
+  name: string;
+}
+
 describe('SqlGenerator', () => {
 
-  it('Test generateCreateTableSql', () => {
+  it('Test generateCreateTableSql with normal model', () => {
     const expectResult: string = `CREATE TABLE users (
 uid INTEGER PRIMARY KEY DEFAULT make_random_id(), --系统编号，唯一标识
 username VARCHAR(255),
@@ -41,7 +50,16 @@ updated_at TIMESTAMP
 );`;
 
     const sql: string = sqlGenerator.generateCreateTableSql(User);
-    console.log(sql);
+    chai.expect(sql).to.equal(expectResult);
+  });
+
+  it('Test generateCreateTableSql with model whose ID is SERIAL', () => {
+    const expectResult: string = `CREATE TABLE enterprises (
+eid SERIAL, --系统编号，唯一标识
+name VARCHAR(255) --企业名
+);`;
+
+    const sql: string = sqlGenerator.generateCreateTableSql(Enterprise);
     chai.expect(sql).to.equal(expectResult);
   });
 });

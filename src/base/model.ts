@@ -79,7 +79,8 @@ export enum SqlFlag {
  */
 export enum SqlDefaultValueType {
   MAKE_RANDOM_ID,
-  NUMBER
+  NUMBER,
+  SERIAL
 }
 
 /**
@@ -98,6 +99,16 @@ export class SqlDefaultValue {
     sqlDefaultValue.type = SqlDefaultValueType.MAKE_RANDOM_ID;
     return sqlDefaultValue;
   };
+
+  /**
+   * Default value type INTEGER and value is auto increment integer.
+   * @constructor
+   */
+  static SERIAL(): SqlDefaultValue {
+    let sqlDefaultValue: SqlDefaultValue = new SqlDefaultValue();
+    sqlDefaultValue.type = SqlDefaultValueType.SERIAL;
+    return sqlDefaultValue;
+  }
 
   /**
    * Default value type INTEGER, FLOAT or other numeric value and value is specific number.
