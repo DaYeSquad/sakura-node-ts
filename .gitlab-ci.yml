@@ -1,0 +1,7 @@
+stages:
+  - lint
+
+tslint:
+  stage: lint
+  script:
+    - sh ./bin/tslint.sh
