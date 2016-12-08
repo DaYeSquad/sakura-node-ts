@@ -10,10 +10,10 @@ class User extends Model {
   @Column('uid', SqlType.INT, SqlFlag.PRIMARY_KEY)
   uid: number;
 
-  @Column('username', SqlType.VARCHAR, SqlFlag.NOT_NULL)
+  @Column('username', SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
   username: string;
 
-  @Column('display_name', SqlType.VARCHAR, SqlFlag.NULLABLE)
+  @Column('display_name', SqlType.VARCHAR_255, SqlFlag.NULLABLE)
   displayName: string;
 
   @Column('age', SqlType.INT, SqlFlag.NULLABLE)

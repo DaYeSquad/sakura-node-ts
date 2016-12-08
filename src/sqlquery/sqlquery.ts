@@ -43,7 +43,7 @@ export class SqlQuery {
   }
 
   static valueAsStringByType(value: any, sqlType: SqlType): string {
-    if (sqlType === SqlType.VARCHAR || sqlType === SqlType.TEXT) {
+    if (sqlType === SqlType.VARCHAR_255 || sqlType === SqlType.TEXT || sqlType === SqlType.VARCHAR_1024) {
       value = `'${value}'`;
     } else if (sqlType === SqlType.DATE) {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, '-');

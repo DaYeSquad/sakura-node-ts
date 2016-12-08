@@ -6,7 +6,8 @@
   "types": "./lib/definitions/index.d.ts",
   "scripts": {
     "pretest": "rm -rf ./lib; gulp ts;",
-    "test": "mocha ./lib --recursive"
+    "test": "mocha ./lib --recursive",
+    "posttest": "rm -rf ./lib"
   },
   "repository": {
     "type": "git",

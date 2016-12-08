@@ -14,10 +14,10 @@ class WeatherCacheInfo extends Model {
   @Column('id', SqlType.INT, SqlFlag.PRIMARY_KEY)
   private id_: number;
 
-  @Column('uri', SqlType.VARCHAR, SqlFlag.NOT_NULL)
+  @Column('uri', SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
   uri: string;
 
-  @Column('alias', SqlType.VARCHAR, SqlFlag.NOT_NULL)
+  @Column('alias', SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
   alias: string;
 
   @Column('meta', SqlType.JSON, SqlFlag.NOT_NULL)
@@ -42,8 +42,8 @@ describe('ReplaceQuery', () => {
       new ReplaceQuery()
         .fromClass(WeatherCacheInfo)
         .where(`uri='${weatherCache.uri}'`, `alias='${weatherCache.alias}'`)
-        .set('uri', weatherCache.uri, SqlType.VARCHAR)
-        .set('alias', weatherCache.alias, SqlType.VARCHAR)
+        .set('uri', weatherCache.uri, SqlType.VARCHAR_255)
+        .set('alias', weatherCache.alias, SqlType.VARCHAR_255)
         .set('expires_at', weatherCache.expiresAt, SqlType.TIMESTAMP)
         .build();
     chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',alias='shuye_dikuai_1',expires_at=to_timestamp(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
