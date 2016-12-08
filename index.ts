@@ -27,6 +27,7 @@ export { UpdateQuery } from './src/sqlquery/updatequery';
 
 export { PgClient } from './src/database/pgclient';
 export { PgClientConfig } from './src/database/pgclientconfig';
+export { SqlGenerator } from './src/tools/sqlgenerator';
 
 // -------------------------------------------------------------------------
 // API
@@ -41,7 +42,7 @@ export { Validator } from './src/api/validator';
 // -------------------------------------------------------------------------
 
 export { TableName, Column } from './src/base/decorator';
-export { Model, SqlFlag, SqlType, SqlField } from './src/base/model';
+export { Model, SqlFlag, SqlType, SqlField, SqlDefaultValue, SqlDefaultValueType } from './src/base/model';
 
 // -------------------------------------------------------------------------
 // Utils
