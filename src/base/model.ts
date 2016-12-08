@@ -49,9 +49,14 @@ export interface SqlField {
   columnName?: string; // column name in table
 }
 
+/**
+ * Sql Type.
+ */
 export enum SqlType {
+  RANDOM_ID, // make_random_id()
   TEXT,
-  VARCHAR,
+  VARCHAR_255, // VARCHAR(255)
+  VARCHAR_1024, // VARCHAR(2014)
   INT,
   DATE,
   TIMESTAMP,
@@ -59,6 +64,9 @@ export enum SqlType {
   NUMERIC
 }
 
+/**
+ * Sql flag indicates the key.
+ */
 export enum SqlFlag {
   PRIMARY_KEY,
   NOT_NULL,
