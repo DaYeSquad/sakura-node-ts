@@ -61,6 +61,7 @@ export class SqlGenerator {
       case SqlType.JSON: return 'JSON';
       case SqlType.NUMERIC: return 'NUMERIC';
       case SqlType.DATE: return 'DATE';
+      default: throw Error('Undefined SqlType');
     }
   }
 
