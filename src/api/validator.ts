@@ -32,6 +32,33 @@ export class Validator {
   }
 
   /**
+   * turn array string into number array
+   * @param {*} param number array as string format like: '[1,2,3]'
+   * @param {string} [reason='param invalid']
+   * @returns {number}
+   * 
+   * @memberOf Validator
+   */
+  toNumberArray(param: string, reason: string = 'param invalid'): number[] {
+    if (param && param.indexOf('[') === 0 && param.lastIndexOf(']') === param.length - 1) {
+      let strArr: string [] = param.substring(1, param.length - 1).split(',');
+      let numArr: number [] = [];
+      for (let str of strArr) {
+        let num: number = Number(str);
+        if (str !== '' && !isNaN(num)) {
+          numArr.push(num);
+        } else {
+          this.errors.push(new ApiError(reason, 'Bad Request'));
+          break;
+        }
+      }
+      return numArr;
+    } else {
+      this.errors.push(new ApiError(reason, 'Bad Request'));
+    }
+  }
+
+  /**
    * Casts any type to string.
    * @param param Any type of input value.
    * @param reason Error reason.
