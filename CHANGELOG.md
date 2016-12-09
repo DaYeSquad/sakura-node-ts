@@ -7,6 +7,7 @@
 * **修改了 SqlType 以满足 sql 自动生成以及数据迁移工具:** 删除了 VARCHAR, 改为 VARCHAR_255 以及 VARCHAR_1024
 * **SqlField 添加了 defaultValue 以及 comment 字段:** defaultValue 用于指定默认值，comment 用于注释，建议所有的都写 comment。
 * **添加了 SqlGenerator:** SqlGenerator 可以指定 Model 自动生成创建表的 sql。
+* **添加了 Validator.toNumberArray 方法:** 用于替代之前的 eval()。
 
   
 
