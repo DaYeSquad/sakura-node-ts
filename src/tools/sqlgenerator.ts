@@ -3,6 +3,7 @@
 
 import {sqlContext} from '../util/sqlcontext';
 import {SqlField, SqlType, SqlFlag, SqlDefaultValue, SqlDefaultValueType} from '../base/model';
+import {Column} from '../migration/column';
 
 /**
  * Used to generate sql file with validation by model.
@@ -51,6 +52,47 @@ export class SqlGenerator {
 
     sql += `);`;
     return sql;
+  }
+
+  /**
+   * Generates ALERT TABLE with ADD COLUMN sql.
+   * @param cls Subclass of Model.
+   * @param column Column description.
+   * @returns {string} sql
+   */
+  generateAlertTableWithAddColumnAction(cls: Function, column: Column): string {
+    const tableName: string = sqlContext.findTableByClass(cls);
+    const type: string = this.sqlTypeToCreateSyntaxString_(column.type);
+
+    let defaultValueWithWhiteSpace: string = '';
+    if (column.defaultValue) {
+      defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(column.defaultValue)}`;
+    }
+
+    return `ALTER TABLE ${tableName} ADD COLUMN ${column.name} ${type}${defaultValueWithWhiteSpace};`;
+  }
+
+  /**
+   * Generates ALERT TABLE with DROP COLUMN sql.
+   * @param cls Subclass of Model.
+   * @param columnName Column name.
+   * @returns {string} sql
+   */
+  generateAlertTableWithDropColumnAction(cls: Function, columnName: string): string {
+    const tableName: string = sqlContext.findTableByClass(cls);
+    return `ALTER TABLE ${tableName} DROP COLUMN IF EXISTS ${columnName};`;
+  }
+
+  /**
+   * Generates ALERT TABLE with RENAME COLUMN sql.
+   * @param cls Subclass of Model.
+   * @param oldName Old column name.
+   * @param newName New column name.
+   * @returns {string} sql
+   */
+  generateAlertTableWithRenameColumnAction(cls: Function, oldName: string, newName: string): string {
+    const tableName: string = sqlContext.findTableByClass(cls);
+    return `ALTER TABLE ${tableName} RENAME COLUMN ${oldName} TO ${newName};`;
   }
 
   /**
