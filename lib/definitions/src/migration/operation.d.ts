@@ -1,4 +1,4 @@
-import { Column } from './column';
+import { Field } from './column';
 export declare abstract class Operation {
     protected modelClass_: Function;
     abstract sql(): string;
@@ -13,7 +13,7 @@ export declare class AddModelOperation extends ModelOperation {
 }
 export declare class AddColumnOperation extends ColumnOperation {
     private column_;
-    constructor(cls: Function, column: Column);
+    constructor(cls: Function, column: Field);
     sql(): string;
 }
 export declare class DropColumnOperation extends ColumnOperation {

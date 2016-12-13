@@ -1,11 +1,14 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
+import * as fs from 'fs';
+import * as path from 'path';
+
 import {
   Operation, AddModelOperation, AddColumnOperation, DropColumnOperation,
   RenameColumnOperation
 } from './operation';
-import {Column} from './column';
+import {Field} from './column';
 import {PgClient} from '../database/pgclient';
 
 /**
@@ -33,7 +36,7 @@ export class Migration {
    * @param cls Class extends model.
    * @param column New column.
    */
-  addColumn(cls: Function, column: Column): void {
+  addColumn(cls: Function, column: Field): void {
     this.operations_.push(new AddColumnOperation(cls, column));
   }
 
@@ -94,7 +97,15 @@ export class Migration {
   /**
    * Executes migrate sql commands, it is highly recommended to use preview() to see sql before use this method.
    */
-  migrate(): void {
+  migrate(setupEnv: boolean = false): void {
+    let pgClient: PgClient = undefined;
+
+    if (PgClient.getInstance()) {
+      pgClient = PgClient.getInstance();
+    } else {
+      throw new Error('UNDEFINED_PG_CLIENT_SHARED_INSTANCE');
+    }
+
     // run dependencies
     for (let dependency of this.dependencies_) {
       dependency.migrate();
@@ -102,14 +113,17 @@ export class Migration {
 
     // run operations
     let sqls: Array<string> = [];
+
+    // create necessary functions
+    if (setupEnv) {
+      let setupEnvSql: string = fs.readFileSync(path.resolve('sql/setup_pg.sql'), 'utf8') + '\n';
+      sqls.push(setupEnvSql);
+    }
+
     for (let operation of this.operations_) {
       sqls.push(operation.sql());
     }
 
-    if (PgClient.getInstance()) {
-      PgClient.getInstance().queryInTransaction(sqls);
-    } else {
-      throw new Error('UNDEFINED_PG_CLIENT_SHARED_INSTANCE');
-    }
+    pgClient.queryInTransaction(sqls);
   }
 }

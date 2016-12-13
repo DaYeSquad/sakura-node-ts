@@ -6,7 +6,7 @@ import {SqlType, SqlFlag, SqlDefaultValue} from '../base/model';
 /**
  * Column description.
  */
-export interface Column {
+export interface Field {
   name: string;
   type: SqlType;
   flag: SqlFlag;

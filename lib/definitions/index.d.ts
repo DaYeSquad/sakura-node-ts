@@ -17,3 +17,5 @@ export { TableName, Column } from './src/base/decorator';
 export { Model, SqlFlag, SqlType, SqlField, SqlDefaultValue, SqlDefaultValueType } from './src/base/model';
 export { DateFormatter, DateFormtOption } from './src/util/dateformatter';
 export { DateUtil, DateEqualityPrecision } from './src/util/dateutil';
+export { Migration } from './src/migration/migration';
+export { Field } from './src/migration/column';

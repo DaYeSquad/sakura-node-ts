@@ -1,7 +1,7 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {Column} from './column';
+import {Field} from './column';
 import {sqlGenerator} from '../tools/sqlgenerator';
 
 /**
@@ -42,9 +42,9 @@ export class AddModelOperation extends ModelOperation {
  * Adds column operation aka ALTER TABLE ... ADD COLUMN.
  */
 export class AddColumnOperation extends ColumnOperation {
-  private column_: Column;
+  private column_: Field;
 
-  constructor(cls: Function, column: Column) {
+  constructor(cls: Function, column: Field) {
     super();
     this.modelClass_ = cls;
     this.column_ = column;
