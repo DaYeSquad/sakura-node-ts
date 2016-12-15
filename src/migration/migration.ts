@@ -1,9 +1,9 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
-
+import * as fs from 'fs';
 import {
   Operation, AddModelOperation, AddColumnOperation, DropColumnOperation,
-  RenameColumnOperation
+  RenameColumnOperation, InitCommentOperation
 } from './operation';
 import {Column} from './column';
 import {PgClient} from '../database/pgclient';
@@ -26,8 +26,8 @@ export class Migration {
    */
   addModel(cls: Function): void {
     this.operations_.push(new AddModelOperation(cls));
+    this.operations_.push(new InitCommentOperation(cls));
   }
-
   /**
    * Adds column to existing table.
    * @param cls Class extends model.
@@ -90,6 +90,13 @@ export class Migration {
 
     return sql;
   }
+
+  save(path: string = 'sql/migration.sql'): void {
+    const sql: string = this.preview();
+    fs.writeFile(path, sql);
+
+  }
+
 
   /**
    * Executes migrate sql commands, it is highly recommended to use preview() to see sql before use this method.

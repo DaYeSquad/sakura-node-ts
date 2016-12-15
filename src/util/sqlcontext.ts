@@ -40,6 +40,10 @@ export class SqlContext {
     this.sqlDefinitions_.get(cls).push(sqlField);
   }
 
+  getTables(): Map<Function, string> {
+
+    return this.tables_;
+  }
   /**
    * Gets sql field description by Class.
    * @param cls Class.

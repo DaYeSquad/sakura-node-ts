@@ -8,7 +8,7 @@ import {Column} from '../migration/column';
 /**
  * Used to generate sql file with validation by model.
  */
-export class SqlGenerator {
+export class TestSqlGenerator {
 
   /**
    * Generates CREATE TABLE sql by given model.
@@ -50,7 +50,7 @@ export class SqlGenerator {
       sql += `${sqlField.columnName} ${type}${flagWithWhiteSpace}${defaultValueWithWhiteSpace}${comma}${comment}\n`;
     });
 
-    sql += `);`;
+    sql += `);\n`;
     return sql;
   }
 
@@ -151,4 +151,4 @@ export class SqlGenerator {
   }
 }
 
-export let sqlGenerator = new SqlGenerator();
+export let testSqlGenerator = new TestSqlGenerator();
