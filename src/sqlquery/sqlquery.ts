@@ -39,7 +39,7 @@ export class SqlQuery {
           console.log(`value (model[${sqlField.name}]) not found`);
         }
       } else {
-        console.log(`Unknown sqlField ${sqlField.name}, ${sqlField.columnName}`)
+        console.log(`Unknown sqlField ${sqlField.name}, ${sqlField.columnName}`);
       }
     }
 
