@@ -1,6 +1,6 @@
 {
   "name": "sakura",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",

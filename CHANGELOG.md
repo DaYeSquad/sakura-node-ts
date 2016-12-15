@@ -1,3 +1,10 @@
+# 2.1.1 (2016.12.15.)
+
+### Features
+
+* **修复了 sqlquery:** 修复了 SqlQuery 中当 SqlType === SqlType.INT 时且为0时触发的一处判断错误。
+
+
 # 2.1.0 (2016.12.12.)
 
 ### Features

@@ -30,12 +30,16 @@ export class SqlQuery {
       if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
         modelInfo.primaryKey = sqlField.columnName; // default not pushes primary key to keys array
       } else if (sqlField.name) {
-        if (model[sqlField.name]) {
+        if (model[sqlField.name] !== undefined) {
           modelInfo.keys.push(sqlField.columnName);
           let value: any = model[sqlField.name];
           value = SqlQuery.valueAsStringByType(value, sqlField.type);
           modelInfo.values.push(value);
+        } else  {
+          console.log(`value (model[${sqlField.name}]) not found`);
         }
+      } else {
+        console.log(`Unknown sqlField ${sqlField.name}, ${sqlField.columnName}`)
       }
     }
 
@@ -56,7 +60,12 @@ export class SqlQuery {
       } else {
         value = `'${JSON.stringify(value)}'::json`;
       }
+    } else if (sqlType === SqlType.INT) {
+      value = String(`${value}`);
+    } else {
+      console.log(`SqlType is ${sqlType}, value is ${value}`);
     }
+
     return value;
   }
 }
