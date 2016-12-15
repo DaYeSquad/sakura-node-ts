@@ -1,5 +1,5 @@
 import { Column } from '../migration/column';
-export declare class SqlGenerator {
+export declare class TestSqlGenerator {
     generateCreateTableSql(cls: Function): string;
     generateAlertTableWithAddColumnAction(cls: Function, column: Column): string;
     generateAlertTableWithDropColumnAction(cls: Function, columnName: string): string;
@@ -9,4 +9,4 @@ export declare class SqlGenerator {
     private sqlFlagToCreateSyntaxString_(sqlFlag);
     private sqlDefaultValueToCreateSyntaxString_(sqlDefaultValue);
 }
-export declare let sqlGenerator: SqlGenerator;
+export declare let testSqlGenerator: TestSqlGenerator;

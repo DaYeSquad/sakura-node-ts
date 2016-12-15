@@ -5,6 +5,7 @@ export declare class SqlContext {
     addSqlTableRelation(relation: SqlTableRelation): void;
     findTableByClass(cls: Function): string;
     addSqlField(cls: Function, sqlField: SqlField): void;
+    getTables(): Map<Function, string>;
     findSqlFields(cls: Function): SqlField[];
 }
 export interface SqlTableRelation {

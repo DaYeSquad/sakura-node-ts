@@ -9,5 +9,6 @@ export declare class Migration {
     addDependency(dependency: Migration): void;
     setDependencies(dependencies: Migration[]): void;
     preview(): string;
+    save(path?: string): void;
     migrate(): void;
 }
