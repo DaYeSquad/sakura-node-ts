@@ -11,6 +11,10 @@ import {
 } from './operation';
 import {Field} from './column';
 import {PgClient} from '../database/pgclient';
+import {SelectQuery} from '../sqlquery/selectquery';
+import {Version} from './version';
+import {PgQueryResult} from '../base/typedefines';
+import {InsertQuery} from '../sqlquery/insertquery';
 
 /**
  * Migration tool for PostgreSQL.
@@ -21,8 +25,19 @@ import {PgClient} from '../database/pgclient';
  *  migration.migrate(); // migrate database.
  */
 export class Migration {
+  private version_: number = 0;
+  private pgInstance_: PgClient = undefined;
+
   private operations_: Array<Operation> = [];
   private dependencies_: Array<Migration> = [];
+
+  /**
+   * Init with current migration version, be sure to use INTEGER value.
+   * @param version Current version.
+   */
+  constructor(version: number) {
+    this.version_ = version;
+  }
 
   /**
    * Adds model's table.
@@ -32,6 +47,7 @@ export class Migration {
     this.operations_.push(new AddModelOperation(cls));
     this.operations_.push(new InitCommentOperation(cls));
   }
+
   /**
    * Adds column to existing table.
    * @param cls Class extends model.
@@ -77,6 +93,20 @@ export class Migration {
   }
 
   /**
+   * Returns current version as number or undefined is table not exists.
+   * @private
+   */
+  private async currentVersion_(): Promise<number | undefined> {
+    const sql: string = new SelectQuery().fromClass(Version).select().build();
+    const result: PgQueryResult = await this.pgInstance_.query(sql);
+    if (result.rows.length > 0) {
+      return result.rows[0]['version'];
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
    * Generates SQL to migrate.
    * @returns {string} SQL.
    */
@@ -95,28 +125,43 @@ export class Migration {
     return sql;
   }
 
-  save(path: string = 'sql/migration.sql'): void {
+  /**
+   * Saves migration result to file.
+   * @param path Full path of file.
+   */
+  save(path: string): void {
     const sql: string = this.preview();
     fs.writeFile(path, sql);
-
   }
-
 
   /**
    * Executes migrate sql commands, it is highly recommended to use preview() to see sql before use this method.
    */
-  migrate(setupEnv: boolean = false): void {
-    let pgClient: PgClient = undefined;
-
+  async migrate(setupEnv: boolean = false): Promise<void> {
+    // init PG
     if (PgClient.getInstance()) {
-      pgClient = PgClient.getInstance();
+      this.pgInstance_ = PgClient.getInstance();
     } else {
       throw new Error('UNDEFINED_PG_CLIENT_SHARED_INSTANCE');
     }
 
+    // check version
+    const currentVersion: number | undefined = await this.currentVersion_();
+    if (currentVersion === undefined) { // first time to execute query
+      this.addModel(Version);
+
+      let version: Version = new Version();
+      version.version = this.version_;
+      const sql: string = new InsertQuery().fromModel(version).build();
+
+      await this.pgInstance_.query(sql);
+    } else if (this.version_ === currentVersion) { // version does not change
+      return;
+    }
+
     // run dependencies
     for (let dependency of this.dependencies_) {
-      dependency.migrate();
+      await dependency.migrate();
     }
 
     // run operations
@@ -132,6 +177,6 @@ export class Migration {
       sqls.push(operation.sql());
     }
 
-    pgClient.queryInTransaction(sqls);
+    await this.pgInstance_.queryInTransaction(sqls);
   }
 }
