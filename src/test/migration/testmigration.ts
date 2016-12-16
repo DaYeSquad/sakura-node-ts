@@ -6,41 +6,34 @@ import * as chai from 'chai';
 import {Migration} from '../../migration/migration';
 import {TableName, Column} from '../../base/decorator';
 import {Model, SqlType, SqlFlag} from '../../base/model';
+import {InitTestDb} from '../../migration/inittestdb';
+import { User } from '../model/user';
 
-@TableName('users')
-class User extends Model {
-  @Column('uid', SqlType.INT, SqlFlag.PRIMARY_KEY)
-  uid: number;
 
-  @Column('username', SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
-  username: string;
 
-  @Column('display_name', SqlType.VARCHAR_255, SqlFlag.NULLABLE)
-  displayName: string;
-
-  @Column('meta', SqlType.JSON, SqlFlag.NULLABLE)
-  meta: any;
-
-  @Column('created_at', SqlType.TIMESTAMP, SqlFlag.NULLABLE)
-  createdAt: Date;
-
-  @Column('updated_at', SqlType.TIMESTAMP, SqlFlag.NULLABLE)
-  updatedAt: number;
-}
 
 describe('Test Migration', () => {
   it('Test Migration.addModel', () => {
     const expectSql: string = `CREATE TABLE users (
-uid INTEGER PRIMARY KEY,
+uid INTEGER PRIMARY KEY, --主键
 username VARCHAR(255),
-display_name VARCHAR(255),
+display_name VARCHAR(255), --真实姓名
 meta JSON,
 created_at TIMESTAMP,
 updated_at TIMESTAMP
-);`;
+);
+COMMENT ON COLUMN users.uid IS '主键';
+COMMENT ON COLUMN users.display_name IS '真实姓名';
+`;
 
     let migration: Migration = new Migration();
     migration.addModel(User);
+
+    let initTestDb: InitTestDb = new InitTestDb();
+    initTestDb.initAllTableSql();
+    initTestDb.save();
+    migration.save();
+
     chai.expect(migration.preview()).to.equal(expectSql);
   });
 
