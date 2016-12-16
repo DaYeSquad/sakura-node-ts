@@ -40,7 +40,7 @@ class Enterprise extends Model {
 describe('SqlGenerator', () => {
 
   it('Test generateCreateTableSql with normal model', () => {
-    const expectResult: string = `CREATE TABLE users (
+    const expectResult: string = `CREATE TABLE IF NOT EXISTS users (
 uid INTEGER PRIMARY KEY DEFAULT make_random_id(), --系统编号，唯一标识
 username VARCHAR(255),
 display_name VARCHAR(255),
@@ -54,7 +54,7 @@ updated_at TIMESTAMP
   });
 
   it('Test generateCreateTableSql with model whose ID is SERIAL', () => {
-    const expectResult: string = `CREATE TABLE enterprises (
+    const expectResult: string = `CREATE TABLE IF NOT EXISTS enterprises (
 eid SERIAL, --系统编号，唯一标识
 name VARCHAR(255) --企业名
 );`;

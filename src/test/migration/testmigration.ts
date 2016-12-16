@@ -10,7 +10,7 @@ import { User } from '../model/user';
 
 describe('Test Migration', () => {
   it('Test Migration.addModel', () => {
-    const expectSql: string = `CREATE TABLE users (
+    const expectSql: string = `CREATE TABLE IF NOT EXISTS users (
 uid INTEGER PRIMARY KEY, --主键
 username VARCHAR(255),
 display_name VARCHAR(255), --真实姓名
