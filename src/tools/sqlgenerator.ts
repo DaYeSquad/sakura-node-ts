@@ -3,7 +3,7 @@
 
 import {sqlContext} from '../util/sqlcontext';
 import {SqlField, SqlType, SqlFlag, SqlDefaultValue, SqlDefaultValueType} from '../base/model';
-import {Column} from '../migration/column';
+import {Field} from '../migration/column';
 
 /**
  * Used to generate sql file with validation by model.
@@ -60,7 +60,7 @@ export class SqlGenerator {
    * @param column Column description.
    * @returns {string} sql
    */
-  generateAlertTableWithAddColumnAction(cls: Function, column: Column): string {
+  generateAlertTableWithAddColumnAction(cls: Function, column: Field): string {
     const tableName: string = sqlContext.findTableByClass(cls);
     const type: string = this.sqlTypeToCreateSyntaxString_(column.type);
 
@@ -122,7 +122,8 @@ export class SqlGenerator {
       case SqlType.JSON: return 'JSON';
       case SqlType.NUMERIC: return 'NUMERIC';
       case SqlType.DATE: return 'DATE';
-      default: throw Error('Undefined SqlType');
+      case SqlType.TEXT: return 'TEXT';
+      default: throw Error(`Undefined SqlType ${sqlType}`);
     }
   }
 
