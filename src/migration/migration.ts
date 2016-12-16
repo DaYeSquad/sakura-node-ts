@@ -98,6 +98,10 @@ export class Migration {
    * @private
    */
   private async currentVersion_(): Promise<number | undefined> {
+    // create table
+    const createTableSql: string = sqlGenerator.generateCreateTableSql(Version);
+    await this.pgInstance_.query(createTableSql);
+
     const sql: string = new SelectQuery().fromClass(Version).select().build();
     const result: PgQueryResult = await this.pgInstance_.query(sql);
     if (result.rows.length > 0) {
@@ -149,13 +153,11 @@ export class Migration {
     // check version
     const currentVersion: number | undefined = await this.currentVersion_();
     if (currentVersion === undefined) { // first time to execute query
-      const createTableSql: string = sqlGenerator.generateCreateTableSql(Version);
-
       let version: Version = new Version();
       version.version = this.version_;
       const insertSql: string = new InsertQuery().fromModel(version).build();
 
-      await this.pgInstance_.queryInTransaction([createTableSql, insertSql]);
+      await this.pgInstance_.query(insertSql);
     } else if (this.version_ === currentVersion) { // version does not change
       return;
     }
