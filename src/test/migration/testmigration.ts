@@ -4,12 +4,8 @@
 import * as chai from 'chai';
 
 import {Migration} from '../../migration/migration';
-import {TableName, Column} from '../../base/decorator';
-import {Model, SqlType, SqlFlag} from '../../base/model';
-import {InitTestDb} from '../../migration/inittestdb';
+import {SqlType, SqlFlag} from '../../base/model';
 import { User } from '../model/user';
-
-
 
 
 describe('Test Migration', () => {
@@ -26,13 +22,8 @@ COMMENT ON COLUMN users.uid IS '主键';
 COMMENT ON COLUMN users.display_name IS '真实姓名';
 `;
 
-    let migration: Migration = new Migration();
+    let migration: Migration = new Migration(1);
     migration.addModel(User);
-
-    let initTestDb: InitTestDb = new InitTestDb();
-    initTestDb.initAllTableSql();
-    initTestDb.save();
-    migration.save();
 
     chai.expect(migration.preview()).to.equal(expectSql);
   });
@@ -40,7 +31,7 @@ COMMENT ON COLUMN users.display_name IS '真实姓名';
   it('Test Migration.addColumn without default value', () => {
     const expectSql: string = `ALTER TABLE users ADD COLUMN alias VARCHAR(255);`;
 
-    let migration: Migration = new Migration();
+    let migration: Migration = new Migration(1);
     migration.addColumn(User, {name: 'alias', type: SqlType.VARCHAR_255, flag: SqlFlag.NULLABLE});
     chai.expect(migration.preview()).to.equal(expectSql);
   });
@@ -48,7 +39,7 @@ COMMENT ON COLUMN users.display_name IS '真实姓名';
   it('Test Migration.dropColumn', () => {
     const expectSql: string = `ALTER TABLE users DROP COLUMN IF EXISTS alias;`;
 
-    let migration: Migration = new Migration();
+    let migration: Migration = new Migration(1);
     migration.dropColumn(User, 'alias');
     chai.expect(migration.preview()).to.equal(expectSql);
   });
@@ -56,7 +47,7 @@ COMMENT ON COLUMN users.display_name IS '真实姓名';
   it('Test Migration.renameColumn', () => {
     const expectSql: string = `ALTER TABLE users RENAME COLUMN display_name TO display_name2;`;
 
-    let migration: Migration = new Migration();
+    let migration: Migration = new Migration(1);
     migration.renameColumn(User, 'display_name', 'display_name2');
     chai.expect(migration.preview()).to.equal(expectSql);
   });
