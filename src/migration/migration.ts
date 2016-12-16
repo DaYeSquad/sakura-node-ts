@@ -15,6 +15,7 @@ import {SelectQuery} from '../sqlquery/selectquery';
 import {Version} from './version';
 import {PgQueryResult} from '../base/typedefines';
 import {InsertQuery} from '../sqlquery/insertquery';
+import {sqlGenerator} from '../tools/sqlgenerator';
 
 /**
  * Migration tool for PostgreSQL.
@@ -148,13 +149,13 @@ export class Migration {
     // check version
     const currentVersion: number | undefined = await this.currentVersion_();
     if (currentVersion === undefined) { // first time to execute query
-      this.addModel(Version);
+      const createTableSql: string = sqlGenerator.generateCreateTableSql(Version);
 
       let version: Version = new Version();
       version.version = this.version_;
-      const sql: string = new InsertQuery().fromModel(version).build();
+      const insertSql: string = new InsertQuery().fromModel(version).build();
 
-      await this.pgInstance_.query(sql);
+      await this.pgInstance_.queryInTransaction([createTableSql, insertSql]);
     } else if (this.version_ === currentVersion) { // version does not change
       return;
     }
