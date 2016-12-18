@@ -35,9 +35,11 @@ export class Migration {
   /**
    * Init with current migration version, be sure to use INTEGER value.
    * @param version Current version.
+   * @param pgClient Postgres connection.
    */
-  constructor(version: number) {
+  constructor(version: number, pgClient: PgClient) {
     this.version_ = version;
+    this.pgInstance_ = pgClient;
   }
 
   /**
@@ -144,9 +146,7 @@ export class Migration {
    */
   async migrate(setupEnv: boolean = false): Promise<void> {
     // init PG
-    if (PgClient.getInstance()) {
-      this.pgInstance_ = PgClient.getInstance();
-    } else {
+    if (this.pgInstance_ === undefined) {
       throw new Error('UNDEFINED_PG_CLIENT_SHARED_INSTANCE');
     }
 

@@ -22,7 +22,7 @@ COMMENT ON COLUMN users.uid IS '主键';
 COMMENT ON COLUMN users.display_name IS '真实姓名';
 `;
 
-    let migration: Migration = new Migration(1);
+    let migration: Migration = new Migration(1, undefined);
     migration.addModel(User);
 
     chai.expect(migration.preview()).to.equal(expectSql);
@@ -31,7 +31,7 @@ COMMENT ON COLUMN users.display_name IS '真实姓名';
   it('Test Migration.addColumn without default value', () => {
     const expectSql: string = `ALTER TABLE users ADD COLUMN alias VARCHAR(255);`;
 
-    let migration: Migration = new Migration(1);
+    let migration: Migration = new Migration(1, undefined);
     migration.addColumn(User, {name: 'alias', type: SqlType.VARCHAR_255, flag: SqlFlag.NULLABLE});
     chai.expect(migration.preview()).to.equal(expectSql);
   });
@@ -39,7 +39,7 @@ COMMENT ON COLUMN users.display_name IS '真实姓名';
   it('Test Migration.dropColumn', () => {
     const expectSql: string = `ALTER TABLE users DROP COLUMN IF EXISTS alias;`;
 
-    let migration: Migration = new Migration(1);
+    let migration: Migration = new Migration(1, undefined);
     migration.dropColumn(User, 'alias');
     chai.expect(migration.preview()).to.equal(expectSql);
   });
@@ -47,7 +47,7 @@ COMMENT ON COLUMN users.display_name IS '真实姓名';
   it('Test Migration.renameColumn', () => {
     const expectSql: string = `ALTER TABLE users RENAME COLUMN display_name TO display_name2;`;
 
-    let migration: Migration = new Migration(1);
+    let migration: Migration = new Migration(1, undefined);
     migration.renameColumn(User, 'display_name', 'display_name2');
     chai.expect(migration.preview()).to.equal(expectSql);
   });
