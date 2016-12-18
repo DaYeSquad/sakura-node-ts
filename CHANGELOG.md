@@ -3,6 +3,7 @@
 ### Features
 
 * **为 Migration 增加了一个初始化的方法:** 方便使用自定义的 PgClient。
+* **修复了 Model.modelFromRow 当类型为 SqlType.TIMESTAMP 时候无法映射问题**
 
 
 # 2.1.5 (2016.12.17.)
