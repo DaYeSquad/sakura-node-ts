@@ -44,5 +44,11 @@ describe('SelectQuery', () => {
       .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = ${115237134}`).build();
     chai.expect(sql).to.equal(`SELECT users.username,enterprises.enterprise_id FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
   });
+
+  it('查询语句 添加OFFSET', () => {
+    const sql: string = new SelectQuery().fromClass(User).select().setOffset(1).build();
+    chai.expect(sql).to.equal(`SELECT * FROM users OFFSET 1`);
+  });
+
 });
 

@@ -14,6 +14,7 @@ export class SelectQuery {
   private selectFields_: string[];
   private orderBys_: {sort: string, order: 'ASC'|'DESC'}[] = [];
   private limit_: number;
+  private offset_: number;
   private joinUsings_: string[] = [];
 
   from(table: string): this {
@@ -59,6 +60,11 @@ export class SelectQuery {
     return this;
   }
 
+  setOffset(offset: number): this {
+    this.offset_ = offset;
+    return this;
+  }
+
   build(): string {
     let fields: string = '*';
     if (this.selectFields_.length > 0) {
@@ -91,6 +97,11 @@ export class SelectQuery {
     // LIMIT
     if (this.limit_) {
       sql = `${sql} LIMIT ${this.limit_}`;
+    }
+
+    // OFFSET
+    if (this.offset_) {
+      sql = `${sql} OFFSET ${this.offset_}`;
     }
 
     return sql;
