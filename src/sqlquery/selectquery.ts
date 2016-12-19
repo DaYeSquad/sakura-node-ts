@@ -101,7 +101,7 @@ export class SelectQuery {
 
     // OFFSET
     if (this.offset_) {
-      if (this.offset_ >= 0){
+      if (this.offset_ >= 0) {
         sql = `${sql} OFFSET ${this.offset_}`;
       }
 
