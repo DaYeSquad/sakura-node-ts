@@ -50,5 +50,10 @@ describe('SelectQuery', () => {
     chai.expect(sql).to.equal(`SELECT * FROM users OFFSET 1`);
   });
 
+  it('查询语句 添加OFFSET 负数则不设置OFFSET', () => {
+    const sql: string = new SelectQuery().fromClass(User).select().setOffset(-1).build();
+    chai.expect(sql).to.equal(`SELECT * FROM users`);
+  });
+
 });
 
