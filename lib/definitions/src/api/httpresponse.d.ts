@@ -1,7 +1,12 @@
 import { ApiError } from './apierror';
 export declare class SuccessResponse {
     data: any;
-    constructor(data: any);
+    constructor(data: any, code?: number);
+}
+export declare class ErrorResponse {
+    message: string;
+    code: number;
+    constructor(message: string);
 }
 export declare class BadRequestResponse {
     errors: Array<ApiError>;
