@@ -8,10 +8,9 @@ import {ApiError} from './apierror';
  */
 export class SuccessResponse {
   data: any;
-  code: number;
   constructor(data: any, code: number = 200) {
-    this.code = code;
     this.data = data;
+    this.data.code = code;
   }
 }
 
