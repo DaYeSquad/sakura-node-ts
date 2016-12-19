@@ -11,10 +11,6 @@ export declare class AddModelOperation extends ModelOperation {
     constructor(cls: Function);
     sql(): string;
 }
-export declare class AddTestModelOperation extends ModelOperation {
-    constructor(cls: Function);
-    sql(): string;
-}
 export declare class InitCommentOperation extends ModelOperation {
     constructor(cls: Function);
     sql(): string;

@@ -2,6 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {sqlContext} from '../util/sqlcontext';
+import {DateUtil} from '../util/dateutil';
 
 /**
  * All model object in trustself should inherit from model and declare its table name and sql definition.
@@ -19,7 +20,11 @@ export class Model {
     let sqlFields: Array<SqlField> = sqlContext.findSqlFields(type);
     let instance: T = new type();
     for (let sqlField of sqlFields) {
-      instance[sqlField.name] = row[sqlField.columnName];
+      if (sqlField.type === SqlType.TIMESTAMP) {
+        instance[sqlField.name] = DateUtil.millisecondToTimestamp(new Date(row[sqlField.columnName]).getTime());
+      } else {
+        instance[sqlField.name] = row[sqlField.columnName];
+      }
     }
     return instance;
   }

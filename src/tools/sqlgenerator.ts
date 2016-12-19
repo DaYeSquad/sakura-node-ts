@@ -18,7 +18,7 @@ export class SqlGenerator {
   generateCreateTableSql(cls: Function): string {
     const tableName: string = sqlContext.findTableByClass(cls);
 
-    let sql: string = `CREATE TABLE ${tableName} (\n`;
+    let sql: string = `CREATE TABLE IF NOT EXISTS ${tableName} (\n`;
 
     const sqlFields: SqlField[] = sqlContext.findSqlFields(cls);
     sqlFields.forEach((sqlField: SqlField, index: number) => {

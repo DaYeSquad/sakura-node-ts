@@ -1,10 +1,11 @@
 import { Field } from './column';
+import { PgClient } from '../database/pgclient';
 export declare class Migration {
     private version_;
     private pgInstance_;
     private operations_;
     private dependencies_;
-    constructor(version: number);
+    constructor(version: number, pgClient: PgClient);
     addModel(cls: Function): void;
     addColumn(cls: Function, column: Field): void;
     dropColumn(cls: Function, columnName: string): void;

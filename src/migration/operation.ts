@@ -3,7 +3,6 @@
 
 import {Field} from './column';
 import {sqlGenerator} from '../tools/sqlgenerator';
-import {testSqlGenerator} from '../tools/testsqlgenerator';
 
 /**
  * Base operation.
@@ -39,16 +38,16 @@ export class AddModelOperation extends ModelOperation {
   }
 }
 
-export class AddTestModelOperation extends ModelOperation {
-  constructor(cls: Function) {
-    super();
-    this.modelClass_ = cls;
-  }
-
-  sql(): string {
-    return testSqlGenerator.generateCreateTableSql(this.modelClass_);
-  }
-}
+// export class AddTestModelOperation extends ModelOperation {
+//   constructor(cls: Function) {
+//     super();
+//     this.modelClass_ = cls;
+//   }
+//
+//   sql(): string {
+//     return testSqlGenerator.generateCreateTableSql(this.modelClass_);
+//   }
+// }
 
 export class InitCommentOperation extends ModelOperation {
   constructor(cls: Function) {

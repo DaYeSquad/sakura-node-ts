@@ -15,6 +15,7 @@ import {SelectQuery} from '../sqlquery/selectquery';
 import {Version} from './version';
 import {PgQueryResult} from '../base/typedefines';
 import {InsertQuery} from '../sqlquery/insertquery';
+import {sqlGenerator} from '../tools/sqlgenerator';
 
 /**
  * Migration tool for PostgreSQL.
@@ -34,9 +35,11 @@ export class Migration {
   /**
    * Init with current migration version, be sure to use INTEGER value.
    * @param version Current version.
+   * @param pgClient Postgres connection.
    */
-  constructor(version: number) {
+  constructor(version: number, pgClient: PgClient) {
     this.version_ = version;
+    this.pgInstance_ = pgClient;
   }
 
   /**
@@ -97,6 +100,10 @@ export class Migration {
    * @private
    */
   private async currentVersion_(): Promise<number | undefined> {
+    // create table
+    const createTableSql: string = sqlGenerator.generateCreateTableSql(Version);
+    await this.pgInstance_.query(createTableSql);
+
     const sql: string = new SelectQuery().fromClass(Version).select().build();
     const result: PgQueryResult = await this.pgInstance_.query(sql);
     if (result.rows.length > 0) {
@@ -139,22 +146,18 @@ export class Migration {
    */
   async migrate(setupEnv: boolean = false): Promise<void> {
     // init PG
-    if (PgClient.getInstance()) {
-      this.pgInstance_ = PgClient.getInstance();
-    } else {
+    if (this.pgInstance_ === undefined) {
       throw new Error('UNDEFINED_PG_CLIENT_SHARED_INSTANCE');
     }
 
     // check version
     const currentVersion: number | undefined = await this.currentVersion_();
     if (currentVersion === undefined) { // first time to execute query
-      this.addModel(Version);
-
       let version: Version = new Version();
       version.version = this.version_;
-      const sql: string = new InsertQuery().fromModel(version).build();
+      const insertSql: string = new InsertQuery().fromModel(version).build();
 
-      await this.pgInstance_.query(sql);
+      await this.pgInstance_.query(insertSql);
     } else if (this.version_ === currentVersion) { // version does not change
       return;
     }

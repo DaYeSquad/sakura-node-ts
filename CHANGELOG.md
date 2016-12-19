@@ -1,3 +1,25 @@
+# 2.1.6 (2016.12.18.)
+
+### Features
+
+* **为 Migration 增加了一个初始化的方法:** 方便使用自定义的 PgClient。
+* **修复了 Model.modelFromRow 当类型为 SqlType.TIMESTAMP 时候无法映射问题**
+
+
+# 2.1.5 (2016.12.17.)
+
+### Features
+
+* **修复了 UpdateQuery:** 修复了 UpdateQuery 中当 value 为0的时候漏字段的问题。
+
+
+# 2.1.2 ~ 2.1.4 (2016.12.16.)
+
+### Features
+
+* **完善了 Migration:** 现在 Migration 会在使用后建立一个 version 的表用来保证 migration 只执行一次。
+
+
 # 2.1.1 (2016.12.15.)
 
 ### Features
