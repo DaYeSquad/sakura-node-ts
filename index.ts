@@ -47,7 +47,7 @@ export { Model, SqlFlag, SqlType, SqlField, SqlDefaultValue, SqlDefaultValueType
 // -------------------------------------------------------------------------
 // Utils
 // -------------------------------------------------------------------------
-
+export { sqlContext } from './src/util/sqlcontext';
 export { DateFormatter, DateFormtOption } from './src/util/dateformatter';
 export { DateUtil, DateEqualityPrecision } from './src/util/dateutil';
 export { Migration } from './src/migration/migration';
