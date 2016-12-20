@@ -5,7 +5,7 @@
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
   "scripts": {
-    "pretest": "rm -rf ./lib; gulp ts;",
+    "pretest": "rm -rf ./lib; gulp ts; sh ./bin/tslint.sh;",
     "test": "mocha ./lib --recursive",
     "posttest": "rm -rf ./lib"
   },
@@ -28,6 +28,7 @@
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.45",
     "@types/pg": "^6.1.33",
+    "@types/showdown": "^1.4.31",
     "@types/sinon": "^1.16.31",
     "@types/superagent": "^2.0.34",
     "@types/supertest": "^1.1.31",
@@ -39,9 +40,11 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^3.0.2",
+    "gago-cloud-service": "git+http://gagodata:gagobigdata77809@git.azure.gagogroup.cn/sakura/cloud-service.git#1.0.1",
     "merge2": "^1.0.2",
     "mocha": "^3.0.2",
     "run-sequence": "^1.2.2",
+    "showdown": "^1.5.2",
     "sinon": "^1.17.6",
     "supertest": "^2.0.0",
     "typescript": "^2.0.3"

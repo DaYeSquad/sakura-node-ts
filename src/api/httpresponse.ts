@@ -4,11 +4,24 @@
 import {ApiError} from './apierror';
 
 /**
+ * Represents HTTP response.
+ */
+export class HttpResponse {
+  code: number = 0;
+
+  constructor(code: number) {
+    this.code = code;
+  }
+}
+
+/**
  * Represents success response with only 1 page.
  */
-export class SuccessResponse {
+export class SuccessResponse extends HttpResponse {
   data: any;
+
   constructor(data: any, code: number = 200) {
+    super(code);
     this.data = data;
     this.data.code = code;
   }
@@ -29,12 +42,12 @@ export class ErrorResponse {
 /**
  * Represents bad request (:400) response.
  */
-export class BadRequestResponse {
+export class BadRequestResponse extends HttpResponse {
   errors: Array<ApiError>;
-  code: number = 400;
   message: string = 'Bad Request';
 
   constructor(errors: Array<ApiError>) {
+    super(400);
     this.errors = errors;
   }
 
@@ -52,11 +65,11 @@ export class BadRequestResponse {
 /**
  * Represents not found (:404) response.
  */
-export class NotFoundResponse {
-  code: number = 404;
+export class NotFoundResponse extends HttpResponse {
   message: string = 'Not Found';
 
   constructor(message: string) {
+    super(404);
     this.message = message;
   }
 
@@ -73,11 +86,11 @@ export class NotFoundResponse {
 /**
  * Represents register error response.
  */
-export class RegisterErrorResponse {
-  code: number = 409; // 409 Conflict
+export class RegisterErrorResponse extends HttpResponse {
   message: string;
 
   constructor(message: string) {
+    super(409); // 409 Conflict
     this.message = message;
   }
 
@@ -94,11 +107,11 @@ export class RegisterErrorResponse {
 /**
  * Represents auth (login) error response.
  */
-export class AuthErrorResponse {
-  code: number = 400; // 400 bad request
+export class AuthErrorResponse extends HttpResponse {
   message: string = '';
 
   constructor(message: string, code: number = 400) {
+    super(code);
     this.message = message;
     this.code = code;
   }
