@@ -8,9 +8,21 @@ import {ApiError} from './apierror';
  */
 export class SuccessResponse {
   data: any;
-
-  constructor(data: any) {
+  constructor(data: any, code: number = 200) {
     this.data = data;
+    this.data.code = code;
+  }
+}
+
+/**
+ * ErrorResponse
+ */
+export class ErrorResponse {
+  message: string;
+  code: number;
+  constructor(message: string) {
+    this.code = 501;
+    this.message = message;
   }
 }
 

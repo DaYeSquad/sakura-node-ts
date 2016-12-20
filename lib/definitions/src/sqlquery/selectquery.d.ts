@@ -4,6 +4,7 @@ export declare class SelectQuery {
     private selectFields_;
     private orderBys_;
     private limit_;
+    private offset_;
     private joinUsings_;
     from(table: string): this;
     fromClass(cls: Function): this;
@@ -13,5 +14,6 @@ export declare class SelectQuery {
     where(...args: any[]): this;
     orderBy(sort: string, order?: 'ASC' | 'DESC'): this;
     setLimit(limit: number): this;
+    setOffset(offset: number): this;
     build(): string;
 }

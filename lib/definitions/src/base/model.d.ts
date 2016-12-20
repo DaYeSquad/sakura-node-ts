@@ -24,6 +24,7 @@ export declare enum SqlType {
     TIMESTAMP = 5,
     JSON = 6,
     NUMERIC = 7,
+    BOOLEAN = 8,
 }
 export declare enum SqlFlag {
     PRIMARY_KEY = 0,
