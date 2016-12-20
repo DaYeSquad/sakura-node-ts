@@ -22,8 +22,7 @@ export class SuccessResponse extends HttpResponse {
 
   constructor(data: any, code: number = 200) {
     super(code);
-    this.data = data;
-    this.data.code = code;
+    this.data = Object.assign(data, {code: code});
   }
 }
 
