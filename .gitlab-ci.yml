@@ -16,6 +16,7 @@ test:
 send_change_log:
   stage: notification
   script:
+    - npm install gulp --registry https://registry.npm.taobao.org
     - gulp ts
     - node ./lib/js/src/tools/sendchangelog.js
 
