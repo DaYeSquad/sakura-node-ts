@@ -40,8 +40,7 @@ async function sendChangeLogToDevelopers() {
   const dataSourceMarkdownHtml: string = converter.makeHtml(dataSourceMdContent);
 
   // 发送邮件给后端团队
-  // const toAddresses: string[] = ['back@gagogroup.com'];
-  const toAddresses: string[] = ['linxiaoyi@gagogroup.com'];
+  const toAddresses: string[] = ['back@gagogroup.com'];
   const toAddress: string = toAddresses.join(',');
 
   const subject: string = `sakura-node-ts 更新提示 - ${currentVersion}`;
