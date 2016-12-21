@@ -16,7 +16,7 @@ test:
 send_change_log:
   stage: notification
   script:
-    - gulp
+    - gulp ts
     - node ./lib/js/src/tools/sendchangelog.js
 
 
