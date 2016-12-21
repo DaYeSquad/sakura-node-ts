@@ -8,7 +8,8 @@ import {BaseEmailService} from 'gcs';
  * 将 CHANGELOG.md 发送给订阅更新邮件的人。
  */
 
-const toAddresses: string[] = ['back@gagogroup.com'];
+const toAddresses: string[] = ['linxiaoyi@gagogroup.com', 'jiangwei@gagogroup.com', 'huteng@gagogroup.com',
+  'liqiushuai@gagogroup.com'];
 
 const packageJson: any = require(path.resolve('./package.json'));
 const currentVersion: string = String(packageJson.version);

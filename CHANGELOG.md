@@ -1,11 +1,11 @@
 # 2.1.9 (2016.12.21.)
 
-* **SuccessResponse 添加toJSON**
+* **SuccessResponse 添加 toJSON**
 * **export 了 ErrorResponse**
 
 # 2.1.8 (2016.12.20.)
 
-* **开始发送邮件给开发者:** back@gagogroup.com。
+* **开始发送邮件给开发者:** linxiaoyi@gagogroup.com, jiangwei@gagogroup.com, huteng@gagogroup.com, liqiushuai@gagogroup.com。
 
 
 # 2.1.7 (2016.12.20.)

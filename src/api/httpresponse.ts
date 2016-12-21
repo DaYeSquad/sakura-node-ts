@@ -19,13 +19,15 @@ export class HttpResponse {
  */
 export class SuccessResponse extends HttpResponse {
   data: any;
+
   constructor(data: any, code: number = 200) {
     super(code);
-    this.data = Object.assign(data, {code: code});
+    this.data = data;
   }
+
   toJSON(): any {
     return {
-      data: this.data
+      data: Object.assign(this.data, {code: this.code})
     };
   }
 }
