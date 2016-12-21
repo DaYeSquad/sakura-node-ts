@@ -19,22 +19,33 @@ export class HttpResponse {
  */
 export class SuccessResponse extends HttpResponse {
   data: any;
-
   constructor(data: any, code: number = 200) {
     super(code);
     this.data = Object.assign(data, {code: code});
+  }
+  toJSON(): any {
+    return {
+      data: this.data
+    };
   }
 }
 
 /**
  * ErrorResponse
  */
-export class ErrorResponse {
+export class ErrorResponse extends HttpResponse {
   message: string;
-  code: number;
-  constructor(message: string) {
-    this.code = 501;
+  constructor(message: string, code: number = 500) {
+    super(code);
     this.message = message;
+  }
+  toJSON(): any {
+    return {
+      error: {
+        code: this.code,
+        message: this.message
+      }
+    };
   }
 }
 
