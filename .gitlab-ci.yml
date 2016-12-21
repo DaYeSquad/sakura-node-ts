@@ -1,6 +1,7 @@
 stages:
   - lint
   - test
+  - notification
 
 tslint:
   stage: lint
@@ -11,3 +12,11 @@ test:
   stage: test
   script:
     - sh ./bin/test.sh
+
+send_change_log:
+  stage: notification
+  script:
+    - gulp
+    - node ./lib/js/src/tools/sendchangelog.js
+
+
