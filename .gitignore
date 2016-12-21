@@ -73,7 +73,6 @@ jspm_packages
 
 node_modules/
 built/*
-lib
 
 # --------- MAC OS ---------
 .DS_Store
