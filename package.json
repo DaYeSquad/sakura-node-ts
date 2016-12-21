@@ -1,6 +1,6 @@
 {
   "name": "sakura",
-  "version": "2.1.9",
+  "version": "2.1.10",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
@@ -40,7 +40,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-typescript": "^3.0.2",
-    "gago-cloud-service": "git+http://gagodata:gagobigdata77809@git.azure.gagogroup.cn/sakura/cloud-service.git#1.1.0",
+    "gago-cloud-service": "git+http://gagodata:gagobigdata77809@git.azure.gagogroup.cn/sakura/cloud-service.git#1.1.1",
     "merge2": "^1.0.2",
     "mocha": "^3.0.2",
     "run-sequence": "^1.2.2",
