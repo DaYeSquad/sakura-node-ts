@@ -1,3 +1,8 @@
+# 2.1.8 (2016.12.21.)
+
+* **SuccessResponse 添加toJSON**
+* **export 了 ErrorResponse**
+
 # 2.1.7 (2016.12.20.)
 
 * **export 了 SqlContext**
