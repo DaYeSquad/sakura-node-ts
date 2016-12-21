@@ -12,7 +12,7 @@ var runSequence = require('run-sequence');
 /**
  * $ gulp ts
  *
- * Compile TypeScript files into 'dist/'.
+ * Compile TypeScript files into './lib'.
  */
 var tsProject = ts.createProject('./tsconfig.json');
 gulp.task('ts', function() {
