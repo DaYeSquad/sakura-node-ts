@@ -123,6 +123,7 @@ export class SqlGenerator {
       case SqlType.NUMERIC: return 'NUMERIC';
       case SqlType.DATE: return 'DATE';
       case SqlType.TEXT: return 'TEXT';
+      case SqlType.BOOLEAN: return 'BOOLEAN';
       default: throw Error(`Undefined SqlType ${sqlType}`);
     }
   }
