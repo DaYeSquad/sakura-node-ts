@@ -1,3 +1,7 @@
+# 2.1.12 (2016.12.29.)
+  
+* **验证 toStr 传入undefined**
+
 # 2.1.11 (2016.12.26.)
 
 * **修改SqlGenerator sqlTypeToCreateSyntaxString_ 添加BOOLEAN**
