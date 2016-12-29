@@ -65,6 +65,9 @@ export class Validator {
    * @returns {String} Result, should be string type if success.
    */
   toStr(param: any, reason: string = 'param invalid'): string {
+    if (param === undefined) {
+      this.errors.push(new ApiError(reason, 'Bad Request'));
+    }
     return String(param);
   }
 
