@@ -1,3 +1,8 @@
+# 2.1.11 (2016.12.26.)
+
+* **修改SqlGenerator sqlTypeToCreateSyntaxString_ 添加BOOLEAN**
+
+
 # 2.1.10 (2016.12.22.)
 
 * **修正了 @蒋伟 提交的 SuccessResponse 并为其增加了单元测试。**
