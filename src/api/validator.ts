@@ -2,6 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {ApiError} from './apierror';
+import {isBoolean} from 'util';
 
 /**
  * Utility to validate input parameters and used by Controller.
@@ -104,7 +105,7 @@ export class Validator {
    * Casts any type to boolean.
    */
   toBoolean(param: any, reason: string = 'param invalid'): Boolean {
-    if (param === typeof Boolean) {
+    if (isBoolean(param)) {
       return Boolean(param);
     } else {
       this.errors.push(new ApiError(reason, 'Bad Request'));
