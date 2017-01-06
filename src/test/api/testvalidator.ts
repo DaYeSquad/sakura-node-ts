@@ -6,7 +6,7 @@ import {Validator} from '../../api/validator';
 
 describe('Validator', () => {
   it('Test Validator toStr undefined', () => {
-    let a;
+    let a: any = undefined;
     let validator: Validator = new Validator();
     validator.toStr(a, 'invalid a');
     chai.expect(validator.hasErrors()).to.equal(true);
