@@ -19,5 +19,3 @@ send_change_log:
     - npm install --registry https://registry.npm.taobao.org
     - gulp
     - node ./lib/js/src/tools/sendchangelog.js
-
-
