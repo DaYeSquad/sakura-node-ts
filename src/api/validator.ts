@@ -104,7 +104,7 @@ export class Validator {
   /**
    * Casts any type to boolean.
    */
-  toBoolean(param: any, reason: string = 'param invalid'): Boolean {
+  toBoolean(param: any, reason: string = 'param invalid'): boolean {
     if (isBoolean(param)) {
       return Boolean(param);
     } else {
