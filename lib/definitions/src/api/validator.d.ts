@@ -7,6 +7,6 @@ export declare class Validator {
     toStr(param: any, reason?: string): string;
     toDate(param: any, reason?: string): Date;
     toUnixTimestamp(param: any, reason?: string): number;
-    toBoolean(param: any, reason?: string): Boolean;
+    toBoolean(param: any, reason?: string): boolean;
     assert(cond: boolean, reason: string): void;
 }

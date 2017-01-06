@@ -2,6 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {ApiError} from './apierror';
+import {isBoolean} from 'util';
 
 /**
  * Utility to validate input parameters and used by Controller.
@@ -65,6 +66,9 @@ export class Validator {
    * @returns {String} Result, should be string type if success.
    */
   toStr(param: any, reason: string = 'param invalid'): string {
+    if (param === undefined) {
+      this.errors.push(new ApiError(reason, 'Bad Request'));
+    }
     return String(param);
   }
 
@@ -76,7 +80,7 @@ export class Validator {
    */
   toDate(param: any, reason: string = 'param invalid'): Date {
     let result: any = new Date(param);
-    if (!result) {
+    if (!result || result.toString() === 'Invalid Date') {
       this.errors.push(new ApiError(reason, 'Bad Request'));
     }
     return result;
@@ -100,8 +104,8 @@ export class Validator {
   /**
    * Casts any type to boolean.
    */
-  toBoolean(param: any, reason: string = 'param invalid'): Boolean {
-    if (param === typeof Boolean) {
+  toBoolean(param: any, reason: string = 'param invalid'): boolean {
+    if (isBoolean(param)) {
       return Boolean(param);
     } else {
       this.errors.push(new ApiError(reason, 'Bad Request'));
