@@ -1,15 +1,15 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {sqlContext} from '../util/sqlcontext';
-import {SqlType} from '../base/model';
-import {SqlQuery} from './sqlquery';
+import {sqlContext} from "../util/sqlcontext";
+import {SqlType} from "../base/model";
+import {SqlQuery} from "./sqlquery";
 
 /**
  * Insert or replace.
  *
  * Usage:
- *  const sql: string = new ReplaceQuery().fromClass(WeatherCacheInfo).where('xx=xx').set(x, y).set(z, c).build();
+ *  const sql: string = new ReplaceQuery().fromClass(WeatherCacheInfo).where("xx=xx").set(x, y).set(z, c).build();
  *  PgClient.getInstance().query(sql);
  */
 export class ReplaceQuery {
@@ -26,7 +26,7 @@ export class ReplaceQuery {
   }
 
   where(...args: any[]): this {
-    this.where_ = args.join(' AND ');
+    this.where_ = args.join(" AND ");
     return this;
   }
 
@@ -48,9 +48,9 @@ export class ReplaceQuery {
       kvsAry.push(`${kv.key}=${value}`);
     });
 
-    let keys: string = keysAry.join(',');
-    let values: string = valuesAry.join(',');
-    let kvs: string = kvsAry.join(',');
+    let keys: string = keysAry.join(",");
+    let values: string = valuesAry.join(",");
+    let kvs: string = kvsAry.join(",");
 
     return `UPDATE ${this.table_} SET ${kvs} WHERE ${this.where_};
             INSERT INTO ${this.table_} (${keys})

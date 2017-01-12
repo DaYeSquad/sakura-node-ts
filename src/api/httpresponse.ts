@@ -1,7 +1,7 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {ApiError} from './apierror';
+import {ApiError} from "./apierror";
 
 /**
  * Represents HTTP response.
@@ -56,7 +56,7 @@ export class ErrorResponse extends HttpResponse {
  */
 export class BadRequestResponse extends HttpResponse {
   errors: Array<ApiError>;
-  message: string = 'Bad Request';
+  message: string = "Bad Request";
 
   constructor(errors: Array<ApiError>) {
     super(400);
@@ -78,7 +78,7 @@ export class BadRequestResponse extends HttpResponse {
  * Represents not found (:404) response.
  */
 export class NotFoundResponse extends HttpResponse {
-  message: string = 'Not Found';
+  message: string = "Not Found";
 
   constructor(message: string) {
     super(404);
@@ -120,7 +120,7 @@ export class RegisterErrorResponse extends HttpResponse {
  * Represents auth (login) error response.
  */
 export class AuthErrorResponse extends HttpResponse {
-  message: string = '';
+  message: string = "";
 
   constructor(message: string, code: number = 400) {
     super(code);
@@ -129,11 +129,11 @@ export class AuthErrorResponse extends HttpResponse {
   }
 
   static missingAuthToken(): AuthErrorResponse {
-    return new AuthErrorResponse('Missing authorization token', 401);
+    return new AuthErrorResponse("Missing authorization token", 401);
   }
 
   static authRequired(): AuthErrorResponse {
-    return new AuthErrorResponse('Authorization required', 401);
+    return new AuthErrorResponse("Authorization required", 401);
   }
 
   toJSON(): any {

@@ -1,8 +1,8 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {Model, SqlType, SqlFlag, SqlDefaultValue} from './model';
-import {sqlContext} from '../util/sqlcontext';
+import {Model, SqlType, SqlFlag, SqlDefaultValue} from "./model";
+import {sqlContext} from "../util/sqlcontext";
 
 /**
  * Class decorator for defining a table name, the class should inherits from {@link Model}.

@@ -3,4 +3,4 @@
 BIN_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR="$(dirname "$BIN_DIR")"
 
-tslint -c ""${ROOT_DIR}"/tslint.json" ""${ROOT_DIR}"/src/**/*.ts"
+./node_modules/.bin/tslint -c ./node_modules/tslint-sakura-contrib/tslint.json src/**/*.ts

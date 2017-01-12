@@ -2,27 +2,27 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
 import {
   Operation, AddModelOperation, AddColumnOperation, DropColumnOperation,
   RenameColumnOperation, InitCommentOperation
-} from './operation';
-import {Field} from './column';
-import {PgClient} from '../database/pgclient';
-import {SelectQuery} from '../sqlquery/selectquery';
-import {Version} from './version';
-import {PgQueryResult} from '../base/typedefines';
-import {InsertQuery} from '../sqlquery/insertquery';
-import {sqlGenerator} from '../tools/sqlgenerator';
+} from "./operation";
+import {Field} from "./column";
+import {PgClient} from "../database/pgclient";
+import {SelectQuery} from "../sqlquery/selectquery";
+import {Version} from "./version";
+import {PgQueryResult} from "../base/typedefines";
+import {InsertQuery} from "../sqlquery/insertquery";
+import {sqlGenerator} from "../tools/sqlgenerator";
 
 /**
  * Migration tool for PostgreSQL.
  *
  * Usage:
  *  let migration = new Migration();
- *  migration.addModel(User); // Adds User's table.
+ *  migration.addModel(User); // Adds User"s table.
  *  migration.migrate(); // migrate database.
  */
 export class Migration {
@@ -43,7 +43,7 @@ export class Migration {
   }
 
   /**
-   * Adds model's table.
+   * Adds model"s table.
    * @param cls Class extends model.
    */
   addModel(cls: Function): void {
@@ -107,7 +107,7 @@ export class Migration {
     const sql: string = new SelectQuery().fromClass(Version).select().build();
     const result: PgQueryResult = await this.pgInstance_.query(sql);
     if (result.rows.length > 0) {
-      return result.rows[0]['version'];
+      return result.rows[0]["version"];
     } else {
       return undefined;
     }
@@ -118,14 +118,14 @@ export class Migration {
    * @returns {string} SQL.
    */
   preview(): string {
-    let sql: string = '';
+    let sql: string = "";
 
     for (let i = 0; i < this.operations_.length; i++) {
       let operation: Operation = this.operations_[i];
       sql += operation.sql();
 
       if (i !== this.operations_.length - 1) {
-        sql += '\n';
+        sql += "\n";
       }
     }
 
@@ -147,7 +147,7 @@ export class Migration {
   async migrate(setupEnv: boolean = false): Promise<void> {
     // init PG
     if (this.pgInstance_ === undefined) {
-      throw new Error('UNDEFINED_PG_CLIENT_SHARED_INSTANCE');
+      throw new Error("UNDEFINED_PG_CLIENT_SHARED_INSTANCE");
     }
 
     // check version
@@ -172,7 +172,7 @@ export class Migration {
 
     // create necessary functions
     if (setupEnv) {
-      let setupEnvSql: string = fs.readFileSync(path.resolve('sql/setup_pg.sql'), 'utf8') + '\n';
+      let setupEnvSql: string = fs.readFileSync(path.resolve("sql/setup_pg.sql"), "utf8") + "\n";
       sqls.push(setupEnvSql);
     }
 

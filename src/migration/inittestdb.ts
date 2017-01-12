@@ -1,8 +1,8 @@
 // Copyright (c) 2016 (jw872505975@gmail.com). All rights reserved.
 
-import * as fs from 'fs';
-import {Operation, AddModelOperation} from './operation';
-import {sqlContext} from '../util/sqlcontext';
+import * as fs from "fs";
+import {Operation, AddModelOperation} from "./operation";
+import {sqlContext} from "../util/sqlcontext";
 
 
 export class InitTestDb {
@@ -18,20 +18,20 @@ export class InitTestDb {
   }
 
   preview(): string {
-    let sql: string = '';
+    let sql: string = "";
 
     for (let i = 0; i < this.operations_.length; i++) {
       let operation: Operation = this.operations_[i];
       sql += operation.sql();
 
       if (i !== this.operations_.length - 1) {
-        sql += '\n';
+        sql += "\n";
       }
     }
     return sql;
   }
 
-  save (path: string = 'sql/test/initTestDb.sql'): void {
+  save (path: string = "sql/test/initTestDb.sql"): void {
     const sql: string = this.preview();
     fs.writeFile(path, sql);
 

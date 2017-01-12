@@ -1,8 +1,8 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {SqlField, SqlFlag, Model} from '../base/model';
-import {sqlContext} from '../util/sqlcontext';
+import {SqlField, SqlFlag, Model} from "../base/model";
+import {sqlContext} from "../util/sqlcontext";
 
 
 /**
@@ -12,7 +12,7 @@ export class SelectQuery {
   private table_: string;
   private where_: string;
   private selectFields_: string[];
-  private orderBys_: {sort: string, order: 'ASC'|'DESC'}[] = [];
+  private orderBys_: {sort: string, order: "ASC"|"DESC"}[] = [];
   private limit_: number;
   private offset_: number;
   private joinUsings_: string[] = [];
@@ -46,11 +46,11 @@ export class SelectQuery {
   }
 
   where(...args: any[]): this {
-    this.where_ = args.join(' AND ');
+    this.where_ = args.join(" AND ");
     return this;
   }
 
-  orderBy(sort: string, order: 'ASC' | 'DESC' = 'ASC'): this {
+  orderBy(sort: string, order: "ASC" | "DESC" = "ASC"): this {
     this.orderBys_.push({sort: sort, order: order});
     return this;
   }
@@ -66,9 +66,9 @@ export class SelectQuery {
   }
 
   build(): string {
-    let fields: string = '*';
+    let fields: string = "*";
     if (this.selectFields_.length > 0) {
-      fields = this.selectFields_.join(',');
+      fields = this.selectFields_.join(",");
     }
 
     let sql: string = `SELECT ${fields} FROM ${this.table_}`;
@@ -90,7 +90,7 @@ export class SelectQuery {
       for (let orderBy of this.orderBys_) {
         orderBySqls.push(`${orderBy.sort} ${orderBy.order}`);
       }
-      let orderBySql = orderBySqls.join(',');
+      let orderBySql = orderBySqls.join(",");
       sql = `${sql} ORDER BY ${orderBySql}`;
     }
 

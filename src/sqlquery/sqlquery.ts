@@ -1,9 +1,9 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {Model, SqlField, SqlType, SqlFlag} from '../base/model';
-import {sqlContext} from '../util/sqlcontext';
-import {DateFormatter, DateFormtOption} from '../util/dateformatter';
+import {Model, SqlField, SqlType, SqlFlag} from "../base/model";
+import {sqlContext} from "../util/sqlcontext";
+import {DateFormatter, DateFormtOption} from "../util/dateformatter";
 
 export interface ModelSqlInfo {
   primaryKey: string;
@@ -22,7 +22,7 @@ export class SqlQuery {
    * @returns {ModelSqlInfo} Result information.
    */
   static getSqlInfoFromDefinition(model: Model): ModelSqlInfo {
-    let modelInfo: ModelSqlInfo = {primaryKey: '', keys: [], values: []};
+    let modelInfo: ModelSqlInfo = {primaryKey: "", keys: [], values: []};
 
     const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(model.constructor);
 
@@ -48,17 +48,17 @@ export class SqlQuery {
 
   static valueAsStringByType(value: any, sqlType: SqlType): string {
     if (sqlType === SqlType.VARCHAR_255 || sqlType === SqlType.TEXT || sqlType === SqlType.VARCHAR_1024) {
-      value = `'${value}'`;
+      value = `"${value}"`;
     } else if (sqlType === SqlType.DATE) {
-      let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, '-');
-      value = `'${valueAsDateInSql}'::date`;
+      let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
+      value = `"${valueAsDateInSql}"::date`;
     } else if (sqlType === SqlType.TIMESTAMP) {
       value = `to_timestamp(${value})`;
     } else if (sqlType === SqlType.JSON) {
-      if (typeof value === 'string') {
-        value = `'${value}'::json`;
+      if (typeof value === "string") {
+        value = `"${value}"::json`;
       } else {
-        value = `'${JSON.stringify(value)}'::json`;
+        value = `"${JSON.stringify(value)}"::json`;
       }
     } else if (sqlType === SqlType.INT) {
       value = String(`${value}`);

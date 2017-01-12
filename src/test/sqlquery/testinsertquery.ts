@@ -1,22 +1,22 @@
-import * as chai from 'chai';
+import * as chai from "chai";
 
-import {InsertQuery} from '../../sqlquery/insertquery';
-import {SqlType, Model, SqlFlag} from '../../base/model';
-import {TableName, Column} from '../../base/decorator';
+import {InsertQuery} from "../../sqlquery/insertquery";
+import {SqlType, Model, SqlFlag} from "../../base/model";
+import {TableName, Column} from "../../base/decorator";
 
-@TableName('users')
+@TableName("users")
 class User extends Model {
 
-  @Column('uid', SqlType.INT, SqlFlag.PRIMARY_KEY)
+  @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY)
   uid: number;
 
-  @Column('username', SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
+  @Column("username", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
   username: string;
 
-  @Column('display_name', SqlType.VARCHAR_255, SqlFlag.NULLABLE)
+  @Column("display_name", SqlType.VARCHAR_255, SqlFlag.NULLABLE)
   displayName: string;
 
-  @Column('age', SqlType.INT, SqlFlag.NULLABLE)
+  @Column("age", SqlType.INT, SqlFlag.NULLABLE)
   age: number;
 
   initAsNewUser(username: string,  displayName?: string, age?: number) {
@@ -26,11 +26,11 @@ class User extends Model {
   }
 }
 
-describe('Test insert query', () => {
-  it('insert语句过滤属性为空的sql', () => {
+describe("Test insert query", () => {
+  it("insert语句过滤属性为空的sql", () => {
     let user: User = new User();
-    user.initAsNewUser('pig');
+    user.initAsNewUser("pig");
     const sql: string = new InsertQuery().fromModel(user).build();
-    chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('pig') RETURNING uid`);
+    chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ("pig") RETURNING uid`);
   });
 });

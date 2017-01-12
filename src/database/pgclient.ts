@@ -1,9 +1,9 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import * as pg from 'pg';
-import {PgClientConfig} from './pgclientconfig';
-import {PgQueryResult} from '../base/typedefines';
+import * as pg from "pg";
+import {PgClientConfig} from "./pgclientconfig";
+import {PgQueryResult} from "../base/typedefines";
 
 /**
  * PostgresSQL client using pg.Pool.
@@ -68,11 +68,11 @@ export class PgClient {
    * @returns {pg.QueryResult} Result.
    */
   async queryInTransaction(sqls: string[]): Promise<PgQueryResult> {
-    let bigSql: string = 'BEGIN;';
+    let bigSql: string = "BEGIN;";
     for (let sql of sqls) {
       bigSql += sql;
     }
-    bigSql += 'COMMIT;';
+    bigSql += "COMMIT;";
 
     return await this.query(bigSql);
   }
