@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/DaYeSquad/sakura-node-ts.svg?branch=master)](https://travis-ci.org/DaYeSquad/sakura-node-ts)
+
 # OVERVIEW
 
 sakura-node-ts is a utility project to provide some very basic tool for developing with PostgreSQL and some common middlewares.
