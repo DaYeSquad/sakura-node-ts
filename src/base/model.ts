@@ -64,6 +64,7 @@ export enum SqlType {
   VARCHAR_255, // VARCHAR(255)
   VARCHAR_1024, // VARCHAR(2014)
   INT,
+  BIGINT,
   DATE,
   TIMESTAMP,
   JSON,

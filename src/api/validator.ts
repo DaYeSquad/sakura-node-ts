@@ -37,7 +37,7 @@ export class Validator {
    * @param {*} param number array as string format like: "[1,2,3]"
    * @param {string} [reason="param invalid"]
    * @returns {number}
-   * 
+   *
    * @memberOf Validator
    */
   toNumberArray(param: string, reason: string = "param invalid"): number[] {

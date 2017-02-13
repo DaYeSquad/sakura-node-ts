@@ -60,7 +60,7 @@ export class SqlQuery {
       } else {
         value = `"${JSON.stringify(value)}"::json`;
       }
-    } else if (sqlType === SqlType.INT) {
+    } else if (sqlType === SqlType.INT || sqlType === SqlType.BIGINT) {
       value = String(`${value}`);
     } else {
       console.log(`SqlType is ${sqlType}, value is ${value}`);
