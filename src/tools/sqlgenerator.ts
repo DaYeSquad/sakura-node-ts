@@ -116,6 +116,7 @@ export class SqlGenerator {
   private sqlTypeToCreateSyntaxString_(sqlType: SqlType): string {
     switch (sqlType) {
       case SqlType.INT: return "INTEGER";
+      case SqlType.BIGINT: return "BIGINT";
       case SqlType.VARCHAR_1024: return "VARCHAR(1024)";
       case SqlType.VARCHAR_255: return "VARCHAR(255)";
       case SqlType.TIMESTAMP: return "TIMESTAMP";
