@@ -47,9 +47,9 @@ describe("Test UpdateQuery (issues)", () => {
   stock.init(19900106, "SZ000333", 0, 0, 0, 0, 0);
 
   it("Stock update sql should include carryingCost and dilutedCost while they are equal to 0", () => {
-    const sql: string = new UpdateQuery().fromModel(stock).where(`stock_id="${stock.stockId}"`, `uid=${stock.uid}`).build();
+    const sql: string = new UpdateQuery().fromModel(stock).where(`stock_id='${stock.stockId}'`, `uid=${stock.uid}`).build();
 
-    const expectSql: string = `UPDATE stocks SET stock_id="SZ000333",uid=19900106,diluted_cost=0,carrying_cost=0,sizing=0,expect_out=0,expect_in=0 WHERE stock_id="SZ000333" AND uid=19900106;`;
+    const expectSql: string = `UPDATE stocks SET stock_id='SZ000333',uid=19900106,diluted_cost=0,carrying_cost=0,sizing=0,expect_out=0,expect_in=0 WHERE stock_id='SZ000333' AND uid=19900106;`;
 
     chai.expect(sql).to.equal(expectSql);
   });

@@ -48,17 +48,17 @@ export class SqlQuery {
 
   static valueAsStringByType(value: any, sqlType: SqlType): string {
     if (sqlType === SqlType.VARCHAR_255 || sqlType === SqlType.TEXT || sqlType === SqlType.VARCHAR_1024) {
-      value = `"${value}"`;
+      value = `'${value}'`;
     } else if (sqlType === SqlType.DATE) {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
-      value = `"${valueAsDateInSql}"::date`;
+      value = `'${valueAsDateInSql}'::date`;
     } else if (sqlType === SqlType.TIMESTAMP) {
       value = `to_timestamp(${value})`;
     } else if (sqlType === SqlType.JSON) {
       if (typeof value === "string") {
-        value = `"${value}"::json`;
+        value = `'${value}'::json`;
       } else {
-        value = `"${JSON.stringify(value)}"::json`;
+        value = `'${JSON.stringify(value)}'::json`;
       }
     } else if (sqlType === SqlType.INT || sqlType === SqlType.BIGINT) {
       value = String(`${value}`);

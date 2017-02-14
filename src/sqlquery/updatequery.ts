@@ -63,10 +63,10 @@ export class UpdateQuery {
         let value: any = this.model_[sqlField.name];
         if (value !== undefined) {
           if (sqlField.type === SqlType.VARCHAR_255 || sqlField.type === SqlType.TEXT || sqlField.type === SqlType.VARCHAR_1024) {
-            value = `"${value}"`;
+            value = `'${value}'`;
           } else if (sqlField.type === SqlType.DATE) {
             let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
-            value = `"${valueAsDateInSql}"::date`;
+            value = `'${valueAsDateInSql}'::date`;
           } else if (sqlField.type === SqlType.TIMESTAMP) {
             if (isNumber(value)) {
               value = `to_timestamp(${value})`;
@@ -78,7 +78,7 @@ export class UpdateQuery {
             if (typeof value === "string") {
               value = `${value}::json`;
             } else {
-              value = `"${JSON.stringify(value)}"::json`;
+              value = `'${JSON.stringify(value)}'::json`;
             }
           }
           updatesAry.push(`${key}=${value}`);
@@ -103,7 +103,7 @@ export class UpdateQuery {
       let updatesAry: string[] = [];
       this.updates_.forEach((update: {key: string, value: any}) => {
         if (typeof(update.value) === "string") {
-          updatesAry.push(`${update.key}="${update.value}"`);
+          updatesAry.push(`${update.key}='${update.value}'`);
         } else {
           updatesAry.push(`${update.key}=${update.value}`);
         }
