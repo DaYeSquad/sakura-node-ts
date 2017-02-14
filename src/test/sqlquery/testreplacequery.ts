@@ -41,14 +41,14 @@ describe("ReplaceQuery", () => {
     const sql: string =
       new ReplaceQuery()
         .fromClass(WeatherCacheInfo)
-        .where(`uri="${weatherCache.uri}"`, `alias="${weatherCache.alias}"`)
+        .where(`uri='${weatherCache.uri}'`, `alias='${weatherCache.alias}'`)
         .set("uri", weatherCache.uri, SqlType.VARCHAR_255)
         .set("alias", weatherCache.alias, SqlType.VARCHAR_255)
         .set("expires_at", weatherCache.expiresAt, SqlType.TIMESTAMP)
         .build();
-    chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri="forecast_temperatures",alias="shuye_dikuai_1",expires_at=to_timestamp(1476842006) WHERE uri="forecast_temperatures" AND alias="shuye_dikuai_1";
+    chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',alias='shuye_dikuai_1',expires_at=to_timestamp(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
             INSERT INTO _weather_caches (uri,alias,expires_at)
-            SELECT "forecast_temperatures","shuye_dikuai_1",to_timestamp(1476842006)
-            WHERE NOT EXISTS (SELECT 1 FROM _weather_caches WHERE uri="forecast_temperatures" AND alias="shuye_dikuai_1");`);
+            SELECT 'forecast_temperatures','shuye_dikuai_1',to_timestamp(1476842006)
+            WHERE NOT EXISTS (SELECT 1 FROM _weather_caches WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1');`);
   });
 });
