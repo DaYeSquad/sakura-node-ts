@@ -31,6 +31,6 @@ describe("Test insert query", () => {
     let user: User = new User();
     user.initAsNewUser("pig");
     const sql: string = new InsertQuery().fromModel(user).build();
-    chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ("pig") RETURNING uid`);
+    chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('pig') RETURNING uid`);
   });
 });
