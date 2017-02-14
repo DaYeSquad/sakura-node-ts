@@ -1,13 +1,14 @@
 {
   "name": "sakura-node",
-  "version": "2.1.16",
+  "version": "2.1.17",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
   "scripts": {
     "pretest": "rm -rf ./lib; gulp ts; sh ./bin/tslint.sh;",
     "test": "mocha ./lib --recursive",
-    "posttest": "rm -rf ./lib"
+    "posttest": "rm -rf ./lib",
+    "postpublish": "rm -rf ./lib; gulp ts; node ./lib/js/src/tools/sendchangelog.js; rm -rf ./lib;"
   },
   "repository": {
     "type": "git",
