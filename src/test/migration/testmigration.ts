@@ -18,8 +18,8 @@ meta JSON,
 created_at TIMESTAMP,
 updated_at TIMESTAMP
 );
-COMMENT ON COLUMN users.uid IS "主键";
-COMMENT ON COLUMN users.display_name IS "真实姓名";
+COMMENT ON COLUMN users.uid IS '主键';
+COMMENT ON COLUMN users.display_name IS '真实姓名';
 `;
 
     let migration: Migration = new Migration(1, undefined);

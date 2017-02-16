@@ -101,7 +101,7 @@ export class SqlGenerator {
     const sqlFields: SqlField[] = sqlContext.findSqlFields(cls);
     for (let sqlField of sqlFields){
       if (sqlField.comment) {
-        sql += `COMMENT ON COLUMN ${tableName}.${sqlField.columnName} IS "${sqlField.comment}";\n`;
+        sql += `COMMENT ON COLUMN ${tableName}.${sqlField.columnName} IS '${sqlField.comment}';\n`;
       }
     }
 
