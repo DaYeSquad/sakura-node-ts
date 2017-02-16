@@ -5,3 +5,6 @@ node_js:
 
 script:
   - sh ./bin/tslint.sh
+
+notifications:
+  slack: gagobigdata:674GLiXxbWRk8BXDTMQ076Ud
