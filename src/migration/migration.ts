@@ -26,11 +26,11 @@ import {sqlGenerator} from "../tools/sqlgenerator";
  *  migration.migrate(); // migrate database.
  */
 export class Migration {
-  private version_: number = 0;
-  private pgInstance_: PgClient = undefined;
+  protected version_: number = 0;
+  protected pgInstance_: PgClient = undefined;
 
-  private operations_: Array<Operation> = [];
-  private dependencies_: Array<Migration> = [];
+  protected operations_: Array<Operation> = [];
+  protected dependencies_: Array<Migration> = [];
 
   /**
    * Init with current migration version, be sure to use INTEGER value.
