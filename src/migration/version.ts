@@ -11,8 +11,11 @@ import {Column, TableName} from "../base/decorator";
 export class Version extends Model {
 
   @Column("id", SqlType.INT, SqlFlag.PRIMARY_KEY, "唯一编码", SqlDefaultValue.SERIAL())
-  private id_: number;
+  id: number;
 
   @Column("version", SqlType.INT, SqlFlag.NOT_NULL, "版本号")
   version: number;
+
+  @Column("app_name", SqlType.VARCHAR_255, SqlFlag.NULLABLE, "应用名称")
+  appName: string;
 }
