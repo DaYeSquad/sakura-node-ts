@@ -79,7 +79,7 @@ export class Validator {
    * @returns {String} Result, should be date type if success.
    */
   toDate(param: any, reason: string = "param invalid"): Date {
-    let result: any = new Date(param);
+    let result: any = new Date(param.toString());
     if (!result || result.toString() === "Invalid Date") {
       this.errors.push(new ApiError(reason, "Bad Request"));
     }

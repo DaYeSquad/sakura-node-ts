@@ -20,6 +20,14 @@ describe("Validator", () => {
     chai.expect(validator.hasErrors()).to.equal(false);
   });
 
+  it("Test Validator toDate 正确", () => {
+    let a: number = 2017;
+    let validator: Validator = new Validator();
+    let date: Date = validator.toDate(a, "invalid a");
+    chai.expect(date.getFullYear()).to.equal(2017);
+    chai.expect(validator.hasErrors()).to.equal(false);
+  });
+
   it("Test Validator toDate 错误", () => {
     let a: string = "12qw";
     let validator: Validator = new Validator();
