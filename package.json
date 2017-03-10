@@ -1,6 +1,6 @@
 {
   "name": "sakura-node",
-  "version": "2.1.22",
+  "version": "2.1.23",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
