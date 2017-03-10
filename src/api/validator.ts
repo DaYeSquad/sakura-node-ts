@@ -3,6 +3,7 @@
 
 import {ApiError} from "./apierror";
 import {isBoolean} from "util";
+import * as moment from "moment";
 
 /**
  * Utility to validate input parameters and used by Controller.
@@ -79,11 +80,12 @@ export class Validator {
    * @returns {String} Result, should be date type if success.
    */
   toDate(param: any, reason: string = "param invalid"): Date {
-    let result: any = new Date(param.toString());
-    if (!result || result.toString() === "Invalid Date") {
+    let date: any = new Date(param.toString());
+    if (!date || date.toString() === "Invalid Date") {
       this.errors.push(new ApiError(reason, "Bad Request"));
     }
-    return result;
+    let timestamp: number = Number(moment(param.toString()).format("X"));
+    return new Date(timestamp * 1000);
   }
 
   /**
