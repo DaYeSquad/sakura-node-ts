@@ -99,7 +99,6 @@
 * **添加了 SqlGenerator:** SqlGenerator 可以指定 Model 自动生成创建表的 sql。
 * **添加了 Validator.toNumberArray 方法:** 用于替代之前的 eval()。
 
-  
 
 # 1.1 (2016.11.30.)
 
@@ -108,7 +107,6 @@
 * **增加了 lint:** 引入 tslint 来检查 TypeScript Code Style。
 * **增加了 join 的方法:** 为 SqlQuery 引入了 join 方法。
   
-
 
 # 1.0 (2016.11.4.)
 
