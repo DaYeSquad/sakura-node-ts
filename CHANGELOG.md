@@ -1,7 +1,7 @@
 
 # 2.1.24 (2017.3.12.)
 
-* **更新validator中toDate的实现，传递参数必须满足YYYY-MM-DD格式，并返回标准时**
+* **更新validator中toDate的实现，传递参数必须满足YYYY-MM-DD 或 YYYY-MM 或 YYYY格式，并返回标准时**
 
 
 # 2.1.23 (2017.3.10.)

@@ -81,18 +81,42 @@ export class Validator {
    * @returns {String} Result, should be date type if success.
    */
   toDate(param: any, reason: string = "param invalid"): Date {
-    let dateString: string = param.toString();
+    let dateStr: string = param.toString();
+    let date: any = new Date(dateStr);
 
-    let dataFormatString: string = `${dateString}T00:00:00+00`;
-    let mo = moment(dataFormatString);
-    if (mo.isValid()) {
-      let timestamp: number = Number(mo.format("X"));
-      console.log(new Date(timestamp * 1000));
-      return new Date(timestamp * 1000);
-    }
-    else {
+    if (!date || date.toString() === "Invalid Date") {
       this.errors.push(new ApiError(reason, "Bad Request"));
+      return;
     }
+    let strArr: string [] = param.substring(0, dateStr.length).split("-");
+      for (let str of strArr) {
+        if (isNaN(Number(str)) || Number(str) === 0) {
+          this.errors.push(new ApiError(reason, "Bad Request"));
+          return;
+        }
+      }
+      let yearString: string = "";
+      let monthString: string = "";
+      let dateString: string = "";
+      if (strArr.length === 1) {
+        yearString = strArr[0];
+        monthString = "01";
+        dateString = "01";
+      }else if (strArr.length === 2) {
+        yearString = strArr[0];
+        monthString = (Number(strArr[1]) > 9) ? strArr[1] : `0${Number(strArr[1])}`;
+        dateString = "01";
+      }else if (strArr.length === 3) {
+        yearString = strArr[0];
+        monthString = (Number(strArr[1]) > 9) ? strArr[1] : `0${Number(strArr[1])}`;
+        dateString = (Number(strArr[2]) > 9) ? strArr[2] : `0${Number(strArr[2])}`;
+      }
+
+    let dataFormatString: string = `${yearString}-${monthString}-${dateString}T00:00:00+00`;
+    let mo = moment(dataFormatString);
+    let timestamp: number = Number(mo.format("X"));
+    console.log(new Date(timestamp * 1000));
+    return new Date(timestamp * 1000);
   }
 
   /**
