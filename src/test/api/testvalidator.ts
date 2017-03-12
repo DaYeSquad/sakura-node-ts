@@ -20,14 +20,6 @@ describe("Validator", () => {
     chai.expect(validator.hasErrors()).to.equal(false);
   });
 
-  it("Test Validator toDate 正确", () => {
-    let a: number = 2017;
-    let validator: Validator = new Validator();
-    let date: Date = validator.toDate(a, "invalid a");
-    chai.expect(date.getFullYear()).to.equal(2017);
-    chai.expect(validator.hasErrors()).to.equal(false);
-  });
-
   it("Test Validator toDate 错误", () => {
     let a: string = "12qw";
     let validator: Validator = new Validator();
@@ -42,13 +34,16 @@ describe("Validator", () => {
     let c: string = `"2016-1-1"`;
     let d: string = `"2016-01-01"`;
     let validator: Validator = new Validator();
-    let dateA: Date =  validator.toDate(a);
-    let dateB: Date =  validator.toDate(b);
-    let dateC: Date =  validator.toDate(c);
-    let dateD: Date =  validator.toDate(d);
-    chai.expect(dateA.toISOString()).to.equal("2015-12-31T16:00:00.000Z");
-    chai.expect(dateB.toISOString()).to.equal("2015-12-31T16:00:00.000Z");
-    chai.expect(dateC.toISOString()).to.equal("2015-12-31T16:00:00.000Z");
-    chai.expect(dateD.toISOString()).to.equal("2015-12-31T16:00:00.000Z");
+    validator.toDate(a);
+    chai.expect(validator.hasErrors()).to.equal(true);
+    let validatorB: Validator = new Validator();
+    validatorB.toDate(b);
+    chai.expect(validatorB.hasErrors()).to.equal(false);
+    let validatorC: Validator = new Validator();
+    validator.toDate(c);
+    chai.expect(validator.hasErrors()).to.equal(true);
+    let validatorD: Validator = new Validator();
+    validator.toDate(d);
+    chai.expect(validator.hasErrors()).to.equal(true);
   });
 });
