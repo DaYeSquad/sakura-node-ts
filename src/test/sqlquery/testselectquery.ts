@@ -57,8 +57,16 @@ describe("SelectQuery", () => {
 
   it("查询语句 添加groupBy ", () => {
     const sql: string = new SelectQuery().fromClass(User).select().groupBy("username").build();
-    chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY  username`);
+    chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username`);
   });
 
+  it("查询语句 添加groupBy 两个参数 ", () => {
+    const sql: string = new SelectQuery().fromClass(User).select().groupBy("username", "uid").build();
+    chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid`);
+  });
+  it("查询语句 添加groupBy 数组参数 ", () => {
+    const sql: string = new SelectQuery().fromClass(User).select().groupBy(...["username", "uid"]).build();
+    chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid`);
+  });
 });
 
