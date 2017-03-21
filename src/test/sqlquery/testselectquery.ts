@@ -55,5 +55,10 @@ describe("SelectQuery", () => {
     chai.expect(sql).to.equal(`SELECT * FROM users`);
   });
 
+  it("查询语句 添加groupBy ", () => {
+    const sql: string = new SelectQuery().fromClass(User).select().groupBy("username").build();
+    chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY  username`);
+  });
+
 });
 
