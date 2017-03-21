@@ -16,7 +16,7 @@ export class SelectQuery {
   private limit_: number;
   private offset_: number;
   private joinUsings_: string[] = [];
-  private groupBy_: string;
+  private groupBy_: string[] = [];
 
   from(table: string): this {
     this.table_ = table;
@@ -41,8 +41,8 @@ export class SelectQuery {
     return this;
   }
 
-  groupBy(field: string): this {
-    this.groupBy_ = field;
+  groupBy(...fields: string[]): this {
+    this.groupBy_ = fields;
     return this;
   }
 
@@ -91,9 +91,15 @@ export class SelectQuery {
     }
 
     // GROUP
-    if (this.groupBy_) {
-      sql = `${sql} GROUP BY  ${this.groupBy_}`;
-    }
+
+      if (this.groupBy_.length > 0) {
+        let groupBySqls: Array<string> = [];
+        for (let groupBy of this.groupBy_) {
+          groupBySqls.push(`${groupBy}`);
+        }
+        let groupBySql = groupBySqls.join(",");
+        sql = `${sql} GROUP BY ${groupBySql}`;
+      }
 
     // ORDER BY
     if (this.orderBys_.length > 0) {
