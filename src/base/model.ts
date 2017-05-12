@@ -11,6 +11,30 @@ export class Model {
   [key: string]: any; // indexer for TypeScript
 
   /**
+   * Makes multiple  model instance from row queried by Postgres.
+   * @param row Row.
+   * @param typeArray  Class Array of T.
+   * @returns {Array<T>} Model array (subclass of Model) instance.
+   */
+  static multipleModelFromRow<T extends Model>(row: any, typeArray: Array<{ new(): T; }>): Map<string, T> {
+    let result: Map<string, T> = new Map();
+    for (let type of typeArray) {
+      let sqlFields: Array<SqlField> = sqlContext.findSqlFields(type);
+      let instance: T = new type();
+      for (let sqlField of sqlFields) {
+        if (sqlField.type === SqlType.TIMESTAMP) {
+          instance[sqlField.name] = DateUtil.millisecondToTimestamp(new Date(row[sqlField.columnName]).getTime());
+        } else {
+          instance[sqlField.name] = row[sqlField.columnName];
+        }
+      }
+      let tableName: string = sqlContext.findTableByClass(type);
+      result.set(tableName, instance);
+    }
+    return result;
+  }
+
+  /**
    * Makes model instance from row queried by Postgres.
    * @param row Row.
    * @param type Class of T.

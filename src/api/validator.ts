@@ -115,7 +115,6 @@ export class Validator {
     let dataFormatString: string = `${yearString}-${monthString}-${dateString}T00:00:00+00`;
     let mo = moment(dataFormatString);
     let timestamp: number = Number(mo.format("X"));
-    console.log(new Date(timestamp * 1000));
     return new Date(timestamp * 1000);
   }
 
