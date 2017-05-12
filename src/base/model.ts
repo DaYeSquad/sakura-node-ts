@@ -42,6 +42,8 @@ export class Model {
     for (let sqlField of sqlFields) {
       if (sqlField.type === SqlType.TIMESTAMP) {
         instance[sqlField.name] = DateUtil.millisecondToTimestamp(new Date(row[sqlField.columnName]).getTime());
+      } else if (sqlField.type === SqlType.INT || sqlField.type === SqlType.BIGINT || sqlField.type === SqlType.NUMERIC) {
+        instance[sqlField.name] = Number(row[sqlField.columnName]);
       } else {
         instance[sqlField.name] = row[sqlField.columnName];
       }

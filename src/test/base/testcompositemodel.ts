@@ -3,10 +3,8 @@
 
 import * as chai from "chai";
 
-import {SelectQuery} from "../../sqlquery/selectquery";
 import {TableName, Column} from "../../base/decorator";
 import {Model, SqlFlag, SqlType, SqlDefaultValue} from "../../base/model";
-
 
 @TableName("users")
 class User extends Model {
@@ -31,7 +29,7 @@ class User extends Model {
 
 
 @TableName("enterprise_relationships")
-export class EnterpriseRelationships extends Model {
+class EnterpriseRelationships extends Model {
 
   @Column("id", SqlType.INT, SqlFlag.PRIMARY_KEY, "主键ID", SqlDefaultValue.MAKE_RANDOM_ID())
   id: number;
