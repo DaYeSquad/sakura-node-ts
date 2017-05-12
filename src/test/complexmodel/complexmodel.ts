@@ -62,12 +62,16 @@ describe("关联表查询，返回两个model", () => {
     let modelArray: any = [];
     modelArray.push(User);
     modelArray.push(EnterpriseRelationships);
-    let result = Model.multipleModelFromRow(sqlQueryResult, modelArray);
-    let user: User | any = result.get("users");
-    let enterpriseRelationships: EnterpriseRelationships | any = result.get("enterprise_relationships");
-    chai.expect(user["uid"]).to.be.equal(1);
-    chai.expect(enterpriseRelationships["eid"]).to.be.equal(333);
+    let mapResult = Model.multipleModelFromRow(sqlQueryResult, modelArray);
 
+
+    let result: User & EnterpriseRelationships;
+    result = Object.assign((result === undefined ? {} : result), ...mapResult.values());
+
+    chai.expect(result["uid"]).to.be.equal(1);
+    chai.expect(result["eid"]).to.be.equal(333);
+    chai.expect(result["username"]).to.be.equal("蒋伟");
+    chai.expect(result["displayName"]).to.be.equal("蒋小伟");
   });
 
 });
