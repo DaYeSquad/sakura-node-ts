@@ -1,12 +1,12 @@
 {
   "name": "sakura-node",
-  "version": "2.1.25",
+  "version": "2.2.0",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
   "scripts": {
     "pretest": "rm -rf ./lib; gulp ts; sh ./bin/tslint.sh;",
-    "test": "mocha ./lib --recursive",
+    "test": "export NODE_ENV=test; mocha ./lib --recursive; export NODE_ENV=;",
     "posttest": "rm -rf ./lib",
     "prepublish": "rm -rf ./lib; gulp ts;",
     "postpublish": "rm -rf ./lib; gulp ts; node ./lib/js/src/tools/sendchangelog.js; rm -rf ./lib;"
@@ -18,13 +18,13 @@
   "author": "Frank Lin",
   "license": "MIT",
   "dependencies": {
-    "@types/moment": "^2.13.0",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "moment": "^2.17.1",
     "pg": "^6.1.0"
   },
   "devDependencies": {
+    "@types/moment": "^2.13.0",
     "@types/body-parser": "0.0.33",
     "@types/chai": "^3.4.34",
     "@types/connect-timeout": "0.0.31",

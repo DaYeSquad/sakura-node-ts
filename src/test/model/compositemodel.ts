@@ -47,7 +47,6 @@ export class EnterpriseRelationships extends Model {
 }
 
 describe("关联表查询，返回两个model", () => {
-
   it("关联表查询，返回两个model", () => {
     let sqlQueryResult: any = {
       uid: 1,
@@ -59,20 +58,11 @@ describe("关联表查询，返回两个model", () => {
       id: 12312311,
       eid: 333
     };
-    let modelArray: any = [];
-    modelArray.push(User);
-    modelArray.push(EnterpriseRelationships);
-    let mapResult = Model.multipleModelFromRow(sqlQueryResult, modelArray);
 
-
-    let result: User & EnterpriseRelationships;
-    result = Object.assign((result === undefined ? {} : result), ...mapResult.values());
-
-    chai.expect(result["uid"]).to.be.equal(1);
-    chai.expect(result["eid"]).to.be.equal(333);
-    chai.expect(result["username"]).to.be.equal("蒋伟");
-    chai.expect(result["displayName"]).to.be.equal("蒋小伟");
+    const result: User & EnterpriseRelationships = Model.compositeModelFromRow(sqlQueryResult, User, EnterpriseRelationships);
+    chai.expect(result.uid).to.be.equal(1);
+    chai.expect(result.eid).to.be.equal(333);
+    chai.expect(result.username).to.be.equal("蒋伟");
+    chai.expect(result.displayName).to.be.equal("蒋小伟");
   });
-
 });
-

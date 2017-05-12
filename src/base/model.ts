@@ -4,6 +4,8 @@
 import {sqlContext} from "../util/sqlcontext";
 import {DateUtil} from "../util/dateutil";
 
+export type ModelClass<T> = { new(): T; };
+
 /**
  * All model object in trustself should inherit from model and declare its table name and sql definition.
  */
@@ -13,25 +15,19 @@ export class Model {
   /**
    * Makes multiple  model instance from row queried by Postgres.
    * @param row Row.
-   * @param typeArray  Class Array of T.
-   * @returns {Array<T>} Model array (subclass of Model) instance.
+   * @param typeA  Class of model
+   * @param typeB Class of model
+   * @returns {T & U} Model (subclass of Model) instance.
    */
-  static multipleModelFromRow<T extends Model>(row: any, typeArray: Array<{ new(): T; }>): Map<string, T> {
-    let result: Map<string, T> = new Map();
-    for (let type of typeArray) {
-      let sqlFields: Array<SqlField> = sqlContext.findSqlFields(type);
-      let instance: T = new type();
-      for (let sqlField of sqlFields) {
-        if (sqlField.type === SqlType.TIMESTAMP) {
-          instance[sqlField.name] = DateUtil.millisecondToTimestamp(new Date(row[sqlField.columnName]).getTime());
-        } else {
-          instance[sqlField.name] = row[sqlField.columnName];
-        }
-      }
-      let tableName: string = sqlContext.findTableByClass(type);
-      result.set(tableName, instance);
+  static compositeModelFromRow<T extends Model, U extends Model>(row: any, typeA: ModelClass<T>, typeB: ModelClass<U>): T & U;
+  static compositeModelFromRow<T extends Model, U extends Model, V extends Model>(row: any, typeA: ModelClass<T>, typeB: ModelClass<U>, typeC: ModelClass<V>): T & U & V;
+  static compositeModelFromRow(row: any, ...types: { new(): any; }[]): any {
+    let instance: any = {};
+    for (let type of types) {
+      let t: any = Model.modelFromRow(row, type);
+      instance = Object.assign(instance, t);
     }
-    return result;
+    return instance;
   }
 
   /**

@@ -24,8 +24,8 @@ Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint
 
 # RUNTIME
 
-TypeScript 2.0.3
+Node 7.x
 
 
-[npm-image]: https://img.shields.io/badge/npm-v2.1.17-blue.svg
+[npm-image]: https://img.shields.io/badge/npm-v2.2.0-blue.svg
 [npm-url]: https://www.npmjs.com/package/sakura-node
