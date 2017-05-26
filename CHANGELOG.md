@@ -1,6 +1,7 @@
-# 2.2.0 (2017.5.12.)
+# 2.2 (2017.5.12.)
 
 * **新增复合类型返回**: Model.compositeModelFromRow
+* **export HttpResponse**
 
 
 # 2.1.24 (2017.3.12.)

@@ -34,7 +34,7 @@ export { SqlGenerator } from "./src/tools/sqlgenerator";
 // -------------------------------------------------------------------------
 
 export { ApiError } from "./src/api/apierror";
-export { SuccessResponse, BadRequestResponse, NotFoundResponse, RegisterErrorResponse, AuthErrorResponse, ErrorResponse } from "./src/api/httpresponse";
+export { HttpResponse, SuccessResponse, BadRequestResponse, NotFoundResponse, RegisterErrorResponse, AuthErrorResponse, ErrorResponse } from "./src/api/httpresponse";
 export { Validator } from "./src/api/validator";
 
 // -------------------------------------------------------------------------
