@@ -90,9 +90,22 @@ export class SqlGenerator {
    * @param newName New column name.
    * @returns {string} sql
    */
-  generateAlertTableWithRenameColumnAction(cls: Function, oldName: string, newName: string): string {
+  generateAlterTableWithRenameColumnAction(cls: Function, oldName: string, newName: string): string {
     const tableName: string = sqlContext.findTableByClass(cls);
     return `ALTER TABLE ${tableName} RENAME COLUMN ${oldName} TO ${newName};`;
+  }
+
+  /**
+   * Generates ALERT TABLE reset COLUMN type sql.
+   * @param cls Subclass of Model.
+   * @param columnName  column name.
+   * @param newType New column type.
+   * @returns {string} sql
+   */
+  generateAlterTableWithAlterColumnTypeAction(cls: Function, columnName: string, newType: SqlType): string {
+    const tableName: string = sqlContext.findTableByClass(cls);
+    const newTypeInString: string = this.sqlTypeToCreateSyntaxString_(newType);
+    return `ALTER TABLE ${tableName} ALTER ${columnName} TYPE ${newTypeInString};`;
   }
 
   generateColumnCommentAction(cls: Function): string {
