@@ -3,6 +3,7 @@
 
 import {Field} from "./column";
 import {sqlGenerator} from "../tools/sqlgenerator";
+import {SqlType} from "../base/model";
 
 /**
  * Base operation.
@@ -109,6 +110,25 @@ export class RenameColumnOperation extends ColumnOperation {
   }
 
   sql(): string {
-    return sqlGenerator.generateAlertTableWithRenameColumnAction(this.modelClass_, this.oldName_, this.newName_);
+    return sqlGenerator.generateAlterTableWithRenameColumnAction(this.modelClass_, this.oldName_, this.newName_);
+  }
+}
+
+/**
+ * Renset column type operation aka ALTER TABLE ... ALTER TYPE
+ */
+export class ResetColumnTypeOperation extends ColumnOperation {
+  private columnName_: string;
+  private newType_: SqlType;
+
+  constructor(cls: Function, columnName: string, newType: SqlType) {
+    super();
+    this.modelClass_ = cls;
+    this.columnName_ = columnName;
+    this.newType_ = newType;
+  }
+
+  sql(): string {
+    return sqlGenerator.generateAlterTableWithAlterColumnTypeAction(this.modelClass_, this.columnName_, this.newType_);
   }
 }

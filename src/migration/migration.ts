@@ -7,7 +7,7 @@ import * as path from "path";
 
 import {
   Operation, AddModelOperation, AddColumnOperation, DropColumnOperation,
-  RenameColumnOperation, InitCommentOperation
+  RenameColumnOperation, ResetColumnTypeOperation, InitCommentOperation
 } from "./operation";
 import {Field} from "./column";
 import {PgClient} from "../database/pgclient";
@@ -16,6 +16,7 @@ import {Version} from "./version";
 import {PgQueryResult} from "../base/typedefines";
 import {InsertQuery} from "../sqlquery/insertquery";
 import {sqlGenerator} from "../tools/sqlgenerator";
+import {SqlType} from "../base/model";
 
 /**
  * Migration tool for PostgreSQL.
@@ -77,6 +78,16 @@ export class Migration {
    */
   renameColumn(cls: Function, oldName: string, newName: string): void {
     this.operations_.push(new RenameColumnOperation(cls, oldName, newName));
+  }
+
+  /**
+   * Reset column type.
+   * @param cls Class extends model.
+   * @param columnName  column name.
+   * @param newType New column type.
+   */
+  resetColumnType(cls: Function, columnName: string, newType: SqlType): void {
+    this.operations_.push(new ResetColumnTypeOperation(cls, columnName, newType));
   }
 
   /**

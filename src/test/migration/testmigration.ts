@@ -51,4 +51,12 @@ COMMENT ON COLUMN users.display_name IS '真实姓名';
     migration.renameColumn(User, "display_name", "display_name2");
     chai.expect(migration.preview()).to.equal(expectSql);
   });
+
+  it("Test Migration.resetColumnType", () => {
+    const expectSql: string = `ALTER TABLE users ALTER uid TYPE BIGINT;`;
+
+    let migration: Migration = new Migration(1, undefined);
+    migration.resetColumnType(User, "uid", SqlType.BIGINT);
+    chai.expect(migration.preview()).to.equal(expectSql);
+  });
 });
