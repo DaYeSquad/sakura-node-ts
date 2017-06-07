@@ -5,7 +5,7 @@ import * as chai from "chai";
 
 import {Migration} from "../../migration/migration";
 import {SqlType, SqlFlag} from "../../base/model";
-import { User } from "../model/user";
+import {User} from "../model/user";
 
 
 describe("Test Migration", () => {
