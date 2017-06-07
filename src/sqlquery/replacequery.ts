@@ -10,7 +10,7 @@ import {SqlQuery} from "./sqlquery";
  *
  * Usage:
  *  const sql: string = new ReplaceQuery().fromClass(WeatherCacheInfo).where("xx=xx").set(x, y).set(z, c).build();
- *  PgClient.getInstance().query(sql);
+ *  PgDriver.getInstance().query(sql);
  */
 export class ReplaceQuery {
   private table_: string;
