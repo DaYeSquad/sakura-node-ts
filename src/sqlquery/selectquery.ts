@@ -1,22 +1,25 @@
 // Copyright 2016 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {SqlField, SqlFlag, Model} from "../base/model";
 import {sqlContext} from "../util/sqlcontext";
-
+import {Query, QueryType} from "./query";
 
 /**
  * Builds select sql query.
  */
-export class SelectQuery {
-  private table_: string;
-  private where_: string;
-  private selectFields_: string[];
-  private orderBys_: {sort: string, order: "ASC"|"DESC"}[] = [];
-  private limit_: number;
-  private offset_: number;
-  private joinUsings_: string[] = [];
-  private groupBy_: string[] = [];
+export class SelectQuery implements Query {
+  table_: string;
+  where_: string;
+  selectFields_: string[];
+  orderBys_: { sort: string, order: "ASC" | "DESC" }[] = [];
+  limit_: number;
+  offset_: number;
+  joinUsings_: string[] = [];
+  groupBy_: string[] = [];
+
+  type(): QueryType {
+    return QueryType.SELECT;
+  }
 
   from(table: string): this {
     this.table_ = table;
@@ -69,61 +72,5 @@ export class SelectQuery {
   setOffset(offset: number): this {
     this.offset_ = offset;
     return this;
-  }
-
-  build(): string {
-    let fields: string = "*";
-    if (this.selectFields_.length > 0) {
-      fields = this.selectFields_.join(",");
-    }
-
-    let sql: string = `SELECT ${fields} FROM ${this.table_}`;
-
-    // join tableName using(column)
-    if (this.joinUsings_.length > 0) {
-      for (let joinUsing of this.joinUsings_) {
-        sql = `${sql} ${joinUsing} `;
-      }
-    }
-    // WHERE
-    if (this.where_) {
-      sql = `${sql} WHERE ${this.where_}`;
-    }
-
-    // GROUP
-
-      if (this.groupBy_.length > 0) {
-        let groupBySqls: Array<string> = [];
-        for (let groupBy of this.groupBy_) {
-          groupBySqls.push(`${groupBy}`);
-        }
-        let groupBySql = groupBySqls.join(",");
-        sql = `${sql} GROUP BY ${groupBySql}`;
-      }
-
-    // ORDER BY
-    if (this.orderBys_.length > 0) {
-      let orderBySqls: Array<string> = [];
-      for (let orderBy of this.orderBys_) {
-        orderBySqls.push(`${orderBy.sort} ${orderBy.order}`);
-      }
-      let orderBySql = orderBySqls.join(",");
-      sql = `${sql} ORDER BY ${orderBySql}`;
-    }
-
-    // LIMIT
-    if (this.limit_) {
-      sql = `${sql} LIMIT ${this.limit_}`;
-    }
-
-    // OFFSET
-    if (this.offset_) {
-      if (this.offset_ >= 0) {
-        sql = `${sql} OFFSET ${this.offset_}`;
-      }
-
-    }
-
-    return sql;
   }
 }

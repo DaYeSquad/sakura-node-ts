@@ -4,6 +4,7 @@
 import {sqlContext} from "../util/sqlcontext";
 import {SqlType} from "../base/model";
 import {SqlQuery} from "./sqlquery";
+import {Query, QueryType} from "./query";
 
 /**
  * Insert or replace.
@@ -12,10 +13,14 @@ import {SqlQuery} from "./sqlquery";
  *  const sql: string = new ReplaceQuery().fromClass(WeatherCacheInfo).where("xx=xx").set(x, y).set(z, c).build();
  *  PgDriver.getInstance().query(sql);
  */
-export class ReplaceQuery {
-  private table_: string;
-  private where_: string;
-  private newValues_: {key: string, value: any, sqlType: SqlType}[] = [];
+export class ReplaceQuery implements Query {
+  table_: string;
+  where_: string;
+  newValues_: {key: string, value: any, sqlType: SqlType}[] = [];
+
+  type(): QueryType {
+    return QueryType.REPLACE;
+  }
 
   fromClass(cls: Function): this {
     let table: string = sqlContext.findTableByClass(cls);
@@ -33,28 +38,5 @@ export class ReplaceQuery {
   set(key: string, value: any, sqlType: SqlType): this {
     this.newValues_.push({key: key, value: value, sqlType: sqlType});
     return this;
-  }
-
-  build(): string {
-    let keysAry: string[] = [];
-    let valuesAry: any[] = [];
-    let kvsAry: any[] = [];
-
-    this.newValues_.forEach((kv) => {
-      keysAry.push(kv.key);
-
-      let value: string = SqlQuery.valueAsStringByType(kv.value, kv.sqlType);
-      valuesAry.push(value);
-      kvsAry.push(`${kv.key}=${value}`);
-    });
-
-    let keys: string = keysAry.join(",");
-    let values: string = valuesAry.join(",");
-    let kvs: string = kvsAry.join(",");
-
-    return `UPDATE ${this.table_} SET ${kvs} WHERE ${this.where_};
-            INSERT INTO ${this.table_} (${keys})
-            SELECT ${values}
-            WHERE NOT EXISTS (SELECT 1 FROM ${this.table_} WHERE ${this.where_});`;
   }
 }

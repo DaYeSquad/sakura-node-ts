@@ -2,6 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {Error} from "tslint/lib/error";
+import {DriverType} from "../driveroptions";
 
 /**
  * Thrown when user tries to pass un-support database.
@@ -9,7 +10,7 @@ import {Error} from "tslint/lib/error";
 export class UnknownDriverError extends Error {
   name = "UnknownDriverError";
 
-  constructor(unknownDriverType: string) {
+  constructor(unknownDriverType: DriverType) {
     super();
     this.message = `Unknown driver type ${unknownDriverType}`;
   }

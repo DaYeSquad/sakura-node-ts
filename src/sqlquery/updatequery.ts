@@ -6,6 +6,7 @@ import {Model, SqlField, SqlFlag, SqlType} from "../base/model";
 import {DateFormatter, DateFormtOption} from "../util/dateformatter";
 import {isDate} from "util";
 import {isNumber} from "util";
+import {Query, QueryType} from "./query";
 
 /**
  * Update query.
@@ -23,13 +24,17 @@ import {isNumber} from "util";
  *
  *  The above will read table name and key-values from model.
  */
-export class UpdateQuery {
-  private table_: string;
-  private where_: string;
-  private updates_: {key: string, value: any}[] = [];
+export class UpdateQuery implements Query {
+  table_: string;
+  where_: string;
+  updates_: {key: string, value: any}[] = [];
 
-  private model_: Model;
-  private setValuesSqlFromModel_: string;
+  model_: Model;
+  setValuesSqlFromModel_: string;
+
+  type(): QueryType {
+    return QueryType.UPDATE;
+  }
 
   table(name: string): this {
     this.table_ = name;
@@ -51,66 +56,11 @@ export class UpdateQuery {
 
   fromModel(model: Model): this {
     this.model_ = model;
-
-    let updatesAry: string[] = [];
-    const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(this.model_.constructor);
-
-    for (let sqlField of sqlDefinitions) {
-      if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
-        // default ignore primary key to keys array
-      } else if (sqlField.name) {
-        let key: string = sqlField.columnName;
-        let value: any = this.model_[sqlField.name];
-        if (value !== undefined) {
-          if (sqlField.type === SqlType.VARCHAR_255 || sqlField.type === SqlType.TEXT || sqlField.type === SqlType.VARCHAR_1024) {
-            value = `'${value}'`;
-          } else if (sqlField.type === SqlType.DATE) {
-            let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
-            value = `'${valueAsDateInSql}'::date`;
-          } else if (sqlField.type === SqlType.TIMESTAMP) {
-            if (isNumber(value)) {
-              value = `to_timestamp(${value})`;
-            } else if (isDate(value)) {
-              let tmp = Math.floor(new Date(value).getTime() / 1000);
-              value = `to_timestamp(${tmp})`;
-            }
-          } else if (sqlField.type === SqlType.JSON) {
-            if (typeof value === "string") {
-              value = `${value}::json`;
-            } else {
-              value = `'${JSON.stringify(value)}'::json`;
-            }
-          }
-          updatesAry.push(`${key}=${value}`);
-        }
-      }
-    }
-
-    this.tableNameFromClass(this.model_.constructor);
-    this.setValuesSqlFromModel_ = updatesAry.join(",");
     return this;
   }
 
   where(...args: any[]): this {
     this.where_ = args.join(" AND ");
     return this;
-  }
-
-  build(): string {
-    if (this.model_) {
-      return `UPDATE ${this.table_} SET ${this.setValuesSqlFromModel_} WHERE ${this.where_};`;
-    } else {
-      let updatesAry: string[] = [];
-      this.updates_.forEach((update: {key: string, value: any}) => {
-        if (typeof(update.value) === "string") {
-          updatesAry.push(`${update.key}='${update.value}'`);
-        } else {
-          updatesAry.push(`${update.key}=${update.value}`);
-        }
-      });
-
-      const updates: string = updatesAry.join(",");
-      return `UPDATE ${this.table_} SET ${updates} WHERE ${this.where_};`;
-    }
   }
 }

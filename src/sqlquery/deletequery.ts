@@ -2,6 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {sqlContext} from "../util/sqlcontext";
+import {Query, QueryType} from "./query";
 
 /**
  * Delete query.
@@ -9,9 +10,13 @@ import {sqlContext} from "../util/sqlcontext";
  * Usage:
  *  let sql: string = new DeleteQuery().from("xx").where("a=c").build();
  */
-export class DeleteQuery {
-  private table_: string;
-  private where_: string;
+export class DeleteQuery implements Query {
+  table_: string;
+  where_: string;
+
+  type(): QueryType {
+    return QueryType.DELETE;
+  }
 
   from(table: string): this {
     this.table_ = table;
@@ -29,13 +34,5 @@ export class DeleteQuery {
   where(...args: any[]): this {
     this.where_ = args.join(" AND ");
     return this;
-  }
-
-  build(): string {
-    let sql: string = `DELETE FROM ${this.table_}`;
-    if (this.where_) {
-      sql = `${sql} WHERE ${this.where_}`;
-    }
-    return sql;
   }
 }
