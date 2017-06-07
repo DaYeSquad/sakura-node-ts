@@ -4,7 +4,18 @@
 
 # OVERVIEW
 
-sakura-node-ts is a utility project to provide some very basic tool for developing with PostgreSQL and some common middlewares.
+Utility of building back end serviced in [Gago Group](https://gagogroup.cn/).
+
+
+# FEATURES
+
+* ORM: Supports PostgreSQL ORM and migration
+
+* HTTP: Wrapper of Request/Response
+
+* Frequently used Express middleware
+
+* Email service: Wraps Aliyun Email Service
 
 
 # BUILD
@@ -27,5 +38,4 @@ Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint
 Node 7.x
 
 
-[npm-image]: https://img.shields.io/badge/npm-v2.2.0-blue.svg
 [npm-url]: https://www.npmjs.com/package/sakura-node
