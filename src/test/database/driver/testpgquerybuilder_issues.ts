@@ -10,6 +10,7 @@ import {InsertQuery} from "../../../sqlquery/insertquery";
 import {PgDriver} from "../../../database/postgres/pgdriver";
 import {DriverType} from "../../../database/driveroptions";
 import {UpdateQuery} from "../../../sqlquery/updatequery";
+import {PgQueryBuilder} from "../../../database/postgres/pgquerybuilder";
 
 export enum TransactionAction {
   BUY = 0,
@@ -90,19 +91,9 @@ export class Stock extends Model {
   }
 }
 
-describe("Test InsertQuery (issues)", () => {
-
-  let driver: PgDriver;
-
-  before(() => {
-    driver = new PgDriver({
-      type: DriverType.POSTGRES,
-      username: "admin",
-      password: "111111",
-      host: "localhost",
-      database: "gagodata"
-    });
-  });
+describe("PgDriver (issues)", () => {
+  
+  let queryBuilder: PgQueryBuilder = new PgQueryBuilder();
 
   it("Transaction should have action_type in insert query while action_type=0", () => {
     const fakeUid: number = 1024;
@@ -113,7 +104,7 @@ describe("Test InsertQuery (issues)", () => {
     transaction.actionType = 0;
 
     const query: InsertQuery = new InsertQuery().fromModel(transaction);
-    const sql: string = driver.buildInsertQuery(query);
+    const sql: string = queryBuilder.buildInsertQuery(query);
     const expectSql: string =
       `INSERT INTO transactions (uid,stock_id,action_type,position,position_sizing,broker_id,action_date) VALUES (1024,'SZ000333',0,2611,100,'xnzq',to_timestamp(1476528418)) RETURNING id`;
     chai.expect(sql).to.equal(expectSql);
@@ -123,7 +114,7 @@ describe("Test InsertQuery (issues)", () => {
     let stock: Stock = new Stock();
     stock.init(19900106, "SZ000333", 0, 0, 0, 0, 0);
     const query: UpdateQuery = new UpdateQuery().fromModel(stock).where(`stock_id='${stock.stockId}'`, `uid=${stock.uid}`);
-    const sql: string = driver.buildUpdateQuery(query);
+    const sql: string = queryBuilder.buildUpdateQuery(query);
     const expectSql: string = `UPDATE stocks SET stock_id='SZ000333',uid=19900106,diluted_cost=0,carrying_cost=0,sizing=0,expect_out=0,expect_in=0 WHERE stock_id='SZ000333' AND uid=19900106;`;
 
     chai.expect(sql).to.equal(expectSql);

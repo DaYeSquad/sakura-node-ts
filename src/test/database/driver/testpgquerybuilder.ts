@@ -8,11 +8,13 @@ import {DriverType} from "../../../database/driveroptions";
 import {DeleteQuery} from "../../../sqlquery/deletequery";
 import {SelectQuery} from "../../../sqlquery/selectquery";
 import {Column, TableName} from "../../../base/decorator";
-import {Model, SqlFlag, SqlType} from "../../../base/model";
+import {Model, SqlDefaultValue, SqlFlag, SqlType} from "../../../base/model";
 import {InsertQuery} from "../../../sqlquery/insertquery";
 import {timestamp} from "../../../base/typedefines";
 import {ReplaceQuery} from "../../../sqlquery/replacequery";
 import {UpdateQuery} from "../../../sqlquery/updatequery";
+import {PgQueryBuilder} from "../../../database/postgres/pgquerybuilder";
+import {AddModelOperation} from "../../../database/migration/operation";
 
 @TableName("users")
 class TestSelectUser extends Model {
@@ -78,6 +80,36 @@ class TestUpdateQueryUser extends Model {
   updatedAt: number;
 }
 
+@TableName("users")
+class TestCreateTableUser extends Model {
+  @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY, "系统编号，唯一标识", SqlDefaultValue.MAKE_RANDOM_ID())
+  uid: number;
+
+  @Column("username", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
+  username: string;
+
+  @Column("display_name", SqlType.VARCHAR_255, SqlFlag.NULLABLE)
+  displayName: string;
+
+  @Column("meta", SqlType.JSON, SqlFlag.NULLABLE)
+  meta: any;
+
+  @Column("created_at", SqlType.TIMESTAMP, SqlFlag.NULLABLE)
+  createdAt: Date;
+
+  @Column("updated_at", SqlType.TIMESTAMP, SqlFlag.NULLABLE)
+  updatedAt: number;
+}
+
+@TableName("enterprises")
+class Enterprise extends Model {
+  @Column("eid", SqlType.INT, SqlFlag.PRIMARY_KEY, "系统编号，唯一标识", SqlDefaultValue.SERIAL())
+  eid: number;
+
+  @Column("name", SqlType.VARCHAR_255, SqlFlag.NOT_NULL, "企业名")
+  name: string;
+}
+
 @TableName("_weather_caches")
 class WeatherCacheInfo extends Model {
 
@@ -104,23 +136,17 @@ class WeatherCacheInfo extends Model {
   }
 }
 
-describe("PgDriver", () => {
-
-  let driver: PgDriver;
+describe("PgQueryBuilder", () => {
+  
+  let queryBuilder: PgQueryBuilder;
 
   before(() => {
-    driver = new PgDriver({
-      type: DriverType.POSTGRES,
-      username: "admin",
-      password: "111111",
-      host: "localhost",
-      database: "gagodata"
-    });
+    queryBuilder = new PgQueryBuilder();
   });
 
   it("Test buildDeleteQuery", () => {
     let query: DeleteQuery = new DeleteQuery().from("users");
-    const sql: string = driver.buildDeleteQuery(query);
+    const sql: string = queryBuilder.buildDeleteQuery(query);
     chai.expect(sql).to.equal("DELETE FROM users");
   });
 
@@ -128,7 +154,7 @@ describe("PgDriver", () => {
     it("查询语句 添加JOIN USING 查询全部属性", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().joinUsing(`join enterprise_relationships using(uid)`)
         .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = ${115237134}`);
-      const sql: string = driver.buildSelectQuery(query);
+      const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT * FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
     });
 
@@ -136,37 +162,37 @@ describe("PgDriver", () => {
 
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprises.enterprise_id"]).joinUsing(`join enterprise_relationships using(uid)`)
         .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = ${115237134}`);
-      const sql: string = driver.buildSelectQuery(query);
+      const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT users.username,enterprises.enterprise_id FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
     });
 
     it("查询语句 添加OFFSET", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().setOffset(1);
-      const sql: string = driver.buildSelectQuery(query);
+      const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT * FROM users OFFSET 1`);
     });
 
     it("查询语句 添加OFFSET 负数则不设置OFFSET", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().setOffset(-1);
-      const sql: string = driver.buildSelectQuery(query);
+      const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT * FROM users`);
     });
 
     it("查询语句 添加groupBy ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().groupBy("username");
-      const sql: string = driver.buildSelectQuery(query);
+      const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username`);
     });
 
     it("查询语句 添加groupBy 两个参数 ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().groupBy("username", "uid");
-      const sql: string = driver.buildSelectQuery(query);
+      const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid`);
     });
 
     it("查询语句 添加groupBy 数组参数 ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().groupBy(...["username", "uid"]);
-      const sql: string = driver.buildSelectQuery(query);
+      const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid`);
     });
   });
@@ -175,7 +201,7 @@ describe("PgDriver", () => {
     let user: TestInsertUser = new TestInsertUser();
     user.initAsNewUser("pig");
     const query: InsertQuery = new InsertQuery().fromModel(user);
-    const sql: string = driver.buildInsertQuery(query);
+    const sql: string = queryBuilder.buildInsertQuery(query);
     chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('pig') RETURNING uid`);
   });
 
@@ -189,7 +215,7 @@ describe("PgDriver", () => {
         .set("uri", weatherCache.uri, SqlType.VARCHAR_255)
         .set("alias", weatherCache.alias, SqlType.VARCHAR_255)
         .set("expires_at", weatherCache.expiresAt, SqlType.TIMESTAMP);
-    const sql: string = driver.buildReplaceQuery(query);
+    const sql: string = queryBuilder.buildReplaceQuery(query);
     chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',alias='shuye_dikuai_1',expires_at=to_timestamp(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
             INSERT INTO _weather_caches (uri,alias,expires_at)
             SELECT 'forecast_temperatures','shuye_dikuai_1',to_timestamp(1476842006)
@@ -199,13 +225,13 @@ describe("PgDriver", () => {
   it("Test buildUpdateQuery", () => {
     it("UpdateQuery with one set and where", () => {
       const query: UpdateQuery = new UpdateQuery().table("films").set("kind", "Dramatic").where(`kind='Drama'`);
-      const sql: string = driver.buildUpdateQuery(query);
+      const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE films SET kind='Dramatic' WHERE kind='Drama';`);
     });
 
     it("UpdateQuery table name from class", () => {
       const query: UpdateQuery = new UpdateQuery().tableNameFromClass(TestUpdateQueryUser).set("kind", "Dramatic").where(`kind='Drama'`);
-      const sql: string = driver.buildUpdateQuery(query);
+      const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET kind='Dramatic' WHERE kind='Drama';`);
     });
 
@@ -214,7 +240,7 @@ describe("PgDriver", () => {
       user.uid = 1;
       user.username = "hello";
       const query: UpdateQuery  = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
-      const sql: string = driver.buildUpdateQuery(query);
+      const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET username='hello' WHERE  uid = 1;`);
     });
 
@@ -223,7 +249,7 @@ describe("PgDriver", () => {
       user.uid = 1;
       user.meta = {version: 1, test: "aaaa"};
       const query: UpdateQuery  = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
-      const sql: string = driver.buildUpdateQuery(query);
+      const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET meta='{"version":1,"test":"aaaa"}'::json WHERE  uid = 1;`);
     });
 
@@ -233,8 +259,33 @@ describe("PgDriver", () => {
       user.createdAt = new Date();
       user.updatedAt = Math.floor(new Date().getTime() / 1000);
       const query: UpdateQuery  = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
-      const sql: string = driver.buildUpdateQuery(query);
+      const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET created_at=to_timestamp(${user.updatedAt}),updated_at=to_timestamp(${user.updatedAt}) WHERE  uid = 1;`);
     });
+  });
+
+  it("Test buildCreateTableOperation", () => {
+    const expectResult: string = `CREATE TABLE IF NOT EXISTS users (
+uid INTEGER PRIMARY KEY DEFAULT make_random_id(), --系统编号，唯一标识
+username VARCHAR(255),
+display_name VARCHAR(255),
+meta JSON,
+created_at TIMESTAMP,
+updated_at TIMESTAMP
+);`;
+    const operation: AddModelOperation = new AddModelOperation(TestCreateTableUser);
+    const sql: string = queryBuilder.buildCreateTableOperation(operation);
+    chai.expect(sql).to.equal(expectResult);
+  });
+
+  it("Test generateCreateTableSql with model whose ID is SERIAL", () => {
+    const expectResult: string = `CREATE TABLE IF NOT EXISTS enterprises (
+eid SERIAL, --系统编号，唯一标识
+name VARCHAR(255) --企业名
+);`;
+
+    const operation: AddModelOperation = new AddModelOperation(Enterprise);
+    const sql: string = queryBuilder.buildCreateTableOperation(operation);
+    chai.expect(sql).to.equal(expectResult);
   });
 });

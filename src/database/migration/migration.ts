@@ -7,40 +7,49 @@ import * as path from "path";
 
 import {
   Operation, AddModelOperation, AddColumnOperation, DropColumnOperation,
-  RenameColumnOperation, ResetColumnTypeOperation, InitCommentOperation
+  RenameColumnOperation, ChangeColumnTypeOperation, AddCommentOperation
 } from "./operation";
 import {Field} from "./column";
-import {PgClient} from "../database/pgclient";
-import {SelectQuery} from "../sqlquery/selectquery";
+import {DriverOptions} from "../driveroptions";
+import {SqlType} from "../../base/model";
+import {InsertQuery} from "../../sqlquery/insertquery";
+import {DBClient} from "../dbclient";
 import {Version} from "./version";
-import {PgQueryResult} from "../base/typedefines";
-import {InsertQuery} from "../sqlquery/insertquery";
-import {sqlGenerator} from "../tools/sqlgenerator";
-import {SqlType} from "../base/model";
+import {SelectQuery} from "../../sqlquery/selectquery";
+import {QueryResult} from "../queryresult";
+import {UpdateQuery} from "../../sqlquery/updatequery";
+import {version} from "punycode";
+
+export interface MigrationOptions {
+  version: number;
+  appName: string;
+  driverOptions: DriverOptions;
+}
 
 /**
- * Migration tool for PostgreSQL.
+ * Migration tool for PostgreSQL and MySQL.
  *
  * Usage:
- *  let migration = new Migration();
+ *  let migration = new Migration(3, driverOptions);
  *  migration.addModel(User); // Adds User"s table.
  *  migration.migrate(); // migrate database.
  */
 export class Migration {
   protected version_: number = 0;
-  protected pgInstance_: PgClient = undefined;
+  protected appName_: string = "";
+  protected dbClient_: DBClient;
 
   protected operations_: Array<Operation> = [];
   protected dependencies_: Array<Migration> = [];
 
   /**
    * Init with current migration version, be sure to use INTEGER value.
-   * @param version Current version.
-   * @param pgClient Postgres connection.
+   * @param options Migration options.
    */
-  constructor(version: number, pgClient: PgClient) {
-    this.version_ = version;
-    this.pgInstance_ = pgClient;
+  constructor(options: MigrationOptions) {
+    this.version_ = options.version;
+    this.appName_ = options.appName;
+    this.dbClient_ = new DBClient(options.driverOptions);
   }
 
   /**
@@ -49,7 +58,7 @@ export class Migration {
    */
   addModel(cls: Function): void {
     this.operations_.push(new AddModelOperation(cls));
-    this.operations_.push(new InitCommentOperation(cls));
+    this.operations_.push(new AddCommentOperation(cls));
   }
 
   /**
@@ -87,7 +96,7 @@ export class Migration {
    * @param newType New column type.
    */
   resetColumnType(cls: Function, columnName: string, newType: SqlType): void {
-    this.operations_.push(new ResetColumnTypeOperation(cls, columnName, newType));
+    this.operations_.push(new ChangeColumnTypeOperation(cls, columnName, newType));
   }
 
   /**
@@ -112,11 +121,11 @@ export class Migration {
    */
   private async currentVersion_(): Promise<number | undefined> {
     // create table
-    const createTableSql: string = sqlGenerator.generateCreateTableSql(Version);
-    await this.pgInstance_.query(createTableSql);
+    const createTableOperation: AddModelOperation = new AddModelOperation(Version);
+    await this.dbClient_.query(createTableOperation);
 
-    const sql: string = new SelectQuery().fromClass(Version).select().build();
-    const result: PgQueryResult = await this.pgInstance_.query(sql);
+    const selectQuery: SelectQuery = new SelectQuery().fromClass(Version).where(`app_name = '${this.appName_}'`).select();
+    const result: QueryResult = await this.dbClient_.query(selectQuery);
     if (result.rows.length > 0) {
       return result.rows[0]["version"];
     } else {
@@ -133,7 +142,7 @@ export class Migration {
 
     for (let i = 0; i < this.operations_.length; i++) {
       let operation: Operation = this.operations_[i];
-      sql += operation.sql();
+      sql += this.dbClient_.operationToString(operation);
 
       if (i !== this.operations_.length - 1) {
         sql += "\n";
@@ -156,19 +165,14 @@ export class Migration {
    * Executes migrate sql commands, it is highly recommended to use preview() to see sql before use this method.
    */
   async migrate(setupEnv: boolean = false): Promise<void> {
-    // init PG
-    if (this.pgInstance_ === undefined) {
-      throw new Error("UNDEFINED_PG_CLIENT_SHARED_INSTANCE");
-    }
-
     // check version
     const currentVersion: number | undefined = await this.currentVersion_();
     if (currentVersion === undefined) { // first time to execute query
       let version: Version = new Version();
       version.version = this.version_;
-      const insertSql: string = new InsertQuery().fromModel(version).build();
-
-      await this.pgInstance_.query(insertSql);
+      version.appName = this.appName_;
+      const insertQuery: InsertQuery = new InsertQuery().fromModel(version);
+      await this.dbClient_.query(insertQuery);
     } else if (this.version_ === currentVersion) { // version does not change
       return;
     }
@@ -188,9 +192,16 @@ export class Migration {
     }
 
     for (let operation of this.operations_) {
-      sqls.push(operation.sql());
+      sqls.push(this.dbClient_.operationToString(operation));
     }
 
-    await this.pgInstance_.queryInTransaction(sqls);
+    await this.dbClient_.queryRawInTransaction(sqls);
+
+    // update table version
+    let version: Version = new Version();
+    version.version = this.version_;
+    version.appName = this.appName_;
+    const updateQuery: UpdateQuery = new UpdateQuery().fromModel(version).where(`id = ${version.id}`);
+    await this.dbClient_.query(updateQuery);
   }
 }
