@@ -13,7 +13,7 @@ import {Query, QueryType} from "./query";
  *  const sql: string = new ReplaceQuery().fromClass(WeatherCacheInfo).where("xx=xx").set(x, y).set(z, c).build();
  *  PgDriver.getInstance().query(sql);
  */
-export class ReplaceQuery implements Query {
+export class ReplaceQuery extends Query {
   table_: string;
   where_: string;
   newValues_: {key: string, value: any, sqlType: SqlType}[] = [];

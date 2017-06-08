@@ -9,7 +9,7 @@ import {Query, QueryType} from "./query";
 /**
  * Builds insert sql query.
  */
-export class InsertQuery implements Query {
+export class InsertQuery extends Query {
   model_: Model;
   returnId_: boolean = true;
 

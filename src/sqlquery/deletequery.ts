@@ -10,7 +10,7 @@ import {Query, QueryType} from "./query";
  * Usage:
  *  let sql: string = new DeleteQuery().from("xx").where("a=c").build();
  */
-export class DeleteQuery implements Query {
+export class DeleteQuery extends Query {
   table_: string;
   where_: string;
 

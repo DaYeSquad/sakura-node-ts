@@ -24,7 +24,7 @@ import {Query, QueryType} from "./query";
  *
  *  The above will read table name and key-values from model.
  */
-export class UpdateQuery implements Query {
+export class UpdateQuery extends Query {
   table_: string;
   where_: string;
   updates_: {key: string, value: any}[] = [];

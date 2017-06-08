@@ -7,7 +7,7 @@ import {Query, QueryType} from "./query";
 /**
  * Builds select sql query.
  */
-export class SelectQuery implements Query {
+export class SelectQuery extends Query {
   table_: string;
   where_: string;
   selectFields_: string[];
