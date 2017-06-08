@@ -33,6 +33,11 @@ Run `gulp` and all releases will be under `./lib`.
 `npm test`
 
 
+# INSTALL
+
+`npm install sakura-node-3`
+
+
 # LINT
 
 Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint.sh` before commit.
@@ -43,4 +48,4 @@ Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint
 Node 7.x
 
 
-[npm-url]: https://www.npmjs.com/package/sakura-node
+[npm-url]: https://www.npmjs.com/package/sakura-node-3

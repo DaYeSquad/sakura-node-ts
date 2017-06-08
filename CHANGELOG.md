@@ -1,3 +1,9 @@
+# 3.0.0 (2017.6.8.)
+
+* **重构了 ORM 模块以兼容 MySQL**: 新的示范可见 src/example
+* **更新了包名**: 现在需要使用 npm install sakura-node-3 来安装
+
+
 # 2.2.3 (2017.6.5.)
 
 * **新增 Migration 修改字段属性方法**: Migration.resetColumnType
