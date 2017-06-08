@@ -37,6 +37,14 @@ export class PgQueryBuilder implements QueryBuilder {
       }
     }
 
+    // join tableName on
+    if (q.joinOn_.length > 0) {
+      for (let eachJoinOn of q.joinOn_) {
+        sql = `${sql} JOIN ${eachJoinOn.tableName} ON (${eachJoinOn["on"]})`;
+      }
+    }
+
+
     // WHERE
     if (q.where_) {
       sql = `${sql} WHERE ${q.where_}`;
