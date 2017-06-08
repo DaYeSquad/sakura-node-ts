@@ -195,6 +195,21 @@ describe("PgQueryBuilder", () => {
       const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid`);
     });
+
+    it("查询语句 join in 关联查询", () => {
+      const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid"])
+                              .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
+      const sql: string = queryBuilder.buildSelectQuery(query);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
+    });
+
+    it("查询语句 多个 join in 关联查询", () => {
+      const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid", "enterprises.name"])
+                              .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid")
+                              .join("enterprises").on("enterprise_relationships.eid = enterprises.eid");
+      const sql: string = queryBuilder.buildSelectQuery(query);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid,enterprises.name FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid) JOIN enterprises ON (enterprise_relationships.eid = enterprises.eid)`);
+    });
   });
 
   it("Test buildInsertQuery", () => {
