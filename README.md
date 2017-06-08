@@ -18,6 +18,11 @@ Utility of building back end serviced in [Gago Group](https://gagogroup.cn/).
 * Email service: Wraps Aliyun Email Service
 
 
+# EXAMPLE
+
+See `src/example`.
+
+
 # BUILD
 
 Run `gulp` and all releases will be under `./lib`.
