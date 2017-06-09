@@ -7,7 +7,10 @@ import {SelectQuery} from "../../../sqlquery/selectquery";
 import {Column, TableName} from "../../../base/decorator";
 import {Model, SqlFlag, SqlType} from "../../../base/model";
 import {MySqlQueryBuilder} from "../../../database/mysql/mysqlquerybuilder";
-import {AddColumnOperation, AddCommentOperation, AddModelOperation} from "../../../database/migration/operation";
+import {
+  AddColumnOperation, AddCommentOperation, AddModelOperation,
+  DropColumnOperation
+} from "../../../database/migration/operation";
 import {Version} from "../../../database/migration/version";
 
 @TableName("users")
@@ -79,6 +82,13 @@ PRIMARY KEY (\`id\`));`;
     const expectSql: string = `ALTER TABLE users ADD COLUMN new_column TEXT;`;
     const addColumnOperation: AddColumnOperation = new AddColumnOperation(User, {name: "new_column", type: SqlType.TEXT, flag: SqlFlag.NOT_NULL, comment: "测试新列"})
     const sql: string = queryBuilder.buildAddColumnOperation(addColumnOperation);
+    chai.expect(sql).to.equal(expectSql);
+  });
+
+  it("Test buildDropColumnOperation", () => {
+    const expectSql: string = `ALTER TABLE users DROP COLUMN new_column;`;
+    const dropColumnOperation: DropColumnOperation = new DropColumnOperation(User, "new_column");
+    const sql: string = queryBuilder.buildDropColumnOperation(dropColumnOperation);
     chai.expect(sql).to.equal(expectSql);
   });
 });

@@ -43,13 +43,13 @@ export class User extends Model {
 
     // 使用 Migration 新建 users 表
     let migration: Migration = new Migration({
-      version: 6,
+      version: 7,
       appName: "api-server-6",
       driverOptions: driverOptions
     });
 
     migration.addModel(User);
-    migration.addColumn(User, {name: "new_column", type: SqlType.TEXT, flag: SqlFlag.NOT_NULL, comment: "测试新列"});
+    migration.dropColumn(User, "new_column");
 
     await migration.migrate();
 

@@ -215,11 +215,11 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
   /**
    * Builds {DropColumnOperation} to raw query.
-   * @param operation {DropColumnOperation} object.
+   * @param op {DropColumnOperation} object.
    */
-  buildDropColumnOperation(operation: DropColumnOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildDropColumnOperation(op: DropColumnOperation): string {
+    const tableName: string = sqlContext.findTableByClass(op.modelClass);
+    return `ALTER TABLE ${tableName} DROP COLUMN ${op.columnName};`;
   }
 
   /**

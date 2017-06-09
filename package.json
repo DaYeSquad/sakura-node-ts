@@ -10,7 +10,7 @@
     "posttest": "rm -rf ./lib",
     "prepublish": "rm -rf ./lib; gulp ts;",
     "postpublish": "rm -rf ./lib; gulp ts; node ./lib/js/src/tools/sendchangelog.js; rm -rf ./lib;",
-    "sample-mysql": "rm -rf ./lib; gulp ts; node ./lib/js/src/example/mysql/dbclient.js; rm -rf ./lib;"
+    "sample-mysql": "rm -rf ./lib; gulp ts; node ./lib/js/src/example/mysql/dbclient.js;"
   },
   "repository": {
     "type": "git",
