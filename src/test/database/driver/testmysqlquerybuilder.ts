@@ -8,8 +8,8 @@ import {Column, TableName} from "../../../base/decorator";
 import {Model, SqlFlag, SqlType} from "../../../base/model";
 import {MySqlQueryBuilder} from "../../../database/mysql/mysqlquerybuilder";
 import {
-  AddColumnOperation, AddCommentOperation, AddModelOperation,
-  DropColumnOperation
+  AddColumnOperation, AddCommentOperation, AddModelOperation, ChangeColumnTypeOperation,
+  DropColumnOperation, RenameColumnOperation
 } from "../../../database/migration/operation";
 import {Version} from "../../../database/migration/version";
 
@@ -89,6 +89,20 @@ PRIMARY KEY (\`id\`));`;
     const expectSql: string = `ALTER TABLE users DROP COLUMN new_column;`;
     const dropColumnOperation: DropColumnOperation = new DropColumnOperation(User, "new_column");
     const sql: string = queryBuilder.buildDropColumnOperation(dropColumnOperation);
+    chai.expect(sql).to.equal(expectSql);
+  });
+
+  it("Test buildRenameColumnOperation", () => {
+    const expectSql: string = `ALTER TABLE users CHANGE username username1 VARCHAR(255);`;
+    const renameColumnOperation: RenameColumnOperation = new RenameColumnOperation(User, "username", "username1");
+    const sql: string = queryBuilder.buildRenameColumnOperation(renameColumnOperation);
+    chai.expect(sql).to.equal(expectSql);
+  });
+
+  it("Test buildChangeColumnTypeOperation", () => {
+    const expectSql: string = `ALTER TABLE users MODIFY username TEXT;`;
+    const resetTypeOperation: ChangeColumnTypeOperation = new ChangeColumnTypeOperation(User, "username", SqlType.TEXT);
+    const sql: string = queryBuilder.buildChangeColumnTypeOperation(resetTypeOperation);
     chai.expect(sql).to.equal(expectSql);
   });
 });

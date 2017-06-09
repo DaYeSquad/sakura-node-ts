@@ -1,13 +1,10 @@
 // Copyright 2017 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {DBClient} from "../../database/dbclient";
 import {DriverOptions, DriverType} from "../../database/driveroptions";
-import {SelectQuery} from "../../sqlquery/selectquery";
 
 import {TableName, Column} from "../../base/decorator";
 import {Model, SqlType, SqlFlag} from "../../base/model";
-import {QueryResult} from "../../database/queryresult";
 import {Migration} from "../../database/migration/migration";
 
 @TableName("users")
@@ -49,7 +46,6 @@ export class User extends Model {
     });
 
     migration.addModel(User);
-    migration.dropColumn(User, "new_column");
 
     await migration.migrate();
 

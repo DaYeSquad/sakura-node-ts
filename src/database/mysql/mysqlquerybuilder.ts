@@ -224,20 +224,30 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
   /**
    * Builds {RenameColumnOperation} to raw query.
-   * @param operation {RenameColumnOperation} object.
+   * @param op {RenameColumnOperation} object.
    */
-  buildRenameColumnOperation(operation: RenameColumnOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildRenameColumnOperation(op: RenameColumnOperation): string {
+    const tableName: string = sqlContext.findTableByClass(op.modelClass);
+    const sqlFields: SqlField[] = sqlContext.findSqlFields(op.modelClass);
+    let sqlType: SqlType | undefined;
+    for (let sqlField of sqlFields) {
+      if (sqlField.name === op.oldName) {
+        sqlType = sqlField.type;
+        break;
+      }
+    }
+    const type: string = this.sqlTypeToCreateSyntaxString_(sqlType);
+    return `ALTER TABLE ${tableName} CHANGE ${op.oldName} ${op.newName} ${type};`;
   }
 
   /**
    * Builds {ChangeColumnTypeOperation} to raw query.
-   * @param operation {ChangeColumnTypeOperation} object.
+   * @param op {ChangeColumnTypeOperation} object.
    */
-  buildChangeColumnTypeOperation(operation: ChangeColumnTypeOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildChangeColumnTypeOperation(op: ChangeColumnTypeOperation): string {
+    const tableName: string = sqlContext.findTableByClass(op.modelClass);
+    const newTypeInString: string = this.sqlTypeToCreateSyntaxString_(op.newType);
+    return `ALTER TABLE ${tableName} MODIFY ${op.columnName} ${newTypeInString};`;
   }
 
   /**
