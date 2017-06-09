@@ -12,6 +12,7 @@ import {sqlContext} from "../../util/sqlcontext";
 import {UpdateQuery} from "../../sqlquery/updatequery";
 import {ReplaceQuery} from "../../sqlquery/replacequery";
 import {DateFormatter, DateFormtOption} from "../../util/dateformatter";
+import {isDate, isNumber} from "util";
 
 import {
   AddColumnOperation, AddCommentOperation, AddModelOperation, ChangeColumnTypeOperation, DropColumnOperation,
@@ -117,8 +118,58 @@ export class MySqlQueryBuilder implements QueryBuilder {
   }
 
   buildUpdateQuery(q: UpdateQuery): string {
-    // TODO(lin.xiaoe.f@gmail.com): add update query implementation
-    return "";
+    if (q.model_) {
+      let updatesAry: string[] = [];
+      const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(q.model_.constructor);
+
+      for (let sqlField of sqlDefinitions) {
+        if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
+          // default ignore primary key to keys array
+        } else if (sqlField.name) {
+          let key: string = sqlField.columnName;
+          let value: any = q.model_[sqlField.name];
+          if (value !== undefined) {
+            if (sqlField.type === SqlType.VARCHAR_255 || sqlField.type === SqlType.TEXT || sqlField.type === SqlType.VARCHAR_1024) {
+              value = `'${value}'`;
+            } else if (sqlField.type === SqlType.DATE) {
+              let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
+              value = `STR_TO_DATE('${valueAsDateInSql}', '%Y-%m-%d')`;
+            } else if (sqlField.type === SqlType.TIMESTAMP) {
+              if (isNumber(value)) {
+                value = `FROM_UNIXTIME(${value})`;
+              } else if (isDate(value)) {
+                let tmp = Math.floor(new Date(value).getTime() / 1000);
+                value = `FROM_UNIXTIME(${tmp})`;
+              }
+            } else if (sqlField.type === SqlType.JSON) {
+              if (typeof value === "string") {
+                value = `${value}`;
+              } else {
+                value = `'${JSON.stringify(value)}'`;
+              }
+            }
+            updatesAry.push(`${key}=${value}`);
+          }
+        }
+      }
+
+      q.tableNameFromClass(q.model_.constructor);
+      q.setValuesSqlFromModel_ = updatesAry.join(",");
+
+      return `UPDATE ${q.table_} SET ${q.setValuesSqlFromModel_} WHERE ${q.where_};`;
+    } else {
+      let updatesAry: string[] = [];
+      q.updates_.forEach((update: {key: string, value: any}) => {
+        if (typeof(update.value) === "string") {
+          updatesAry.push(`${update.key}='${update.value}'`);
+        } else {
+          updatesAry.push(`${update.key}=${update.value}`);
+        }
+      });
+
+      const updates: string = updatesAry.join(",");
+      return `UPDATE ${q.table_} SET ${updates} WHERE ${q.where_};`;
+    }
   }
 
   buildReplaceQuery(q: ReplaceQuery): string {
@@ -288,14 +339,14 @@ export class MySqlQueryBuilder implements QueryBuilder {
       value = `'${value}'`;
     } else if (sqlType === SqlType.DATE) {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
-      value = `'${valueAsDateInSql}'::date`;
+      value = `STR_TO_DATE('${valueAsDateInSql}', '%Y-%m-%d')`;
     } else if (sqlType === SqlType.TIMESTAMP) {
-      value = `to_timestamp(${value})`;
+      value = `FROM_UNIXTIME(${value})`;
     } else if (sqlType === SqlType.JSON) {
       if (typeof value === "string") {
-        value = `'${value}'::json`;
+        value = `'${value}'`;
       } else {
-        value = `'${JSON.stringify(value)}'::json`;
+        value = `'${JSON.stringify(value)}'`;
       }
     } else if (sqlType === SqlType.INT || sqlType === SqlType.BIGINT) {
       value = String(`${value}`);
