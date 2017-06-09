@@ -65,15 +65,7 @@ export class DBClient {
   async query(q: Query): Promise<QueryResult>;
   async query(q: Operation): Promise<QueryResult>;
   async query(q: any): Promise<QueryResult> {
-    if (q instanceof Query) {
-      let rawSql: string = this.queryToString_(q);
-      return await this.driver.query(rawSql);
-    } else if (q instanceof Operation) {
-      let rawSql: string = this.operationToString(q);
-      return await this.driver.query(rawSql);
-    } else {
-      return await this.driver.query(q);
-    }
+    return await this.driver.query(q);
   }
 
   /**
@@ -94,77 +86,9 @@ export class DBClient {
     let sqls: Array<string> = [];
 
     for (let query of queries) {
-      sqls.push(this.queryToString_(query));
+      sqls.push(this.driver.queryToString_(query));
     }
 
     return await this.queryRawInTransaction(sqls);
-  }
-
-  private queryToString_(q: Query): string {
-    let rawSql: string = "";
-
-    switch (q.type()) {
-      case QueryType.SELECT: {
-        rawSql = this.driver.queryBuilder.buildSelectQuery(<SelectQuery>q);
-        break;
-      }
-      case QueryType.UPDATE: {
-        rawSql = this.driver.queryBuilder.buildUpdateQuery(<UpdateQuery>q);
-        break;
-      }
-      case QueryType.REPLACE: {
-        rawSql = this.driver.queryBuilder.buildReplaceQuery(<ReplaceQuery>q);
-        break;
-      }
-      case QueryType.INSERT: {
-        rawSql = this.driver.queryBuilder.buildInsertQuery(<InsertQuery>q);
-        break;
-      }
-      case QueryType.DELETE: {
-        rawSql = this.driver.queryBuilder.buildDeleteQuery(<DeleteQuery>q);
-        break;
-      }
-      default: {
-        throw new InternalError(DBClient.name);
-      }
-    }
-
-    return rawSql;
-  }
-
-  operationToString(op: Operation): string {
-    let rawSql: string = "";
-
-    switch (op.type) {
-      case OperationType.ADD_MODEL: {
-        rawSql = this.driver.queryBuilder.buildCreateTableOperation(<AddModelOperation>op);
-        break;
-      }
-      case OperationType.ADD_COMMENT: {
-        rawSql = this.driver.queryBuilder.buildAddCommentOperation(<AddCommentOperation>op);
-        break;
-      }
-      case OperationType.ADD_COLUMN: {
-        rawSql = this.driver.queryBuilder.buildAddColumnOperation(<AddColumnOperation>op);
-        break;
-      }
-      case OperationType.DROP_COLUMN: {
-        rawSql = this.driver.queryBuilder.buildDropColumnOperation(<DropColumnOperation>op);
-        break;
-      }
-      case OperationType.RENAME_COLUMN: {
-        rawSql = this.driver.queryBuilder.buildRenameColumnOperation(<RenameColumnOperation>op);
-        break;
-      }
-      case OperationType.CHANGE_COLUMN_TYPE: {
-        rawSql = this.driver.queryBuilder.buildChangeColumnTypeOperation(<ChangeColumnTypeOperation>op);
-        break;
-      }
-      default: {
-        throw new InternalError(DBClient.name);
-      }
-    }
-
-    return rawSql;
   }
 }

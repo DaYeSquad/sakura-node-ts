@@ -50,7 +50,7 @@ export interface QueryBuilder {
    * Builds {AddModelOperation} to raw query.
    * @param operation {AddModelOperation} object.
    */
-  buildCreateTableOperation(operation: AddModelOperation): string;
+  buildAddModelOperation(operation: AddModelOperation): string;
 
   /**
    * Builds {AddCommentOperation} to raw query.

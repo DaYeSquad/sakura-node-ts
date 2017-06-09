@@ -8,16 +8,20 @@ import {DriverOptions} from "../driveroptions";
 import {QueryResult} from "../queryresult";
 import {QueryBuilder} from "../querybuilder";
 import {MySqlQueryBuilder} from "./mysqlquerybuilder";
+import {Query, QueryType} from "../../sqlquery/query";
+import {Operation} from "../migration/operation";
+import {InsertQuery} from "../../sqlquery/insertquery";
 
 /**
  * MySQL driver.
  */
-export class MySqlDriver implements Driver {
+export class MySqlDriver extends Driver {
   private pool_: mysql.IPool;
 
   queryBuilder: QueryBuilder = new MySqlQueryBuilder();
 
   constructor(driverOptions: DriverOptions) {
+    super();
     this.pool_ = mysql.createPool({
       connectionLimit: 10,
       host: driverOptions.host,
@@ -28,12 +32,31 @@ export class MySqlDriver implements Driver {
     });
   }
 
-  async query(sql: string): Promise<QueryResult> {
+  async query(q: string): Promise<QueryResult>;
+  async query(q: Query): Promise<QueryResult>;
+  async query(q: Operation): Promise<QueryResult>;
+  async query(q: any): Promise<QueryResult> {
     return new Promise<QueryResult>((resolve, reject) => {
+      let rawSql: string = "";
+
+      if (q instanceof Query) {
+        rawSql = this.queryToString_(q);
+        if (q.type() === QueryType.INSERT) {
+          const insertQ: InsertQuery = <InsertQuery>q;
+          if (insertQ.returnId_) {
+            console.log("it has some error");
+          }
+        }
+      } else if (q instanceof Operation) {
+        rawSql = this.operationToString(q);
+      } else {
+        rawSql = q;
+      }
+
       this.pool_.getConnection((err: mysql.IError, connection: mysql.IConnection) => {
         if (err) reject(err);
 
-        connection.query(sql, (err: mysql.IError, rows: any[], fields: mysql.IFieldInfo[]) => {
+        connection.query(rawSql, (err: mysql.IError, rows: any[], fields: mysql.IFieldInfo[]) => {
           connection.release();
 
           if (err) reject(err);

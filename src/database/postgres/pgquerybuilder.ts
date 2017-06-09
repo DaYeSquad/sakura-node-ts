@@ -188,7 +188,7 @@ export class PgQueryBuilder implements QueryBuilder {
   /**
    * CREATE TABLE IF NOT EXISTS <table_name> ...;
    */
-  buildCreateTableOperation(operation: AddModelOperation): string {
+  buildAddModelOperation(operation: AddModelOperation): string {
     const cls: Function = operation.modelClass;
     const tableName: string = sqlContext.findTableByClass(cls);
 

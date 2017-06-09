@@ -7,17 +7,20 @@ import {QueryResult} from "../queryresult";
 import {DriverOptions} from "../driveroptions";
 import {QueryBuilder} from "../querybuilder";
 import {PgQueryBuilder} from "./pgquerybuilder";
+import {Query, QueryType} from "../../sqlquery/query";
+import {Operation} from "../migration/operation";
 
 /**
  * PostgresSQL client using pg.Pool.
  */
-export class PgDriver implements Driver {
+export class PgDriver extends Driver {
 
   private pool_: pg.Pool;
 
   queryBuilder: QueryBuilder = new PgQueryBuilder();
 
   constructor(driverOptions: DriverOptions) {
+    super();
     let config: pg.PoolConfig = {
       user: driverOptions.username,
       database: driverOptions.database,
@@ -31,10 +34,23 @@ export class PgDriver implements Driver {
     this.pool_ = new pg.Pool(config);
   }
 
-  async query(sql: string): Promise<QueryResult> {
+  async query(q: string): Promise<QueryResult>;
+  async query(q: Query): Promise<QueryResult>;
+  async query(q: Operation): Promise<QueryResult>;
+  async query(q: any): Promise<QueryResult> {
+    let rawSql: string = "";
+
+    if (q instanceof Query) {
+      rawSql = this.queryToString_(q);
+    } else if (q instanceof Operation) {
+      rawSql = this.operationToString(q);
+    } else {
+      rawSql = q;
+    }
+
     let client: pg.Client = await this.pool_.connect();
     try {
-      const pgQueryResult: pg.QueryResult = await client.query(sql);
+      const pgQueryResult: pg.QueryResult = await client.query(rawSql);
       return {rows: pgQueryResult.rows};
     } finally {
       client.release();

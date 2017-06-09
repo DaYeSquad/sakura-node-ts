@@ -1,6 +1,8 @@
 // Copyright 2017 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
+import * as util from "util";
+
 import {QueryBuilder} from "../querybuilder";
 import {SelectQuery} from "../../sqlquery/selectquery";
 import {DeleteQuery} from "../../sqlquery/deletequery";
@@ -13,6 +15,7 @@ import {
   AddColumnOperation, AddCommentOperation, AddModelOperation, ChangeColumnTypeOperation, DropColumnOperation,
   RenameColumnOperation
 } from "../migration/operation";
+import {SqlDefaultValue, SqlDefaultValueType, SqlField, SqlFlag, SqlType} from "../../base/model";
 
 /**
  * MySQL query builder.
@@ -96,10 +99,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       const tableName: string = sqlContext.findTableByClass(q.model_.constructor);
 
       if (q.returnId_ && primaryKey) {
-        return `
-        INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr});
-        SELECT LAST_INSERT_ID();
-        `;
+        return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr});`;
       }
 
       return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr})`;
@@ -139,9 +139,47 @@ export class MySqlQueryBuilder implements QueryBuilder {
    * Builds {AddModelOperation} to raw query.
    * @param operation {AddModelOperation} object.
    */
-  buildCreateTableOperation(operation: AddModelOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildAddModelOperation(operation: AddModelOperation): string {
+    const tableName: string = sqlContext.findTableByClass(operation.modelClass);
+
+    let sql: string = util.format("CREATE TABLE IF NOT EXISTS `%s` (\n", tableName);
+    let primaryKey: string | undefined = undefined;
+
+    const sqlFields: SqlField[] = sqlContext.findSqlFields(operation.modelClass);
+    sqlFields.forEach((sqlField: SqlField, index: number) => {
+      const type: string = this.sqlTypeToCreateSyntaxString_(sqlField.type);
+
+      if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
+        primaryKey = util.format("PRIMARY KEY (`%s`)", sqlField.columnName);
+      }
+
+      let comment: string = "";
+      if (sqlField.comment) {
+        comment = ` -- ${sqlField.comment}`;
+      }
+
+      let comma: string = index === (sqlFields.length - 1) ? "" : ",";
+
+      let defaultValueWithWhiteSpace: string = "";
+      if (sqlField.defaultValue) {
+        // if default value type is SERIAL, use SERIAL syntax
+        if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL) {
+          sql += `${sqlField.columnName} INT AUTO_INCREMENT${comma}${comment}\n`;
+          return;
+        }
+
+        defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(sqlField.defaultValue)}`;
+      }
+
+      sql += `\`${sqlField.columnName}\` ${type}${defaultValueWithWhiteSpace}${comma}${comment}\n`;
+    });
+
+    if (primaryKey) {
+      sql += `,\n${primaryKey}`;
+    }
+
+    sql += `);`;
+    return sql;
   }
 
   /**
@@ -186,6 +224,51 @@ export class MySqlQueryBuilder implements QueryBuilder {
    */
   buildChangeColumnTypeOperation(operation: ChangeColumnTypeOperation): string {
     // TODO(lin.xiaoe.f@gmail.com):
+    return "";
+  }
+
+  /**
+   * Translate SqlType to string used in CREATE TABLE syntax.
+   * eg: SqlType.INT will be translated to "INTEGER".
+   * @private
+   */
+  private sqlTypeToCreateSyntaxString_(sqlType: SqlType): string {
+    switch (sqlType) {
+      case SqlType.INT: return "INT";
+      case SqlType.BIGINT: return "BIGINT";
+      case SqlType.VARCHAR_1024: return "VARCHAR(1024)";
+      case SqlType.VARCHAR_255: return "VARCHAR(255)";
+      case SqlType.TIMESTAMP: return "TIMESTAMP";
+      case SqlType.JSON: return "JSON";
+      case SqlType.NUMERIC: return "NUMERIC";
+      case SqlType.DATE: return "DATE";
+      case SqlType.TEXT: return "TEXT";
+      case SqlType.BOOLEAN: return "BOOLEAN";
+      default: throw Error(`Undefined SqlType ${sqlType}`);
+    }
+  }
+
+  /**
+   * Translate SqlFlag to string used in CREATE TABLE syntax.
+   * eg: SqlFlag.PRIMARY_KEY will be translated to "PRIMARY KEY".
+   * @private
+   */
+  private sqlFlagToCreateSyntaxString_(sqlFlag: SqlFlag): string {
+    if (sqlFlag === SqlFlag.PRIMARY_KEY) {
+      return "PRIMARY KEY";
+    }
+    return "";
+  }
+
+  /**
+   * Translate SqlDefaultValue to string used in CREATE TABLE syntax.
+   * eg: SqlDefaultValueType.MAKE_RANDOM_ID will be translated to "make_random_id".
+   * @private
+   */
+  private sqlDefaultValueToCreateSyntaxString_(sqlDefaultValue: SqlDefaultValue): string {
+    if (sqlDefaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
+      return "make_random_id()";
+    }
     return "";
   }
 }

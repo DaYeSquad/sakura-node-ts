@@ -19,6 +19,7 @@ import {SelectQuery} from "../../sqlquery/selectquery";
 import {QueryResult} from "../queryresult";
 import {UpdateQuery} from "../../sqlquery/updatequery";
 import {version} from "punycode";
+import {PgDriver} from "../postgres/pgdriver";
 
 export interface MigrationOptions {
   version: number;
@@ -142,7 +143,7 @@ export class Migration {
 
     for (let i = 0; i < this.operations_.length; i++) {
       let operation: Operation = this.operations_[i];
-      sql += this.dbClient_.operationToString(operation);
+      sql += this.dbClient_.driver.operationToString(operation);
 
       if (i !== this.operations_.length - 1) {
         sql += "\n";
@@ -168,6 +169,11 @@ export class Migration {
     // check version
     const currentVersion: number | undefined = await this.currentVersion_();
     if (currentVersion === undefined) { // first time to execute query
+      // create table
+      const createTableOperation: AddModelOperation = new AddModelOperation(Version);
+      await this.dbClient_.query(createTableOperation);
+
+      // insert version
       let version: Version = new Version();
       version.version = this.version_;
       version.appName = this.appName_;
@@ -186,13 +192,13 @@ export class Migration {
     let sqls: Array<string> = [];
 
     // create necessary functions
-    if (setupEnv) {
+    if (setupEnv && (this.dbClient_.driver instanceof PgDriver)) {
       let setupEnvSql: string = fs.readFileSync(path.resolve("sql/setup_pg.sql"), "utf8") + "\n";
       sqls.push(setupEnvSql);
     }
 
     for (let operation of this.operations_) {
-      sqls.push(this.dbClient_.operationToString(operation));
+      sqls.push(this.dbClient_.driver.operationToString(operation));
     }
 
     await this.dbClient_.queryRawInTransaction(sqls);

@@ -264,7 +264,7 @@ describe("PgQueryBuilder", () => {
     });
   });
 
-  it("Test buildCreateTableOperation", () => {
+  it("Test buildAddModelOperation", () => {
     const expectResult: string = `CREATE TABLE IF NOT EXISTS users (
 uid INTEGER PRIMARY KEY DEFAULT make_random_id(), --系统编号，唯一标识
 username VARCHAR(255),
@@ -274,7 +274,7 @@ created_at TIMESTAMP,
 updated_at TIMESTAMP
 );`;
     const operation: AddModelOperation = new AddModelOperation(TestCreateTableUser);
-    const sql: string = queryBuilder.buildCreateTableOperation(operation);
+    const sql: string = queryBuilder.buildAddModelOperation(operation);
     chai.expect(sql).to.equal(expectResult);
   });
 
@@ -285,7 +285,7 @@ name VARCHAR(255) --企业名
 );`;
 
     const operation: AddModelOperation = new AddModelOperation(Enterprise);
-    const sql: string = queryBuilder.buildCreateTableOperation(operation);
+    const sql: string = queryBuilder.buildAddModelOperation(operation);
     chai.expect(sql).to.equal(expectResult);
   });
 });
