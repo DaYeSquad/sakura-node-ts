@@ -5,9 +5,9 @@ import * as chai from "chai";
 
 import {SelectQuery} from "../../../sqlquery/selectquery";
 import {Column, TableName} from "../../../base/decorator";
-import {Model, SqlDefaultValue, SqlFlag, SqlType} from "../../../base/model";
+import {Model, SqlFlag, SqlType} from "../../../base/model";
 import {MySqlQueryBuilder} from "../../../database/mysql/mysqlquerybuilder";
-import {AddModelOperation} from "../../../database/migration/operation";
+import {AddCommentOperation, AddModelOperation} from "../../../database/migration/operation";
 import {Version} from "../../../database/migration/version";
 
 @TableName("users")
@@ -66,6 +66,13 @@ id INT AUTO_INCREMENT COMMENT '唯一编码',
 PRIMARY KEY (\`id\`));`;
     const addModelOperation: AddModelOperation = new AddModelOperation(Version);
     const sql: string = queryBuilder.buildAddModelOperation(addModelOperation);
+    chai.expect(sql).to.equal(expectSql);
+  });
+
+  it("Test buildAddCommentOperation", () => {
+    const expectSql: string | undefined = undefined;
+    const addCommentOperation: AddCommentOperation = new AddCommentOperation(Version);
+    const sql: string = queryBuilder.buildAddCommentOperation(addCommentOperation);
     chai.expect(sql).to.equal(expectSql);
   });
 });
