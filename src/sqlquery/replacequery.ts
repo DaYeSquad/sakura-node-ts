@@ -3,7 +3,6 @@
 
 import {sqlContext} from "../util/sqlcontext";
 import {SqlType} from "../base/model";
-import {SqlQuery} from "./sqlquery";
 import {Query, QueryType} from "./query";
 
 /**
