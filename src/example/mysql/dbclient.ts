@@ -32,29 +32,34 @@ export class User extends Model {
 }
 
 (async () => {
-  const driverOptions: DriverOptions = {
-    type: DriverType.MYSQL,
-    username: "root",
-    password: "111111",
-    host: "localhost",
-    database: "gagodata"
-  };
+  try {
+    const driverOptions: DriverOptions = {
+      type: DriverType.MYSQL,
+      username: "root",
+      password: "111111",
+      host: "localhost",
+      database: "gagodata"
+    };
 
-  // 使用 Migration 新建 users 表
-  let migration: Migration = new Migration({
-    version: 3,
-    appName: "api-server-6",
-    driverOptions: driverOptions
-  });
+    // 使用 Migration 新建 users 表
+    let migration: Migration = new Migration({
+      version: 6,
+      appName: "api-server-6",
+      driverOptions: driverOptions
+    });
 
-  migration.addModel(User);
+    migration.addModel(User);
+    migration.addColumn(User, {name: "new_column", type: SqlType.TEXT, flag: SqlFlag.NOT_NULL, comment: "测试新列"});
 
-  await migration.migrate();
+    await migration.migrate();
 
-  // 创建 DBClient 全局单例
-  // DBClient.createClient(driverOptions);
-  //
-  // const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
-  // const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
-  // console.log(`there are ${result.rows.length} users`);
+    // 创建 DBClient 全局单例
+    // DBClient.createClient(driverOptions);
+    //
+    // const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
+    // const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
+    // console.log(`there are ${result.rows.length} users`);
+  } catch (err) {
+    console.log(err);
+  }
 })();

@@ -203,7 +203,7 @@ export class Migration {
     }
 
     for (let operation of this.operations_) {
-      const sql: string = this.dbClient_.driver.operationToString(operation);
+      const sql: string | undefined = this.dbClient_.driver.operationToString(operation);
       if (sql) {
         sqls.push(sql);
       }

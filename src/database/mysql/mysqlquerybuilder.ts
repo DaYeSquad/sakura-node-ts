@@ -199,11 +199,18 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
   /**
    * Builds {AddColumnOperation} to raw query.
-   * @param operation {AddColumnOperation} object.
+   * @param op {AddColumnOperation} object.
    */
-  buildAddColumnOperation(operation: AddColumnOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildAddColumnOperation(op: AddColumnOperation): string {
+    const tableName: string = sqlContext.findTableByClass(op.modelClass);
+    const type: string = this.sqlTypeToCreateSyntaxString_(op.column.type);
+
+    let defaultValueWithWhiteSpace: string = "";
+    if (op.column.defaultValue) {
+      defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(op.column.defaultValue)}`;
+    }
+
+    return `ALTER TABLE ${tableName} ADD COLUMN ${op.column.name} ${type}${defaultValueWithWhiteSpace};`;
   }
 
   /**
@@ -244,7 +251,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       case SqlType.BIGINT: return "BIGINT";
       case SqlType.VARCHAR_1024: return "VARCHAR(1024)";
       case SqlType.VARCHAR_255: return "VARCHAR(255)";
-      case SqlType.TIMESTAMP: return "TIMESTAMP";
+      case SqlType.TIMESTAMP: return "TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
       case SqlType.JSON: return "JSON";
       case SqlType.NUMERIC: return "NUMERIC";
       case SqlType.DATE: return "DATE";

@@ -7,11 +7,11 @@ import {SelectQuery} from "../../../sqlquery/selectquery";
 import {Column, TableName} from "../../../base/decorator";
 import {Model, SqlFlag, SqlType} from "../../../base/model";
 import {MySqlQueryBuilder} from "../../../database/mysql/mysqlquerybuilder";
-import {AddCommentOperation, AddModelOperation} from "../../../database/migration/operation";
+import {AddColumnOperation, AddCommentOperation, AddModelOperation} from "../../../database/migration/operation";
 import {Version} from "../../../database/migration/version";
 
 @TableName("users")
-class TestSelectUser extends Model {
+class User extends Model {
   @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY)
   uid: number;
 
@@ -39,17 +39,16 @@ describe("MySqlQueryBuilder", () => {
     queryBuilder = new MySqlQueryBuilder();
   });
 
-
   describe("Test buildSelectQuery", () => {
     it("查询语句 join in 关联查询", () => {
-      const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid"])
+      const query: SelectQuery = new SelectQuery().fromClass(User).select(["users.username", "enterprise_relationships.eid"])
                               .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
       const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
     });
 
     it("查询语句 多个 join in 关联查询", () => {
-      const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid", "enterprises.name"])
+      const query: SelectQuery = new SelectQuery().fromClass(User).select(["users.username", "enterprise_relationships.eid", "enterprises.name"])
                               .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid")
                               .join("enterprises").on("enterprise_relationships.eid = enterprises.eid");
       const sql: string = queryBuilder.buildSelectQuery(query);
@@ -73,6 +72,13 @@ PRIMARY KEY (\`id\`));`;
     const expectSql: string | undefined = undefined;
     const addCommentOperation: AddCommentOperation = new AddCommentOperation(Version);
     const sql: string = queryBuilder.buildAddCommentOperation(addCommentOperation);
+    chai.expect(sql).to.equal(expectSql);
+  });
+
+  it("Test buildAddColumnOperation", () => {
+    const expectSql: string = `ALTER TABLE users ADD COLUMN new_column TEXT;`;
+    const addColumnOperation: AddColumnOperation = new AddColumnOperation(User, {name: "new_column", type: SqlType.TEXT, flag: SqlFlag.NOT_NULL, comment: "测试新列"})
+    const sql: string = queryBuilder.buildAddColumnOperation(addColumnOperation);
     chai.expect(sql).to.equal(expectSql);
   });
 });
