@@ -106,7 +106,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       const tableName: string = sqlContext.findTableByClass(q.model_.constructor);
 
       if (q.returnId_ && primaryKey) {
-        return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr});`;
+        return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr}); SELECT last_insert_id();`;
       }
 
       return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr})`;

@@ -7,6 +7,8 @@ import {SelectQuery} from "../../../sqlquery/selectquery";
 import {Column, TableName} from "../../../base/decorator";
 import {Model, SqlDefaultValue, SqlFlag, SqlType} from "../../../base/model";
 import {MySqlQueryBuilder} from "../../../database/mysql/mysqlquerybuilder";
+import {AddModelOperation} from "../../../database/migration/operation";
+import {Version} from "../../../database/migration/version";
 
 @TableName("users")
 class TestSelectUser extends Model {
@@ -53,5 +55,17 @@ describe("MySqlQueryBuilder", () => {
       const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid,enterprises.name FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid) JOIN enterprises ON (enterprise_relationships.eid = enterprises.eid)`);
     });
+  });
+
+  it("Test buildAddModelOperation", () => {
+    const expectSql: string = `CREATE TABLE IF NOT EXISTS \`version\` (
+id INT AUTO_INCREMENT, -- 唯一编码
+\`version\` INT, -- 版本号
+\`app_name\` VARCHAR(255) -- 应用名称
+,
+PRIMARY KEY (\`id\`));`;
+    const addModelOperation: AddModelOperation = new AddModelOperation(Version);
+    const sql: string = queryBuilder.buildAddModelOperation(addModelOperation);
+    chai.expect(sql).to.equal(expectSql);
   });
 });

@@ -28,7 +28,8 @@ export class MySqlDriver extends Driver {
       user: driverOptions.username,
       password: driverOptions.password,
       database: driverOptions.database,
-      port: driverOptions.port | 3306
+      port: driverOptions.port | 3306,
+      multipleStatements: true
     });
   }
 
@@ -41,12 +42,6 @@ export class MySqlDriver extends Driver {
 
       if (q instanceof Query) {
         rawSql = this.queryToString_(q);
-        if (q.type() === QueryType.INSERT) {
-          const insertQ: InsertQuery = <InsertQuery>q;
-          if (insertQ.returnId_) {
-            console.log("it has some error");
-          }
-        }
       } else if (q instanceof Operation) {
         rawSql = this.operationToString(q);
       } else {
