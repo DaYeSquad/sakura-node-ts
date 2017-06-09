@@ -15,6 +15,7 @@ export class SelectQuery extends Query {
   limit_: number;
   offset_: number;
   joinUsings_: string[] = [];
+  joinOn_: Array<{tableName: string, on: string}> = [];
   groupBy_: string[] = [];
 
   type(): QueryType {
@@ -41,6 +42,18 @@ export class SelectQuery extends Query {
 
   joinUsing(joninStr: string): this {
     this.joinUsings_.push(joninStr);
+    return this;
+  }
+
+  join(tableName: string): this {
+    this.joinOn_.push({tableName: tableName, on: null});
+    return this;
+  }
+
+  on(onStr: string): this {
+    let lastJoinIn: {tableName: string, on: string} = this.joinOn_.pop();
+    lastJoinIn["on"] = onStr;
+    this.joinOn_.push(lastJoinIn);
     return this;
   }
 
