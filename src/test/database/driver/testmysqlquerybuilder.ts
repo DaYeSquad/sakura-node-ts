@@ -59,9 +59,9 @@ describe("MySqlQueryBuilder", () => {
 
   it("Test buildAddModelOperation", () => {
     const expectSql: string = `CREATE TABLE IF NOT EXISTS \`version\` (
-id INT AUTO_INCREMENT, -- 唯一编码
-\`version\` INT, -- 版本号
-\`app_name\` VARCHAR(255) -- 应用名称
+id INT AUTO_INCREMENT COMMENT '唯一编码',
+\`version\` INT COMMENT '版本号',
+\`app_name\` VARCHAR(255) COMMENT '应用名称'
 ,
 PRIMARY KEY (\`id\`));`;
     const addModelOperation: AddModelOperation = new AddModelOperation(Version);

@@ -162,7 +162,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
       let comment: string = "";
       if (sqlField.comment) {
-        comment = ` -- ${sqlField.comment}`;
+        comment = ` COMMENT '${sqlField.comment}'`;
       }
 
       let comma: string = index === (sqlFields.length - 1) ? "" : ",";
@@ -171,14 +171,14 @@ export class MySqlQueryBuilder implements QueryBuilder {
       if (sqlField.defaultValue) {
         // if default value type is SERIAL, use SERIAL syntax
         if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL) {
-          sql += `${sqlField.columnName} INT AUTO_INCREMENT${comma}${comment}\n`;
+          sql += `${sqlField.columnName} INT AUTO_INCREMENT${comment}${comma}\n`;
           return;
         }
 
         defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(sqlField.defaultValue)}`;
       }
 
-      sql += `\`${sqlField.columnName}\` ${type}${defaultValueWithWhiteSpace}${comma}${comment}\n`;
+      sql += `\`${sqlField.columnName}\` ${type}${defaultValueWithWhiteSpace}${comment}${comma}\n`;
     });
 
     if (primaryKey) {
@@ -189,13 +189,12 @@ export class MySqlQueryBuilder implements QueryBuilder {
     return sql;
   }
 
+
   /**
-   * Builds {AddCommentOperation} to raw query.
-   * @param operation {AddCommentOperation} object.
+   * Implemented in {buildAddModelOperation}.
    */
-  buildAddCommentOperation(operation: AddCommentOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildAddCommentOperation(operation: AddCommentOperation): string | undefined {
+    return undefined;
   }
 
   /**

@@ -238,7 +238,7 @@ export class PgQueryBuilder implements QueryBuilder {
   /**
    * COMMENT ON COLUMN <col> IS '<comment>';
    */
-  buildAddCommentOperation(op: AddCommentOperation): string {
+  buildAddCommentOperation(op: AddCommentOperation): string | undefined {
     let sql: string = "";
     const tableName: string = sqlContext.findTableByClass(op.modelClass);
     const sqlFields: SqlField[] = sqlContext.findSqlFields(op.modelClass);

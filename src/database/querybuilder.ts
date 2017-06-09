@@ -54,9 +54,12 @@ export interface QueryBuilder {
 
   /**
    * Builds {AddCommentOperation} to raw query.
+   *
+   * WARNING: Database not have its implementation can return undefined.
+   *
    * @param operation {AddCommentOperation} object.
    */
-  buildAddCommentOperation(operation: AddCommentOperation): string;
+  buildAddCommentOperation(operation: AddCommentOperation): string | undefined;
 
   /**
    * Builds {AddColumnOperation} to raw query.

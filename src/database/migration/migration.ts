@@ -143,7 +143,12 @@ export class Migration {
 
     for (let i = 0; i < this.operations_.length; i++) {
       let operation: Operation = this.operations_[i];
-      sql += this.dbClient_.driver.operationToString(operation);
+      const opSql: string | undefined = this.dbClient_.driver.operationToString(operation);
+      if (opSql) {
+        sql += opSql;
+      } else {
+        continue;
+      }
 
       if (i !== this.operations_.length - 1) {
         sql += "\n";
@@ -198,7 +203,10 @@ export class Migration {
     }
 
     for (let operation of this.operations_) {
-      sqls.push(this.dbClient_.driver.operationToString(operation));
+      const sql: string = this.dbClient_.driver.operationToString(operation);
+      if (sql) {
+        sqls.push(sql);
+      }
     }
 
     await this.dbClient_.queryRawInTransaction(sqls);
