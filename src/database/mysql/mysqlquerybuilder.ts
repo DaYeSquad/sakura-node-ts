@@ -162,7 +162,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
       let comment: string = "";
       if (sqlField.comment) {
-        comment = ` -- ${sqlField.comment}`;
+        comment = ` COMMENT '${sqlField.comment}'`;
       }
 
       let comma: string = index === (sqlFields.length - 1) ? "" : ",";
@@ -171,14 +171,14 @@ export class MySqlQueryBuilder implements QueryBuilder {
       if (sqlField.defaultValue) {
         // if default value type is SERIAL, use SERIAL syntax
         if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL) {
-          sql += `${sqlField.columnName} INT AUTO_INCREMENT${comma}${comment}\n`;
+          sql += `${sqlField.columnName} INT AUTO_INCREMENT${comment}${comma}\n`;
           return;
         }
 
         defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(sqlField.defaultValue)}`;
       }
 
-      sql += `\`${sqlField.columnName}\` ${type}${defaultValueWithWhiteSpace}${comma}${comment}\n`;
+      sql += `\`${sqlField.columnName}\` ${type}${defaultValueWithWhiteSpace}${comment}${comma}\n`;
     });
 
     if (primaryKey) {
@@ -189,49 +189,65 @@ export class MySqlQueryBuilder implements QueryBuilder {
     return sql;
   }
 
+
   /**
-   * Builds {AddCommentOperation} to raw query.
-   * @param operation {AddCommentOperation} object.
+   * Implemented in {buildAddModelOperation}.
    */
-  buildAddCommentOperation(operation: AddCommentOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildAddCommentOperation(operation: AddCommentOperation): string | undefined {
+    return undefined;
   }
 
   /**
    * Builds {AddColumnOperation} to raw query.
-   * @param operation {AddColumnOperation} object.
+   * @param op {AddColumnOperation} object.
    */
-  buildAddColumnOperation(operation: AddColumnOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildAddColumnOperation(op: AddColumnOperation): string {
+    const tableName: string = sqlContext.findTableByClass(op.modelClass);
+    const type: string = this.sqlTypeToCreateSyntaxString_(op.column.type);
+
+    let defaultValueWithWhiteSpace: string = "";
+    if (op.column.defaultValue) {
+      defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(op.column.defaultValue)}`;
+    }
+
+    return `ALTER TABLE ${tableName} ADD COLUMN ${op.column.name} ${type}${defaultValueWithWhiteSpace};`;
   }
 
   /**
    * Builds {DropColumnOperation} to raw query.
-   * @param operation {DropColumnOperation} object.
+   * @param op {DropColumnOperation} object.
    */
-  buildDropColumnOperation(operation: DropColumnOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildDropColumnOperation(op: DropColumnOperation): string {
+    const tableName: string = sqlContext.findTableByClass(op.modelClass);
+    return `ALTER TABLE ${tableName} DROP COLUMN ${op.columnName};`;
   }
 
   /**
    * Builds {RenameColumnOperation} to raw query.
-   * @param operation {RenameColumnOperation} object.
+   * @param op {RenameColumnOperation} object.
    */
-  buildRenameColumnOperation(operation: RenameColumnOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildRenameColumnOperation(op: RenameColumnOperation): string {
+    const tableName: string = sqlContext.findTableByClass(op.modelClass);
+    const sqlFields: SqlField[] = sqlContext.findSqlFields(op.modelClass);
+    let sqlType: SqlType | undefined;
+    for (let sqlField of sqlFields) {
+      if (sqlField.name === op.oldName) {
+        sqlType = sqlField.type;
+        break;
+      }
+    }
+    const type: string = this.sqlTypeToCreateSyntaxString_(sqlType);
+    return `ALTER TABLE ${tableName} CHANGE ${op.oldName} ${op.newName} ${type};`;
   }
 
   /**
    * Builds {ChangeColumnTypeOperation} to raw query.
-   * @param operation {ChangeColumnTypeOperation} object.
+   * @param op {ChangeColumnTypeOperation} object.
    */
-  buildChangeColumnTypeOperation(operation: ChangeColumnTypeOperation): string {
-    // TODO(lin.xiaoe.f@gmail.com):
-    return "";
+  buildChangeColumnTypeOperation(op: ChangeColumnTypeOperation): string {
+    const tableName: string = sqlContext.findTableByClass(op.modelClass);
+    const newTypeInString: string = this.sqlTypeToCreateSyntaxString_(op.newType);
+    return `ALTER TABLE ${tableName} MODIFY ${op.columnName} ${newTypeInString};`;
   }
 
   /**
@@ -245,7 +261,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       case SqlType.BIGINT: return "BIGINT";
       case SqlType.VARCHAR_1024: return "VARCHAR(1024)";
       case SqlType.VARCHAR_255: return "VARCHAR(255)";
-      case SqlType.TIMESTAMP: return "TIMESTAMP";
+      case SqlType.TIMESTAMP: return "TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
       case SqlType.JSON: return "JSON";
       case SqlType.NUMERIC: return "NUMERIC";
       case SqlType.DATE: return "DATE";

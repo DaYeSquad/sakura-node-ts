@@ -1,13 +1,10 @@
 // Copyright 2017 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {DBClient} from "../../database/dbclient";
 import {DriverOptions, DriverType} from "../../database/driveroptions";
-import {SelectQuery} from "../../sqlquery/selectquery";
 
 import {TableName, Column} from "../../base/decorator";
 import {Model, SqlType, SqlFlag} from "../../base/model";
-import {QueryResult} from "../../database/queryresult";
 import {Migration} from "../../database/migration/migration";
 
 @TableName("users")
@@ -32,29 +29,33 @@ export class User extends Model {
 }
 
 (async () => {
-  const driverOptions: DriverOptions = {
-    type: DriverType.MYSQL,
-    username: "root",
-    password: "111111",
-    host: "localhost",
-    database: "gagodata"
-  };
+  try {
+    const driverOptions: DriverOptions = {
+      type: DriverType.MYSQL,
+      username: "root",
+      password: "111111",
+      host: "localhost",
+      database: "gagodata"
+    };
 
-  // 使用 Migration 新建 users 表
-  let migration: Migration = new Migration({
-    version: 3,
-    appName: "api-server-6",
-    driverOptions: driverOptions
-  });
+    // 使用 Migration 新建 users 表
+    let migration: Migration = new Migration({
+      version: 7,
+      appName: "api-server-6",
+      driverOptions: driverOptions
+    });
 
-  migration.addModel(User);
+    migration.addModel(User);
 
-  await migration.migrate();
+    await migration.migrate();
 
-  // 创建 DBClient 全局单例
-  // DBClient.createClient(driverOptions);
-  //
-  // const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
-  // const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
-  // console.log(`there are ${result.rows.length} users`);
+    // 创建 DBClient 全局单例
+    // DBClient.createClient(driverOptions);
+    //
+    // const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
+    // const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
+    // console.log(`there are ${result.rows.length} users`);
+  } catch (err) {
+    console.log(err);
+  }
 })();

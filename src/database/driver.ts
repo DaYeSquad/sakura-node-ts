@@ -74,7 +74,7 @@ export abstract class Driver {
     return rawSql;
   }
 
-  operationToString(op: Operation): string {
+  operationToString(op: Operation): string | undefined {
     let rawSql: string = "";
 
     switch (op.type) {

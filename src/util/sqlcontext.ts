@@ -41,9 +41,9 @@ export class SqlContext {
   }
 
   getTables(): Map<Function, string> {
-
     return this.tables_;
   }
+
   /**
    * Gets sql field description by Class.
    * @param cls Class.

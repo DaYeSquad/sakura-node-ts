@@ -48,6 +48,8 @@ export class MySqlDriver extends Driver {
         rawSql = q;
       }
 
+      console.log(rawSql);
+
       this.pool_.getConnection((err: mysql.IError, connection: mysql.IConnection) => {
         if (err) reject(err);
 
@@ -63,11 +65,11 @@ export class MySqlDriver extends Driver {
   }
 
   async queryInTransaction(sqls: string[]): Promise<QueryResult> {
-    let bigSql: string = "START TRANSACTION;";
+    let bigSql: string = "START TRANSACTION;\n";
     for (let sql of sqls) {
       bigSql += sql;
     }
-    bigSql += "COMMIT;";
+    bigSql += "\nCOMMIT;";
 
     return await this.query(bigSql);
   }
