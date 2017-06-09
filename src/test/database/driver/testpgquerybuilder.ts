@@ -137,20 +137,22 @@ class WeatherCacheInfo extends Model {
 }
 
 describe("PgQueryBuilder", () => {
-  
+
   let queryBuilder: PgQueryBuilder;
 
   before(() => {
     queryBuilder = new PgQueryBuilder();
   });
 
-  it("Test buildDeleteQuery", () => {
-    let query: DeleteQuery = new DeleteQuery().from("users");
-    const sql: string = queryBuilder.buildDeleteQuery(query);
-    chai.expect(sql).to.equal("DELETE FROM users");
+  describe("Test buildDeleteQuery", () => {
+    it("Test buildDeleteQuery", () => {
+      let query: DeleteQuery = new DeleteQuery().from("users");
+      const sql: string = queryBuilder.buildDeleteQuery(query);
+      chai.expect(sql).to.equal("DELETE FROM users");
+    });
   });
 
-  it("Test buildSelectQuery", () => {
+  describe("Test buildSelectQuery", () => {
     it("查询语句 添加JOIN USING 查询全部属性", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().joinUsing(`join enterprise_relationships using(uid)`)
         .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = ${115237134}`);
@@ -164,6 +166,21 @@ describe("PgQueryBuilder", () => {
         .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = ${115237134}`);
       const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT users.username,enterprises.enterprise_id FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
+    });
+
+    it("查询语句 join in 关联查询", () => {
+      const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid"])
+                              .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
+      const sql: string = queryBuilder.buildSelectQuery(query);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
+    });
+
+    it("查询语句 多个 join in 关联查询", () => {
+      const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid", "enterprises.name"])
+                              .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid")
+                              .join("enterprises").on("enterprise_relationships.eid = enterprises.eid");
+      const sql: string = queryBuilder.buildSelectQuery(query);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid,enterprises.name FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid) JOIN enterprises ON (enterprise_relationships.eid = enterprises.eid)`);
     });
 
     it("查询语句 添加OFFSET", () => {
@@ -197,32 +214,36 @@ describe("PgQueryBuilder", () => {
     });
   });
 
-  it("Test buildInsertQuery", () => {
-    let user: TestInsertUser = new TestInsertUser();
-    user.initAsNewUser("pig");
-    const query: InsertQuery = new InsertQuery().fromModel(user);
-    const sql: string = queryBuilder.buildInsertQuery(query);
-    chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('pig') RETURNING uid`);
+  describe("Test buildInsertQuery", () => {
+    it("Test buildInsertQuery", () => {
+      let user: TestInsertUser = new TestInsertUser();
+      user.initAsNewUser("pig");
+      const query: InsertQuery = new InsertQuery().fromModel(user);
+      const sql: string = queryBuilder.buildInsertQuery(query);
+      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('pig') RETURNING uid`);
+    });
   });
 
-  it("Test buildReplaceQuery", () => {
-    let weatherCache: WeatherCacheInfo = new WeatherCacheInfo();
-    weatherCache.init("forecast_temperatures", "shuye_dikuai_1", {}, 1476842006);
-    const query: ReplaceQuery =
-      new ReplaceQuery()
-        .fromClass(WeatherCacheInfo)
-        .where(`uri='${weatherCache.uri}'`, `alias='${weatherCache.alias}'`)
-        .set("uri", weatherCache.uri, SqlType.VARCHAR_255)
-        .set("alias", weatherCache.alias, SqlType.VARCHAR_255)
-        .set("expires_at", weatherCache.expiresAt, SqlType.TIMESTAMP);
-    const sql: string = queryBuilder.buildReplaceQuery(query);
-    chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',alias='shuye_dikuai_1',expires_at=to_timestamp(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
+  describe("Test buildReplaceQuery", () => {
+    it("Test buildReplaceQuery", () => {
+      let weatherCache: WeatherCacheInfo = new WeatherCacheInfo();
+      weatherCache.init("forecast_temperatures", "shuye_dikuai_1", {}, 1476842006);
+      const query: ReplaceQuery =
+        new ReplaceQuery()
+          .fromClass(WeatherCacheInfo)
+          .where(`uri='${weatherCache.uri}'`, `alias='${weatherCache.alias}'`)
+          .set("uri", weatherCache.uri, SqlType.VARCHAR_255)
+          .set("alias", weatherCache.alias, SqlType.VARCHAR_255)
+          .set("expires_at", weatherCache.expiresAt, SqlType.TIMESTAMP);
+      const sql: string = queryBuilder.buildReplaceQuery(query);
+      chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',alias='shuye_dikuai_1',expires_at=to_timestamp(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
             INSERT INTO _weather_caches (uri,alias,expires_at)
             SELECT 'forecast_temperatures','shuye_dikuai_1',to_timestamp(1476842006)
             WHERE NOT EXISTS (SELECT 1 FROM _weather_caches WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1');`);
+    });
   });
 
-  it("Test buildUpdateQuery", () => {
+  describe("Test buildUpdateQuery", () => {
     it("UpdateQuery with one set and where", () => {
       const query: UpdateQuery = new UpdateQuery().table("films").set("kind", "Dramatic").where(`kind='Drama'`);
       const sql: string = queryBuilder.buildUpdateQuery(query);
@@ -264,8 +285,9 @@ describe("PgQueryBuilder", () => {
     });
   });
 
-  it("Test buildAddModelOperation", () => {
-    const expectResult: string = `CREATE TABLE IF NOT EXISTS users (
+  describe("Test buildAddModelOperation", () => {
+    it("Test buildAddModelOperation", () => {
+      let expectResult: string = `CREATE TABLE IF NOT EXISTS users (
 uid INTEGER PRIMARY KEY DEFAULT make_random_id(), --系统编号，唯一标识
 username VARCHAR(255),
 display_name VARCHAR(255),
@@ -273,19 +295,23 @@ meta JSON,
 created_at TIMESTAMP,
 updated_at TIMESTAMP
 );`;
-    const operation: AddModelOperation = new AddModelOperation(TestCreateTableUser);
-    const sql: string = queryBuilder.buildAddModelOperation(operation);
-    chai.expect(sql).to.equal(expectResult);
+      const operation: AddModelOperation = new AddModelOperation(TestCreateTableUser);
+      let sql: string = queryBuilder.buildAddModelOperation(operation);
+
+      chai.expect(sql).to.equal(expectResult);
+    });
   });
 
-  it("Test generateCreateTableSql with model whose ID is SERIAL", () => {
-    const expectResult: string = `CREATE TABLE IF NOT EXISTS enterprises (
+  describe("Test buildAddModelOperation", () => {
+    it("Test generateCreateTableSql with model whose ID is SERIAL", () => {
+      const expectResult: string = `CREATE TABLE IF NOT EXISTS enterprises (
 eid SERIAL, --系统编号，唯一标识
 name VARCHAR(255) --企业名
 );`;
 
-    const operation: AddModelOperation = new AddModelOperation(Enterprise);
-    const sql: string = queryBuilder.buildAddModelOperation(operation);
-    chai.expect(sql).to.equal(expectResult);
+      const operation: AddModelOperation = new AddModelOperation(Enterprise);
+      const sql: string = queryBuilder.buildAddModelOperation(operation);
+      chai.expect(sql).to.equal(expectResult);
+    });
   });
 });
