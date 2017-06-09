@@ -1,6 +1,6 @@
 // Copyright 2017 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
-
+import {Model, SqlField, SqlType, SqlFlag} from "../base/model";
 import {SelectQuery} from "../sqlquery/selectquery";
 import {DeleteQuery} from "../sqlquery/deletequery";
 import {InsertQuery} from "../sqlquery/insertquery";
@@ -10,6 +10,12 @@ import {
   AddColumnOperation, AddCommentOperation, AddModelOperation, ChangeColumnTypeOperation, DropColumnOperation,
   RenameColumnOperation
 } from "./migration/operation";
+
+export interface ModelSqlInfo {
+  primaryKey: string;
+  keys: Array<string>;
+  values: Array<string>;
+}
 
 /**
  * Query builder.
@@ -84,4 +90,22 @@ export interface QueryBuilder {
    * @param operation {ChangeColumnTypeOperation} object.
    */
   buildChangeColumnTypeOperation(operation: ChangeColumnTypeOperation): string;
+
+    /**
+   * Gets model sql definition infos.
+   * @param model Model object.
+   * @returns {ModelSqlInfo} Result information.
+   */
+  getSqlInfoFromDefinition(model: Model): ModelSqlInfo;
+
+  /**
+   *
+   * @param {any} value
+   * @param {SqlType} sqlType
+   * @returns {string} type value in string format
+   *
+   * @memberOf QueryBuilder
+   */
+  valueAsStringByType(value: any, sqlType: SqlType): string;
+
 }

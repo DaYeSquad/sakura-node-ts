@@ -33,7 +33,6 @@ export { Model, SqlFlag, SqlType, SqlField, SqlDefaultValue, SqlDefaultValueType
 // Database
 // -------------------------------------------------------------------------
 
-export { SqlQuery } from "./src/sqlquery/sqlquery";
 export { DeleteQuery } from "./src/sqlquery/deletequery";
 export { InsertQuery } from "./src/sqlquery/insertquery";
 export { ReplaceQuery } from "./src/sqlquery/replacequery";

@@ -7,15 +7,17 @@ import {QueryBuilder} from "../querybuilder";
 import {SelectQuery} from "../../sqlquery/selectquery";
 import {DeleteQuery} from "../../sqlquery/deletequery";
 import {InsertQuery} from "../../sqlquery/insertquery";
-import {ModelSqlInfo, SqlQuery} from "../../sqlquery/sqlquery";
+import {ModelSqlInfo} from "../querybuilder";
 import {sqlContext} from "../../util/sqlcontext";
 import {UpdateQuery} from "../../sqlquery/updatequery";
 import {ReplaceQuery} from "../../sqlquery/replacequery";
+import {DateFormatter, DateFormtOption} from "../../util/dateformatter";
+
 import {
   AddColumnOperation, AddCommentOperation, AddModelOperation, ChangeColumnTypeOperation, DropColumnOperation,
   RenameColumnOperation
 } from "../migration/operation";
-import {SqlDefaultValue, SqlDefaultValueType, SqlField, SqlFlag, SqlType} from "../../base/model";
+import {SqlDefaultValue, SqlDefaultValueType, SqlField, SqlFlag, SqlType, Model} from "../../base/model";
 
 /**
  * MySQL query builder.
@@ -94,7 +96,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
   buildInsertQuery(q: InsertQuery): string {
     if (q.model_) {
-      let modelSqlInfo: ModelSqlInfo = SqlQuery.getSqlInfoFromDefinition(q.model_);
+      let modelSqlInfo: ModelSqlInfo = this.getSqlInfoFromDefinition(q.model_);
 
       let primaryKey: string = modelSqlInfo.primaryKey;
       let keys: Array<string> = modelSqlInfo.keys;
@@ -127,7 +129,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
     q.newValues_.forEach((kv) => {
       keysAry.push(kv.key);
 
-      let value: string = SqlQuery.valueAsStringByType(kv.value, kv.sqlType);
+      let value: string = this.valueAsStringByType(kv.value, kv.sqlType);
       valuesAry.push(value);
       kvsAry.push(`${kv.key}=${value}`);
     });
@@ -248,6 +250,60 @@ export class MySqlQueryBuilder implements QueryBuilder {
     const tableName: string = sqlContext.findTableByClass(op.modelClass);
     const newTypeInString: string = this.sqlTypeToCreateSyntaxString_(op.newType);
     return `ALTER TABLE ${tableName} MODIFY ${op.columnName} ${newTypeInString};`;
+  }
+
+
+  /**
+   * Gets model sql definition infos.
+   * @param model Model object.
+   * @returns {ModelSqlInfo} Result information.
+   */
+  getSqlInfoFromDefinition(model: Model): ModelSqlInfo {
+    let modelInfo: ModelSqlInfo = {primaryKey: "", keys: [], values: []};
+
+    const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(model.constructor);
+
+    for (let sqlField of sqlDefinitions) {
+      if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
+        modelInfo.primaryKey = sqlField.columnName; // default not pushes primary key to keys array
+      } else if (sqlField.name) {
+        if (model[sqlField.name] !== undefined) {
+          modelInfo.keys.push(sqlField.columnName);
+          let value: any = model[sqlField.name];
+          value = this.valueAsStringByType(value, sqlField.type);
+          modelInfo.values.push(value);
+        } else  {
+          console.log(`value (model[${sqlField.name}]) not found`);
+        }
+      } else {
+        console.log(`Unknown sqlField ${sqlField.name}, ${sqlField.columnName}`);
+      }
+    }
+
+    return modelInfo;
+  }
+
+  valueAsStringByType(value: any, sqlType: SqlType): string {
+    if (sqlType === SqlType.VARCHAR_255 || sqlType === SqlType.TEXT || sqlType === SqlType.VARCHAR_1024) {
+      value = `'${value}'`;
+    } else if (sqlType === SqlType.DATE) {
+      let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
+      value = `'${valueAsDateInSql}'::date`;
+    } else if (sqlType === SqlType.TIMESTAMP) {
+      value = `to_timestamp(${value})`;
+    } else if (sqlType === SqlType.JSON) {
+      if (typeof value === "string") {
+        value = `'${value}'::json`;
+      } else {
+        value = `'${JSON.stringify(value)}'::json`;
+      }
+    } else if (sqlType === SqlType.INT || sqlType === SqlType.BIGINT) {
+      value = String(`${value}`);
+    } else {
+      console.log(`SqlType is ${sqlType}, value is ${value}`);
+    }
+
+    return value;
   }
 
   /**
