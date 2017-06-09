@@ -30,6 +30,9 @@ Run `gulp` and all releases will be under `./lib`.
 
 # TEST
 
+We highly recommend to use docker as test database container, for MySQL, you can use [this image](https://hub.docker.com/_/mysql/), 
+run `docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -e MYSQL_DATABASE=gagotest -v /tmp/mysql:/var/lib/mysql -d mysql:latest`
+
 `npm test`
 
 
