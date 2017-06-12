@@ -196,7 +196,7 @@ export class Migration {
     // run operations
     let sqls: Array<string> = [];
 
-    // create necessary functions
+    // create necessary functions on PostgreSQL
     if (setupEnv && (this.dbClient_.driver instanceof PgDriver)) {
       let setupEnvSql: string = fs.readFileSync(path.resolve("sql/setup_pg.sql"), "utf8") + "\n";
       sqls.push(setupEnvSql);
@@ -215,7 +215,8 @@ export class Migration {
     let version: Version = new Version();
     version.version = this.version_;
     version.appName = this.appName_;
-    const updateQuery: UpdateQuery = new UpdateQuery().fromModel(version).where(`id = ${version.id}`);
+    const updateQuery: UpdateQuery = new UpdateQuery().fromModel(version).where(`app_name = '${version.appName}'`,
+      `version = ${version.version}`);
     await this.dbClient_.query(updateQuery);
   }
 }

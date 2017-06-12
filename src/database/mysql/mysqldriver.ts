@@ -48,8 +48,6 @@ export class MySqlDriver extends Driver {
         rawSql = q;
       }
 
-      console.log(rawSql);
-
       this.pool_.getConnection((err: mysql.IError, connection: mysql.IConnection) => {
         if (err) reject(err);
 

@@ -46,7 +46,9 @@ export * from "./src/database/querybuilder";
 export * from "./src/database/queryresult";
 
 export * from "./src/database/error/internalerror";
+export * from "./src/database/error/sqlfieldnamenotfounderror";
 export * from "./src/database/error/unknowndrivererror";
+export * from "./src/database/error/unknownsqlfielderror";
 
 export * from "./src/database/migration/column";
 export * from "./src/database/migration/migration";

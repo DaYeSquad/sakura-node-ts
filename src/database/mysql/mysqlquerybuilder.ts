@@ -19,6 +19,8 @@ import {
   RenameColumnOperation
 } from "../migration/operation";
 import {SqlDefaultValue, SqlDefaultValueType, SqlField, SqlFlag, SqlType, Model} from "../../base/model";
+import {SqlFieldNameNotFound} from "../error/sqlfieldnamenotfounderror";
+import {UnknownSqlFieldError} from "../error/unknownsqlfielderror";
 
 /**
  * MySQL query builder.
@@ -308,6 +310,8 @@ export class MySqlQueryBuilder implements QueryBuilder {
    * Gets model sql definition infos.
    * @param model Model object.
    * @returns {ModelSqlInfo} Result information.
+   * @throws {SqlFieldNameNotFound} When model[sqlField.name] is undefined.
+   * @throws {UnknownSqlFieldError} when sqlField is wrong.
    */
   getSqlInfoFromDefinition(model: Model): ModelSqlInfo {
     let modelInfo: ModelSqlInfo = {primaryKey: "", keys: [], values: []};
@@ -324,10 +328,10 @@ export class MySqlQueryBuilder implements QueryBuilder {
           value = this.valueAsStringByType(value, sqlField.type);
           modelInfo.values.push(value);
         } else  {
-          console.log(`value (model[${sqlField.name}]) not found`);
+          throw new SqlFieldNameNotFound(sqlField.name);
         }
       } else {
-        console.log(`Unknown sqlField ${sqlField.name}, ${sqlField.columnName}`);
+        throw new UnknownSqlFieldError(sqlField);
       }
     }
 
@@ -351,7 +355,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
     } else if (sqlType === SqlType.INT || sqlType === SqlType.BIGINT) {
       value = String(`${value}`);
     } else {
-      console.log(`SqlType is ${sqlType}, value is ${value}`);
+      // do nothing
     }
 
     return value;
