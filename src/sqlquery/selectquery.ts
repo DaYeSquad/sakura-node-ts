@@ -4,6 +4,12 @@
 import {sqlContext} from "../util/sqlcontext";
 import {Query, QueryType} from "./query";
 
+export enum JoinType {
+  JOIN,
+  LEFT_JOIN,
+  RIGHT_JOIN
+}
+
 /**
  * Builds select sql query.
  */
@@ -15,7 +21,7 @@ export class SelectQuery extends Query {
   limit_: number;
   offset_: number;
   joinUsings_: string[] = [];
-  joinOn_: Array<{tableName: string, on: string}> = [];
+  joinOn_: Array<{tableName: string, joinType: JoinType, on: string}> = [];
   groupBy_: string[] = [];
 
   type(): QueryType {
@@ -46,12 +52,22 @@ export class SelectQuery extends Query {
   }
 
   join(tableName: string): this {
-    this.joinOn_.push({tableName: tableName, on: null});
+    this.joinOn_.push({tableName: tableName, joinType: JoinType.JOIN, on: null});
+    return this;
+  }
+
+  leftJoin(tableName: string): this {
+    this.joinOn_.push({tableName: tableName, joinType: JoinType.LEFT_JOIN, on: null});
+    return this;
+  }
+
+  rightJoin(tableName: string): this {
+    this.joinOn_.push({tableName: tableName, joinType: JoinType.RIGHT_JOIN, on: null});
     return this;
   }
 
   on(onStr: string): this {
-    let lastJoinIn: {tableName: string, on: string} = this.joinOn_.pop();
+    let lastJoinIn: {tableName: string, joinType: JoinType, on: string} = this.joinOn_.pop();
     lastJoinIn["on"] = onStr;
     this.joinOn_.push(lastJoinIn);
     return this;

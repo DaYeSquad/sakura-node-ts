@@ -2,7 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {QueryBuilder} from "../querybuilder";
-import {SelectQuery} from "../../sqlquery/selectquery";
+import {SelectQuery, JoinType} from "../../sqlquery/selectquery";
 import {DeleteQuery} from "../../sqlquery/deletequery";
 import {InsertQuery} from "../../sqlquery/insertquery";
 import {ModelSqlInfo} from "../querybuilder";
@@ -40,7 +40,17 @@ export class PgQueryBuilder implements QueryBuilder {
     // join tableName on
     if (q.joinOn_.length > 0) {
       for (let eachJoinOn of q.joinOn_) {
-        sql = `${sql} JOIN ${eachJoinOn.tableName} ON (${eachJoinOn["on"]})`;
+        switch (eachJoinOn["joinType"]) {
+          case JoinType.JOIN:
+            sql = `${sql} JOIN ${eachJoinOn.tableName} ON (${eachJoinOn["on"]})`;
+            break;
+          case JoinType.LEFT_JOIN:
+            sql = `${sql} LEFT JOIN ${eachJoinOn.tableName} ON (${eachJoinOn["on"]})`;
+            break;
+          case JoinType.RIGHT_JOIN:
+            sql = `${sql} RIGHT JOIN ${eachJoinOn.tableName} ON (${eachJoinOn["on"]})`;
+            break;
+        }
       }
     }
 

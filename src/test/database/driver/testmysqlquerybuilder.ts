@@ -76,6 +76,14 @@ describe("MySqlQueryBuilder", () => {
       chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
     });
 
+    it("查询语句 left join in 关联查询", () => {
+      const query: SelectQuery = new SelectQuery().fromClass(User).select(["users.username", "enterprise_relationships.eid"])
+                              .leftJoin("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
+      const sql: string = queryBuilder.buildSelectQuery(query);
+      console.log(sql);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users LEFT JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
+    });
+
     it("查询语句 多个 join in 关联查询", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select(["users.username", "enterprise_relationships.eid", "enterprises.name"])
                               .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid")
