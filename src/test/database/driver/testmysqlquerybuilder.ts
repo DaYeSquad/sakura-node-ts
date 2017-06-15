@@ -37,11 +37,13 @@ class User extends Model {
   @Column("updated_at", SqlType.TIMESTAMP, SqlFlag.NULLABLE)
   updatedAt: timestamp;
 
-  initAsNewUser(displayName: string, username: string, meta: any, updatedAt: timestamp) {
+  initAsNewUser(uid: number, displayName: string, username: string, meta: any, updatedAt: timestamp, createdAt: Date) {
+    this.uid = uid;
     this.displayName = displayName;
     this.username = username;
     this.meta = meta;
     this.updatedAt = updatedAt;
+    this.createdAt = new Date(createdAt);
   }
 }
 
@@ -80,7 +82,6 @@ describe("MySqlQueryBuilder", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select(["users.username", "enterprise_relationships.eid"])
                               .leftJoin("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
       const sql: string = queryBuilder.buildSelectQuery(query);
-      console.log(sql);
       chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users LEFT JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
     });
 
@@ -204,13 +205,19 @@ PRIMARY KEY (\`id\`));`;
     chai.expect(sql).to.equal(expectSql);
   });
 
-   describe("Test buildInsertQuery", () => {
+  describe("Test buildInsertQuery", () => {
     it("Test buildInsertQuery", () => {
       let user: User = new User();
-      user.initAsNewUser("pig", "jiangwei", `{"a":"hello","b":"world"}`, 188821212);
+      user.initAsNewUser(111, "pig", "jiangwei", `{"a":"hello","b":"world"}`, 188821212, new Date(1));
       const query: InsertQuery = new InsertQuery().fromModel(user);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username,display_name,meta,updated_at) VALUES ('jiangwei','pig','{"a":"hello","b":"world"}',FROM_UNIXTIME(188821212)); SELECT last_insert_id();`);
+      chai.expect(sql).to.equal(`INSERT INTO users (username,display_name,meta,created_at,updated_at) VALUES ('jiangwei','pig','{"a":"hello","b":"world"}',FROM_UNIXTIME(Thu Jan 01 1970 08:00:00 GMT+0800 (CST)),FROM_UNIXTIME(188821212)); SELECT last_insert_id();`);
+    });
+
+    it("Test buildInsertQuery by table, set key - value handly", () => {
+      const query: InsertQuery = new InsertQuery().fromTable("users").set(["username", "uid"]).value(["huteng", 1]);
+      const sql: string = queryBuilder.buildInsertQuery(query);
+      chai.expect(sql).to.equal(`INSERT INTO users (username,uid) VALUES (huteng,1); SELECT last_insert_id();`);
     });
   });
 

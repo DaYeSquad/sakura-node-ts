@@ -10,7 +10,11 @@ import {Query, QueryType} from "./query";
  */
 export class InsertQuery extends Query {
   model_: Model;
+  table_: string;
   returnId_: boolean = true;
+  returnValue_: string = "";
+  columns_: string[] = [];
+  values_: any[] = [];
 
   type(): QueryType {
     return QueryType.INSERT;
@@ -18,6 +22,26 @@ export class InsertQuery extends Query {
 
   fromModel(model: Model): this {
     this.model_ = model;
+    return this;
+  }
+
+  fromTable(table: string): this {
+    this.table_ = table;
+    return this;
+  }
+
+  set(columns: string[]): this {
+    this.columns_ = columns;
+    return this;
+  }
+
+  value(values: any[]): this {
+    this.values_ = values;
+    return this;
+  }
+
+  returning(returnColumn: string): this {
+    this.returnValue_ = returnColumn;
     return this;
   }
 
