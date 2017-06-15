@@ -334,12 +334,8 @@ export class MySqlQueryBuilder implements QueryBuilder {
     let modelInfo: ModelSqlInfo = {primaryKey: "", keys: [], values: []};
 
     const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(model.constructor);
-    console.log(model);
-    console.log(sqlDefinitions);
 
     for (let sqlField of sqlDefinitions) {
-      console.log(sqlField.name);
-      console.log(model[sqlField.name]);
       if (sqlField.flag === SqlFlag.PRIMARY_KEY) {
         modelInfo.primaryKey = sqlField.columnName; // default not pushes primary key to keys array
       } else if (sqlField.name) {
