@@ -1,6 +1,7 @@
 # 3.0.5 (2017.6.14.)
 
 * **修改原来join in 方法:** 为 SqlQuery 增加了 left join on 及 right join on 方法。
+* **增加手动添加更新insert方法:** 为 InsertQuery 增加手动添加值的方法
 
 
 # 3.0.4 (3.0.1 - 3.0.4) (2017.6.12.)
