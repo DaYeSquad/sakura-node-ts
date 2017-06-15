@@ -120,6 +120,13 @@ export class PgQueryBuilder implements QueryBuilder {
       }
 
       return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr})`;
+    } else if (q.table_) {
+      if (q.columns_.length > 0 && (q.columns_.length === q.values_.length)) {
+        let keysStr: string = q.columns_.join(",");
+        let valuesStr: string = q.values_.join(",");
+        let returnValue: string = q.returnValue_;
+        return `INSERT INTO ${q.table_} (${keysStr}) VALUES (${valuesStr}) RETURNING ${returnValue}`;
+      }
     }
     return "";
   }
