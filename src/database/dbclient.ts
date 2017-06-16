@@ -69,6 +69,26 @@ export class DBClient {
   }
 
   /**
+   * Translate Query Object to SQL string.
+   * @param q Query string or query object.
+   * @returns {String}  sql String.
+   */
+  queryToString(q: Query): string;
+  queryToString(q: Operation): string;
+  queryToString(q: any): string {
+    let rawSql: string = "";
+
+    if (q instanceof Query) {
+      rawSql = this.driver.queryToString_(q);
+    } else if (q instanceof Operation) {
+      rawSql = this.driver.operationToString(q);
+    } else {
+      rawSql = q;
+    }
+    return rawSql;
+  }
+
+  /**
    * Executes SQL queries in transaction.
    * @param sqls Query strings.
    * @returns {Promise<QueryResult>} Query result.
