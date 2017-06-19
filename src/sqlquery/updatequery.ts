@@ -62,7 +62,9 @@ export class UpdateQuery {
         let key: string = sqlField.columnName;
         let value: any = this.model_[sqlField.name];
         if (value !== undefined) {
-          if (sqlField.type === SqlType.VARCHAR_255 || sqlField.type === SqlType.TEXT || sqlField.type === SqlType.VARCHAR_1024) {
+          if (value === null) {
+          value = "NULL";
+        }else if (sqlField.type === SqlType.VARCHAR_255 || sqlField.type === SqlType.TEXT || sqlField.type === SqlType.VARCHAR_1024) {
             value = `'${value}'`;
           } else if (sqlField.type === SqlType.DATE) {
             let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
