@@ -1,6 +1,12 @@
+# 2.3.0 (2017.6.20.)
+
+* **UpdateQuery 支持 NULL**: Thanks to @杨东来
+
+
 # 2.2.3 (2017.6.5.)
 
 * **新增 Migration 修改字段属性方法**: Migration.resetColumnType
+
 
 # 2.2 (2017.5.12.)
 

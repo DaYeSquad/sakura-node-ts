@@ -40,7 +40,6 @@ export class Land extends Model {
 
 describe("Test UpdateQuery (issues: 'null' string)", () => {
 
-
   it("when get null value sql-string value shoule be null regardless 'null' ext ", () => {
     let land: Land = new Land();
     land.init(null, null, null, null, null);
