@@ -48,7 +48,7 @@ Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint
 
 # RUNTIME
 
-Node 7.x
+Node 6.11.0
 
 
 [npm-url]: https://www.npmjs.com/package/sakura-node-3
