@@ -41,7 +41,7 @@ export function Column(parameters: ColumnParameters): Function;
 export function Column(name: string, type: SqlType, flag: SqlFlag, comment?: string, defaultValue?: SqlDefaultValue): Function;
 
 export function Column(interfaceOrName: any, type?: SqlType, flag?: SqlFlag, comment?: string, defaultValue?: SqlDefaultValue): Function {
-  if (type) { // passing parameters in sequence
+  if (type!== undefined && type !== null) { // passing parameters in sequence
     const columnName: string = interfaceOrName;
     return function (target: Object, propertyName: string) {
       if (target instanceof Model) {
