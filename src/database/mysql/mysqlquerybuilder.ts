@@ -115,6 +115,11 @@ export class MySqlQueryBuilder implements QueryBuilder {
       let keys: Array<string> = modelSqlInfo.keys;
       let values: Array<string> = modelSqlInfo.values;
 
+      if (keys.indexOf(primaryKey) === -1) {
+        keys.push(primaryKey);
+        values.push(`make_random_id()`);
+      }
+
       const keysStr: string = keys.join(",");
       const valuesStr: string = values.join(",");
 
@@ -242,7 +247,8 @@ export class MySqlQueryBuilder implements QueryBuilder {
       let defaultValueWithWhiteSpace: string = "";
       if (sqlField.defaultValue) {
         // if default value type is SERIAL, use SERIAL syntax
-        if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL) {
+        if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL ||
+            sqlField.defaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
           sql += `${sqlField.columnName} INT AUTO_INCREMENT${comment}${comma}\n`;
           return;
         }
