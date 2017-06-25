@@ -6,11 +6,12 @@ import * as mysql from "mysql";
 import {Driver} from "../driver";
 import {DriverOptions} from "../driveroptions";
 import {QueryResult} from "../queryresult";
-import {QueryBuilder} from "../querybuilder";
+import {ModelSqlInfo, QueryBuilder} from "../querybuilder";
 import {MySqlQueryBuilder} from "./mysqlquerybuilder";
 import {Query, QueryType} from "../../sqlquery/query";
 import {Operation} from "../migration/operation";
 import {InsertQuery} from "../../sqlquery/insertquery";
+import {query} from "winston";
 
 /**
  * MySQL driver.
@@ -40,8 +41,19 @@ export class MySqlDriver extends Driver {
     return new Promise<QueryResult>((resolve, reject) => {
       let rawSql: string = "";
 
+      // 在 PG 中，InsertQuery 之后会返回 row[primaryKey] = "<id>";
+      // 在 MySQL 中为 row["insertId"] = "<id>"
+      // 所以在 MySQL 中在之后会注入 row[primaryKey] = "<id>" 以兼容
+      let insertQueryPKey: string | undefined = undefined;
+
       if (q instanceof Query) {
         rawSql = this.queryToString_(q);
+        if (q.type() === QueryType.INSERT) {
+          if ((<InsertQuery>q).model_) {
+            let modelSqlInfo: ModelSqlInfo = this.queryBuilder.getSqlInfoFromDefinition((<InsertQuery>q).model_);
+            insertQueryPKey = modelSqlInfo.primaryKey;
+          }
+        }
       } else if (q instanceof Operation) {
         rawSql = this.operationToString(q);
       } else {
@@ -55,6 +67,13 @@ export class MySqlDriver extends Driver {
           connection.release();
 
           if (err) reject(err);
+
+          // 注入 primaryKey
+          if (insertQueryPKey) {
+            for (let row of rows) {
+              row[insertQueryPKey] = row["insertId"];
+            }
+          }
 
           resolve({rows: rows});
         });

@@ -1,3 +1,8 @@
+# 3.0.8 (2017.6.24.)
+
+* **修复了 issue 23:** [postgres和mysql，插入一条数据，返回数据结构不一样](https://github.com/DaYeSquad/sakura-node-ts/issues/23)
+
+
 # 3.0.5 (2017.6.14.)
 
 * **修改原来join in 方法:** 为 SqlQuery 增加了 left join on 及 right join on 方法。

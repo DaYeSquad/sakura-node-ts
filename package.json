@@ -1,12 +1,12 @@
 {
   "name": "sakura-node-3",
-  "version": "3.0.7",
+  "version": "3.0.8",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL, MySQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
   "scripts": {
     "pretest": "rm -rf ./lib; gulp ts; sh ./bin/tslint.sh;",
-    "test": "export NODE_ENV=test; mocha ./lib --recursive; export NODE_ENV=;",
+    "test": "export NODE_ENV=test; mocha ./lib -x ./lib/js/src/test/testmysqldbclient_issue_23.js --recursive; export NODE_ENV=;",
     "posttest": "rm -rf ./lib",
     "prepublish": "rm -rf ./lib; gulp ts;",
     "postpublish": "rm -rf ./lib; gulp ts; node ./lib/js/src/tools/sendchangelog.js; rm -rf ./lib;",
