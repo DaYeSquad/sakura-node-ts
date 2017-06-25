@@ -227,13 +227,13 @@ describe("PgQueryBuilder", () => {
       user.initAsNewUser("pig");
       const query: InsertQuery = new InsertQuery().fromModel(user);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('pig') RETURNING uid`);
+      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('pig') RETURNING uid;`);
     });
 
     it("Test buildInsertQuery by table, set key - value handly", () => {
       const query: InsertQuery = new InsertQuery().fromTable("users").set(["username", "uid"]).value(["huteng", 1]).returning("uid");
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username,uid) VALUES (huteng,1) RETURNING uid`);
+      chai.expect(sql).to.equal(`INSERT INTO users (username,uid) VALUES (huteng,1) RETURNING uid;`);
     });
   });
 
