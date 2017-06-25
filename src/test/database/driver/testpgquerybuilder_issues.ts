@@ -106,7 +106,7 @@ describe("PgDriver (issues)", () => {
     const query: InsertQuery = new InsertQuery().fromModel(transaction);
     const sql: string = queryBuilder.buildInsertQuery(query);
     const expectSql: string =
-      `INSERT INTO transactions (uid,stock_id,action_type,position,position_sizing,broker_id,action_date) VALUES (1024,'SZ000333',0,2611,100,'xnzq',to_timestamp(1476528418)) RETURNING id`;
+      `INSERT INTO transactions (uid,stock_id,action_type,position,position_sizing,broker_id,action_date) VALUES (1024,'SZ000333',0,2611,100,'xnzq',to_timestamp(1476528418)) RETURNING id;`;
     chai.expect(sql).to.equal(expectSql);
   });
 

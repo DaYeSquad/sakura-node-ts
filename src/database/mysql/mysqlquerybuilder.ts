@@ -350,8 +350,12 @@ export class MySqlQueryBuilder implements QueryBuilder {
           let value: any = model[sqlField.name];
           value = this.valueAsStringByType(value, sqlField.type);
           modelInfo.values.push(value);
-        } else  {
+        }else if (sqlField.flag === SqlFlag.NOT_NULL){
+          // NOT_NULL
           throw new SqlFieldNameNotFound(sqlField.name);
+        } else {
+          // NULLABLE
+          console.log(`value (model[${sqlField.name}]) not found`);
         }
       } else {
         throw new UnknownSqlFieldError(sqlField);
