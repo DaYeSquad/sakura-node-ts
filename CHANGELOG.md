@@ -1,3 +1,7 @@
+# 3.0.10 (2017.6.25.)
+
+* **增加了mysql 随机函数实现 :**  增加了mysql builder 支持 make_radom_id 的实现
+
 # 3.0.8 (2017.6.24.)
 
 * **修复了 issue 23:** [postgres和mysql，插入一条数据，返回数据结构不一样](https://github.com/DaYeSquad/sakura-node-ts/issues/23)
