@@ -255,8 +255,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       let defaultValueWithWhiteSpace: string = "";
       if (sqlField.defaultValue) {
         // if default value type is SERIAL, use SERIAL syntax
-        if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL ||
-            sqlField.defaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
+        if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL) {
           sql += `${sqlField.columnName} INT AUTO_INCREMENT${comment}${comma}\n`;
           return;
         }
