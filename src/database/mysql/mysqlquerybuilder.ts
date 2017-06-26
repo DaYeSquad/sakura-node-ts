@@ -115,6 +115,19 @@ export class MySqlQueryBuilder implements QueryBuilder {
       let keys: Array<string> = modelSqlInfo.keys;
       let values: Array<string> = modelSqlInfo.values;
 
+
+      // 如果主键默认值是随机数， 则在插入时自动添加一个随机数主键
+      let fields: SqlField[] = sqlContext.findSqlFields(q.model_.constructor)
+      for (let field of fields) {
+        if (field.flag === SqlFlag.PRIMARY_KEY) {
+          if (field.defaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
+            keys.push(primaryKey);
+            values.push(`make_random_id()`);
+          }
+          break;
+        }
+      }
+
       const keysStr: string = keys.join(",");
       const valuesStr: string = values.join(",");
 
