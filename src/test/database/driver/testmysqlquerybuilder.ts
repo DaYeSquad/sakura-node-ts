@@ -19,7 +19,7 @@ import {Version} from "../../../database/migration/version";
 
 @TableName("users")
 class User extends Model {
-  @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY)
+  @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY, "", SqlDefaultValue.MAKE_RANDOM_ID())
   uid: number;
 
   @Column("username", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
