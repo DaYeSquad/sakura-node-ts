@@ -289,32 +289,29 @@ PRIMARY KEY (\`id\`));`;
       user.username = "jiangwei";
       const query: InsertQuery  = new InsertQuery().fromModel(user);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('jiangwei'); SELECT last_insert_id();`);
-    });
-
-    it("column function sqltype.text unable to register property", () => {
-      let user: User = new User();
-      user.username = "jiangwei";
-      const query: InsertQuery  = new InsertQuery().fromModel(user);
-      const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('jiangwei'); SELECT last_insert_id();`);
-    });
-
-    it("modelFromRow SqlType.JSON", () => {
-      let user: User = new User();
-      user.username = "jiangwei";
-      const query: InsertQuery  = new InsertQuery().fromModel(user);
-      const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('jiangwei'); SELECT last_insert_id();`);
+      chai.expect(sql).to.equal(`INSERT INTO users (username,uid) VALUES (\'jiangwei\',make_random_id()); SELECT last_insert_id();`);
     });
 
     it("TIMESTAMP default  CURRENT_TIMESTAMP to NULL", () => {
-      let user: User = new User();
-      user.username = "jiangwei";
-      const query: InsertQuery  = new InsertQuery().fromModel(user);
-      const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('jiangwei'); SELECT last_insert_id();`);
+      const expectSql: string = `CREATE TABLE IF NOT EXISTS \`users\` (
+\`uid\` INT DEFAULT make_random_id(),
+\`username\` VARCHAR(255),
+\`display_name\` VARCHAR(255),
+\`meta\` JSON,
+\`created_at\` TIMESTAMP NULL DEFAULT NULL,
+\`updated_at\` TIMESTAMP NULL DEFAULT NULL
+,
+PRIMARY KEY (\`uid\`));`;
+      const addModelOperation: AddModelOperation = new AddModelOperation(User);
+      const sql: string = queryBuilder.buildAddModelOperation(addModelOperation);
+      console.log(sql);
+      chai.expect(sql).to.equal(expectSql);
     });
+
+    it("column function sqltype.text unable to register property", () => {
+      // TODO: @jiangwei
+    });
+
   });
 
 });
