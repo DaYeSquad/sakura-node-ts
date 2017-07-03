@@ -280,5 +280,41 @@ PRIMARY KEY (\`id\`));`;
       const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET created_at=FROM_UNIXTIME(${user.updatedAt}),updated_at=FROM_UNIXTIME(${user.updatedAt}) WHERE  uid = 1;`);
     });
+
   });
+
+  describe("UnitTest Error", () => {
+    it("SqlFlag.NULLABLE value is empty throw error", () => {
+      let user: User = new User();
+      user.username = "jiangwei";
+      const query: InsertQuery  = new InsertQuery().fromModel(user);
+      const sql: string = queryBuilder.buildInsertQuery(query);
+      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('jiangwei'); SELECT last_insert_id();`);
+    });
+
+    it("column function sqltype.text unable to register property", () => {
+      let user: User = new User();
+      user.username = "jiangwei";
+      const query: InsertQuery  = new InsertQuery().fromModel(user);
+      const sql: string = queryBuilder.buildInsertQuery(query);
+      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('jiangwei'); SELECT last_insert_id();`);
+    });
+
+    it("modelFromRow SqlType.JSON", () => {
+      let user: User = new User();
+      user.username = "jiangwei";
+      const query: InsertQuery  = new InsertQuery().fromModel(user);
+      const sql: string = queryBuilder.buildInsertQuery(query);
+      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('jiangwei'); SELECT last_insert_id();`);
+    });
+
+    it("TIMESTAMP default  CURRENT_TIMESTAMP to NULL", () => {
+      let user: User = new User();
+      user.username = "jiangwei";
+      const query: InsertQuery  = new InsertQuery().fromModel(user);
+      const sql: string = queryBuilder.buildInsertQuery(query);
+      chai.expect(sql).to.equal(`INSERT INTO users (username) VALUES ('jiangwei'); SELECT last_insert_id();`);
+    });
+  });
+
 });
