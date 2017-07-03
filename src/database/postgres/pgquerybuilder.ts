@@ -248,7 +248,7 @@ export class PgQueryBuilder implements QueryBuilder {
 
         defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(sqlField.defaultValue)}`;
       }
-      
+
       sql += `${sqlField.columnName} ${type}${flagWithWhiteSpace}${defaultValueWithWhiteSpace}${comma}${comment}\n`;
     });
 

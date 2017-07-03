@@ -45,7 +45,7 @@ export class Model {
       } else if (sqlField.type === SqlType.JSON) {
         if (typeof row[sqlField.columnName] === "string") {
           instance[sqlField.name] = JSON.parse(row[sqlField.columnName]);
-        } else if(typeof row[sqlField.columnName] === "object") {
+        } else if (typeof row[sqlField.columnName] === "object") {
           instance[sqlField.name] = row[sqlField.columnName];
         } else {
           // Null
