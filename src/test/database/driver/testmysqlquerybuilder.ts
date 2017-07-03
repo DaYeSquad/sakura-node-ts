@@ -19,7 +19,7 @@ import {Version} from "../../../database/migration/version";
 
 @TableName("users")
 class User extends Model {
-  @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY)
+  @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY, "", SqlDefaultValue.MAKE_RANDOM_ID())
   uid: number;
 
   @Column("username", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
@@ -211,7 +211,7 @@ PRIMARY KEY (\`id\`));`;
       user.initAsNewUser(111, "pig", "jiangwei", `{"a":"hello","b":"world"}`, 188821212, new Date(1));
       const query: InsertQuery = new InsertQuery().fromModel(user);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username,display_name,meta,created_at,updated_at) VALUES ('jiangwei','pig','{"a":"hello","b":"world"}',FROM_UNIXTIME(Thu Jan 01 1970 08:00:00 GMT+0800 (CST)),FROM_UNIXTIME(188821212)); SELECT last_insert_id();`);
+      chai.expect(sql).to.equal(`INSERT INTO users (username,display_name,meta,created_at,updated_at,uid) VALUES ('jiangwei','pig','{"a":"hello","b":"world"}',FROM_UNIXTIME(Thu Jan 01 1970 08:00:00 GMT+0800 (CST)),FROM_UNIXTIME(188821212),make_random_id()); SELECT last_insert_id();`);
     });
 
     it("Test buildInsertQuery by table, set key - value handly", () => {
