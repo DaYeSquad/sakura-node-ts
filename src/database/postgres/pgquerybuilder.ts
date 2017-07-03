@@ -238,13 +238,17 @@ export class PgQueryBuilder implements QueryBuilder {
       if (sqlField.defaultValue) {
         // if default value type is SERIAL, use SERIAL syntax
         if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL) {
-          sql += `${sqlField.columnName} SERIAL${comma}${comment}\n`;
+          if (flag !== "") {
+            sql += `${sqlField.columnName} SERIAL ${flagWithWhiteSpace} ${comma}${comment}\n`;
+          }else {
+            sql += `${sqlField.columnName} SERIAL${comma}${comment}\n`;
+          }
           return;
         }
 
         defaultValueWithWhiteSpace = ` DEFAULT ${this.sqlDefaultValueToCreateSyntaxString_(sqlField.defaultValue)}`;
       }
-
+      
       sql += `${sqlField.columnName} ${type}${flagWithWhiteSpace}${defaultValueWithWhiteSpace}${comma}${comment}\n`;
     });
 
