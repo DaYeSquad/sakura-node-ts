@@ -6,7 +6,7 @@
   "types": "./lib/definitions/index.d.ts",
   "scripts": {
     "pretest": "rm -rf ./lib; gulp ts; sh ./bin/tslint.sh;",
-    "test": "export NODE_ENV=test; mocha ./lib -x ./lib/js/src/test/testmysqldbclient_issue_23.js --recursive; export NODE_ENV=;",
+    "test": "export NODE_ENV=test; mocha  './lib/js/src/test/**/*.js'   --recursive; export NODE_ENV=;",
     "posttest": "rm -rf ./lib",
     "prepublish": "rm -rf ./lib; gulp ts;",
     "postpublish": "rm -rf ./lib; gulp ts; node ./lib/js/src/tools/sendchangelog.js; rm -rf ./lib;",

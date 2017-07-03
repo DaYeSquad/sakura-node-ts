@@ -318,7 +318,7 @@ updated_at TIMESTAMP
   describe("Test buildAddModelOperation", () => {
     it("Test generateCreateTableSql with model whose ID is SERIAL", () => {
       const expectResult: string = `CREATE TABLE IF NOT EXISTS enterprises (
-eid SERIAL, --系统编号，唯一标识
+eid SERIAL  PRIMARY KEY , --系统编号，唯一标识
 name VARCHAR(255) --企业名
 );`;
 

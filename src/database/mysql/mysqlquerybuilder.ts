@@ -406,7 +406,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       case SqlType.BIGINT: return "BIGINT";
       case SqlType.VARCHAR_1024: return "VARCHAR(1024)";
       case SqlType.VARCHAR_255: return "VARCHAR(255)";
-      case SqlType.TIMESTAMP: return "TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
+      case SqlType.TIMESTAMP: return "TIMESTAMP NULL DEFAULT NULL";
       case SqlType.JSON: return "JSON";
       case SqlType.NUMERIC: return "NUMERIC";
       case SqlType.DATE: return "DATE";

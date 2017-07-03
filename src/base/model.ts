@@ -42,6 +42,15 @@ export class Model {
     for (let sqlField of sqlFields) {
       if (sqlField.type === SqlType.TIMESTAMP) {
         instance[sqlField.name] = DateUtil.millisecondToTimestamp(new Date(row[sqlField.columnName]).getTime());
+      } else if (sqlField.type === SqlType.JSON) {
+        if (typeof row[sqlField.columnName] === "string") {
+          instance[sqlField.name] = JSON.parse(row[sqlField.columnName]);
+        } else if (typeof row[sqlField.columnName] === "object") {
+          instance[sqlField.name] = row[sqlField.columnName];
+        } else {
+          // Null
+          instance[sqlField.name] = undefined;
+        }
       } else if (sqlField.type === SqlType.INT || sqlField.type === SqlType.BIGINT || sqlField.type === SqlType.NUMERIC) {
         instance[sqlField.name] = Number(row[sqlField.columnName]);
       } else {

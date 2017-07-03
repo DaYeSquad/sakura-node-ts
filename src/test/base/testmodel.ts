@@ -12,7 +12,9 @@ describe("ORM", () => {
       uid: 1,
       username: "蒋伟",
       display_name: "蒋小伟",
-      meta: "no meta",
+      meta: {
+        a: 10
+      },
       created_at: 1111,
       updated_at: 2222,
       id: 12312311,
