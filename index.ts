@@ -13,6 +13,7 @@ export { timestamp, PgQueryResult } from "./src/base/typedefines";
 
 export { corsAllowAll } from "./src/middleware/cors";
 export { haltOnTimedout } from "./src/middleware/timeout";
+export { setPowerBy } from "./src/middleware/powerby";
 
 // -------------------------------------------------------------------------
 // API
