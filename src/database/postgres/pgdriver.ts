@@ -26,7 +26,7 @@ export class PgDriver extends Driver {
       database: driverOptions.database,
       password: driverOptions.password,
       host: driverOptions.host,
-      port: driverOptions.port | 5432,
+      port: driverOptions.port || 5432,
       max: 10,
       idleTimeoutMillis: 30000
     };

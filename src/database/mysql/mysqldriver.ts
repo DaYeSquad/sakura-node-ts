@@ -29,7 +29,7 @@ export class MySqlDriver extends Driver {
       user: driverOptions.username,
       password: driverOptions.password,
       database: driverOptions.database,
-      port: driverOptions.port | 3306,
+      port: driverOptions.port || 3306,
       multipleStatements: true
     });
   }
