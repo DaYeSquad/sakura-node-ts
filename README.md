@@ -96,6 +96,11 @@ run `docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -
 `npm install sakura-node-3`
 
 
+# TIPS
+
+Master-slave mode is not natively supported in our project, try to use queryBuilder directly.
+
+
 # LINT
 
 Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint.sh` before commit.
