@@ -96,9 +96,36 @@ run `docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -
 `npm install sakura-node-3`
 
 
-# TIPS
+# CLUSTER
 
-Master-slave mode is not natively supported in our project, try to use queryBuilder directly.
+```TypeScript
+const driverOptions: DriverOptions = {
+      type: DriverType.MYSQL,
+      username: "root",
+      password: "111111",
+      database: "gago",
+      clusterOptions: {
+        master: {
+          host: "172.169.21.48"
+        },
+        slaves: [
+          {
+            host: "172.169.21.49"
+          },
+          {
+            host: "172.169.21.50"
+          }
+        ]
+      }
+    };
+
+    // 创建 DBClient 全局单例
+    DBClient.createClient(driverOptions);
+
+    const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
+    const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
+    console.log(`there are ${result.rows.length} users`);
+```
 
 
 # LINT

@@ -7,18 +7,8 @@ import {UnknownDriverError} from "./error/unknowndrivererror";
 import {PgDriver} from "./postgres/pgdriver";
 import {DriverOptions, DriverType} from "./driveroptions";
 import {MySqlDriver} from "./mysql/mysqldriver";
-import {Query, QueryType} from "../sqlquery/query";
-import {InternalError} from "./error/internalerror";
-import {SelectQuery} from "../sqlquery/selectquery";
-import {InsertQuery} from "../sqlquery/insertquery";
-import {DeleteQuery} from "../sqlquery/deletequery";
-import {UpdateQuery} from "../sqlquery/updatequery";
-import {ReplaceQuery} from "../sqlquery/replacequery";
-import {raw} from "body-parser";
-import {
-  AddColumnOperation, AddCommentOperation, AddModelOperation, ChangeColumnTypeOperation, DropColumnOperation, Operation,
-  OperationType, RenameColumnOperation
-} from "./migration/operation";
+import {Query} from "../sqlquery/query";
+import {Operation} from "./migration/operation";
 
 /**
  * Database client.

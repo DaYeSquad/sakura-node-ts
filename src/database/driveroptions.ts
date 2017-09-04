@@ -7,33 +7,51 @@ export enum DriverType {
 }
 
 /**
- * Options of database driver.
+ * Options of cluster mode
  */
-export interface DriverOptions {
-  type: DriverType;
+export interface ClusterOptions {
+  master: DriverConnectionOptions;
+  slaves: DriverConnectionOptions[];
+}
 
+/**
+ * Basic connection options for driver
+ */
+export interface DriverConnectionOptions {
   /**
    * Username (aka User) of database.
    */
-  username: string;
+  username?: string;
 
   /**
    * Password of database.
    */
-  password: string;
+  password?: string;
 
   /**
    * Database name.
    */
-  database: string;
+  database?: string;
 
   /**
    * Host of database.
    */
-  host: string;
+  host?: string;
 
   /**
    * Port number, if not given, default database port will be used.
    */
   port?: number;
+}
+
+/**
+ * Options of database driver.
+ */
+export interface DriverOptions extends DriverConnectionOptions {
+  type: DriverType;
+
+  /**
+   * Cluster options, if used, ignores host, port, database in parent level.
+   */
+  clusterOptions?: ClusterOptions;
 }

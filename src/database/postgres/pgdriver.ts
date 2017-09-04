@@ -21,6 +21,11 @@ export class PgDriver extends Driver {
 
   constructor(driverOptions: DriverOptions) {
     super();
+
+    if (driverOptions.clusterOptions) {
+      throw new Error("We do not support cluster mode in postgres right now, please issue if you want this feature");
+    }
+
     let config: pg.PoolConfig = {
       user: driverOptions.username,
       database: driverOptions.database,

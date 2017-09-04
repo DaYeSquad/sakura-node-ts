@@ -1,3 +1,8 @@
+# 3.1.0 (2017.9.4.)
+
+* **支持 MySQL 的主从模式 :** 新增了 master-slave 模式的选项，默认在 SELECT 语句走 slave，在其余走 master，即读写分离
+
+
 # 3.0.14 (2017.9.3.)
 
 * **修复了 issue 31 :**  buildDeleteQuery及buildSelectQuery末尾无分号，造成使用queryInTransaction时拼接出错
