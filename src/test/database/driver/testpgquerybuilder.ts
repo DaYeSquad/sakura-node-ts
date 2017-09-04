@@ -148,7 +148,7 @@ describe("PgQueryBuilder", () => {
     it("Test buildDeleteQuery", () => {
       let query: DeleteQuery = new DeleteQuery().from("users");
       const sql: string = queryBuilder.buildDeleteQuery(query);
-      chai.expect(sql).to.equal("DELETE FROM users");
+      chai.expect(sql).to.equal("DELETE FROM users;");
     });
   });
 
@@ -157,7 +157,7 @@ describe("PgQueryBuilder", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().joinUsing(`join enterprise_relationships using(uid)`)
         .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = 115237134`);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT * FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
+      chai.expect(sql).to.equal(`SELECT * FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134;`);
     });
 
     it("查询语句 添加JOIN USING 查询部分属性", () => {
@@ -165,21 +165,21 @@ describe("PgQueryBuilder", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprises.enterprise_id"]).joinUsing(`join enterprise_relationships using(uid)`)
         .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = 115237134`);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT users.username,enterprises.enterprise_id FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprises.enterprise_id FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134;`);
     });
 
     it("查询语句 join in 关联查询", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid"])
                               .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid);`);
     });
 
     it("查询语句 left join in 关联查询", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid"])
                               .leftJoin("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users LEFT JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users LEFT JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid);`);
     });
 
     it("查询语句 多个 join in 关联查询", () => {
@@ -187,37 +187,37 @@ describe("PgQueryBuilder", () => {
                               .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid")
                               .join("enterprises").on("enterprise_relationships.eid = enterprises.eid");
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid,enterprises.name FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid) JOIN enterprises ON (enterprise_relationships.eid = enterprises.eid)`);
+      chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid,enterprises.name FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid) JOIN enterprises ON (enterprise_relationships.eid = enterprises.eid);`);
     });
 
     it("查询语句 添加OFFSET", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().setOffset(1);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT * FROM users OFFSET 1`);
+      chai.expect(sql).to.equal(`SELECT * FROM users OFFSET 1;`);
     });
 
     it("查询语句 添加OFFSET 负数则不设置OFFSET", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().setOffset(-1);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT * FROM users`);
+      chai.expect(sql).to.equal(`SELECT * FROM users;`);
     });
 
     it("查询语句 添加groupBy ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().groupBy("username");
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username`);
+      chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username;`);
     });
 
     it("查询语句 添加groupBy 两个参数 ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().groupBy("username", "uid");
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid`);
+      chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid;`);
     });
 
     it("查询语句 添加groupBy 数组参数 ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select().groupBy(...["username", "uid"]);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid`);
+      chai.expect(sql).to.equal(`SELECT * FROM users GROUP BY username,uid;`);
     });
   });
 

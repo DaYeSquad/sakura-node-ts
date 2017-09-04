@@ -16,6 +16,7 @@ import {
   DropColumnOperation, RenameColumnOperation
 } from "../../../database/migration/operation";
 import {Version} from "../../../database/migration/version";
+import {DeleteQuery} from "../../../sqlquery/deletequery";
 
 @TableName("users")
 class User extends Model {
@@ -280,7 +281,16 @@ PRIMARY KEY (\`id\`));`;
       const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET created_at=FROM_UNIXTIME(${user.updatedAt}),updated_at=FROM_UNIXTIME(${user.updatedAt}) WHERE  uid = 1;`);
     });
+  });
 
+  describe("Test build delete query", () => {
+    it("buildDeleteQuery 及 buildSelectQuery 末尾无分号，造成使用 queryInTransaction 时拼接出错", () => {
+      it("UpdateQuery with one set and where", () => {
+        const query: DeleteQuery = new DeleteQuery().from("users").where("uid = 121");
+        const sql: string = queryBuilder.buildDeleteQuery(query);
+        chai.expect(sql).to.equal(`DELETE FROM users WHERE uid = 121;`);
+      });
+    });
   });
 
   describe("UnitTest Error", () => {

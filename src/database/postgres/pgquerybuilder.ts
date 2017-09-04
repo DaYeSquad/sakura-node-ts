@@ -91,6 +91,8 @@ export class PgQueryBuilder implements QueryBuilder {
       }
     }
 
+    sql += ";";
+
     return sql;
   }
 
@@ -99,6 +101,7 @@ export class PgQueryBuilder implements QueryBuilder {
     if (q.where_) {
       sql = `${sql} WHERE ${q.where_}`;
     }
+    sql += ";";
     return sql;
   }
 

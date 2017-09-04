@@ -1,3 +1,8 @@
+# 3.0.14 (2017.9.3.)
+
+* **修复了 issue 31 :**  buildDeleteQuery及buildSelectQuery末尾无分号，造成使用queryInTransaction时拼接出错
+
+
 # 3.0.13 (2017.8.31.)
 
 * **修复了端口错误问题**

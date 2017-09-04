@@ -104,6 +104,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
     if (q.where_) {
       sql = `${sql} WHERE ${q.where_}`;
     }
+    sql += ";";
     return sql;
   }
 

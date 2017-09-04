@@ -9,8 +9,8 @@ import {BaseEmailService} from "gcs";
  */
 
 if (process.env["NODE_ENV"] !== "test") {
-  const toAddresses: string[] = ["linxiaoyi@gagogroup.com", "jiangwei@gagogroup.com", "huteng@gagogroup.com",
-    "liqiushuai@gagogroup.com"];
+  const toAddresses: string[] = ["linxiaoyi@gagogroup.com", "jiangwei@gagogroup.com", "tangyongtao@gagogroup.com",
+    "qifenglong@gagogroup.com", "heming@gagogroup.com", "cuixiangchang@gagogroup.com", "jialongfei@gagogroup.com"];
 
   const packageJson: any = require(path.resolve("./package.json"));
   const currentVersion: string = String(packageJson.version);
