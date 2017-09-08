@@ -33,7 +33,7 @@ export class MySqlDriver extends Driver {
       let clusterOptions: ClusterOptions = driverOptions.clusterOptions;
 
       this.cluster_.add("MASTER", {
-        connectionLimit: 10,
+        connectionLimit: clusterOptions.master.max || 10,
         host: clusterOptions.master.host || driverOptions.host,
         port: clusterOptions.master.port || driverOptions.port || 3306,
         user: clusterOptions.master.username || driverOptions.username,
@@ -46,7 +46,7 @@ export class MySqlDriver extends Driver {
         let slaveDriverOption: DriverConnectionOptions = clusterOptions.slaves[i];
 
         this.cluster_.add(`SLAVE${i}`, {
-          connectionLimit: 10,
+          connectionLimit: slaveDriverOption.max || 10,
           host: slaveDriverOption.host || driverOptions.host,
           port: slaveDriverOption.port || driverOptions.port || 3306,
           user: slaveDriverOption.username || driverOptions.username,
@@ -57,7 +57,7 @@ export class MySqlDriver extends Driver {
       }
     } else {
       this.pool_ = mysql.createPool({
-        connectionLimit: 10,
+        connectionLimit: driverOptions.max || 10,
         host: driverOptions.host,
         user: driverOptions.username,
         password: driverOptions.password,

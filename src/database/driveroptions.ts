@@ -42,6 +42,11 @@ export interface DriverConnectionOptions {
    * Port number, if not given, default database port will be used.
    */
   port?: number;
+
+  /**
+   * Max connections in pool.
+   */
+  max?: number;
 }
 
 /**
