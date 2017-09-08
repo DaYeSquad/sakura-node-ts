@@ -27,7 +27,7 @@ export class MySqlDriver extends Driver {
 
     if (driverOptions.clusterOptions) {
       this.cluster_ = mysql.createPoolCluster({
-        defaultSelector: "ORDER" // select the first node available unconditionally
+        defaultSelector: "RANDOM" // select the first node available unconditionally
       });
 
       let clusterOptions: ClusterOptions = driverOptions.clusterOptions;
