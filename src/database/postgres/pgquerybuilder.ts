@@ -91,7 +91,8 @@ export class PgQueryBuilder implements QueryBuilder {
       }
     }
 
-    sql += ";";
+    // PG 有分号 Gago-data 不兼容
+    // sql += ";";
 
     return sql;
   }

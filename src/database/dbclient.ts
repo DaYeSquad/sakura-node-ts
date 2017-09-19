@@ -96,7 +96,11 @@ export class DBClient {
     let sqls: Array<string> = [];
 
     for (let query of queries) {
-      sqls.push(this.driver.queryToString_(query));
+      let queryStr: string = this.driver.queryToString_(query);
+      if (queryStr.charAt(queryStr.length - 1) !== ";") {
+        queryStr += ";";
+      }
+      sqls.push(queryStr);
     }
 
     return await this.queryRawInTransaction(sqls);
