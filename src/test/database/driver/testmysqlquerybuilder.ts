@@ -314,7 +314,6 @@ PRIMARY KEY (\`id\`));`;
 PRIMARY KEY (\`uid\`));`;
       const addModelOperation: AddModelOperation = new AddModelOperation(User);
       const sql: string = queryBuilder.buildAddModelOperation(addModelOperation);
-      console.log(sql);
       chai.expect(sql).to.equal(expectSql);
     });
 

@@ -60,7 +60,6 @@ describe("关联表查询，返回两个model", () => {
     };
 
     const result: User & EnterpriseRelationships = Model.compositeModelFromRow(sqlQueryResult, User, EnterpriseRelationships);
-    console.log(result);
     chai.expect(result.uid).to.be.equal(1);
     chai.expect(result.eid).to.be.equal(333);
     chai.expect(result.username).to.be.equal("蒋伟");

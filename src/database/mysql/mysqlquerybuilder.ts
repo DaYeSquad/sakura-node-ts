@@ -368,7 +368,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
           throw new SqlFieldNameNotFound(sqlField.name);
         } else {
           // NULLABLE
-          console.log(`value (model[${sqlField.name}]) not found`);
+          // console.log(`value (model[${sqlField.name}]) not found`);
         }
       } else {
         throw new UnknownSqlFieldError(sqlField);

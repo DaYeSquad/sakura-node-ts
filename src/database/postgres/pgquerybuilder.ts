@@ -387,7 +387,9 @@ export class PgQueryBuilder implements QueryBuilder {
           value = this.valueAsStringByType(value, sqlField.type);
           modelInfo.values.push(value);
         } else  {
-          console.log(`value (model[${sqlField.name}]) not found`);
+          if (sqlField.flag === SqlFlag.NOT_NULL) { // if NOT_NULL value is undefined, log its error
+            console.log(`value (model[${sqlField.name}]) not found`);
+          }
         }
       } else {
         console.log(`Unknown sqlField ${sqlField.name}, ${sqlField.columnName}`);
