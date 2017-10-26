@@ -3,6 +3,7 @@
 
 import {sqlContext} from "../util/sqlcontext";
 import {Query, QueryType} from "./query";
+import {SqlField} from "../base/model";
 
 export enum JoinType {
   JOIN,
@@ -14,9 +15,10 @@ export enum JoinType {
  * Builds select sql query.
  */
 export class SelectQuery extends Query {
+  cls_: Function | undefined;
   table_: string;
   where_: string;
-  selectFields_: string[];
+  selectFields_: string[] = [];
   orderBys_: { sort: string, order: "ASC" | "DESC" }[] = [];
   limit_: number;
   offset_: number;
@@ -34,6 +36,7 @@ export class SelectQuery extends Query {
   }
 
   fromClass(cls: Function): this {
+    this.cls_ = cls;
     let table: string = sqlContext.findTableByClass(cls);
     if (table) {
       this.table_ = table;

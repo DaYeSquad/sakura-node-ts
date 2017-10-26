@@ -26,6 +26,12 @@ export class PgQueryBuilder implements QueryBuilder {
     let fields: string = "*";
     if (q.selectFields_.length > 0) {
       fields = q.selectFields_.join(",");
+    } else if (q.cls_) {
+      const sqlFields: SqlField[] = sqlContext.findSqlFields(q.cls_);
+      for (let field of sqlFields) {
+        q.selectFields_.push(field.name);
+      }
+      fields = q.selectFields_.join(",");
     }
 
     let sql: string = `SELECT ${fields} FROM ${q.table_}`;
