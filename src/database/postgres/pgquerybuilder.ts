@@ -411,7 +411,10 @@ export class PgQueryBuilder implements QueryBuilder {
       } else {
         value = `'${JSON.stringify(value)}'::json`;
       }
-    } else if (sqlType === SqlType.INT || sqlType === SqlType.BIGINT) {
+    } else if (sqlType === SqlType.INT ||
+      sqlType === SqlType.BIGINT ||
+      sqlType === SqlType.BOOLEAN ||
+      sqlType === SqlType.NUMERIC) {
       value = String(`${value}`);
     } else {
       console.log(`SqlType is ${sqlType}, value is ${value}`);
