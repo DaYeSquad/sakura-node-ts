@@ -3,12 +3,23 @@
 
 import * as path from "path";
 import {BaseEmailService} from "gcs";
+import {Aliyun, AliyunConfigOptions} from "gago-cloud-service";
 
 /**
  * 将 CHANGELOG.md 发送给订阅更新邮件的人。
  */
 
 if (process.env["NODE_ENV"] !== "test") {
+  // enable email service
+  let aliuyunConfig: AliyunConfigOptions = {
+    enterpriseId: process.env["ENTERPRISE_ID"],
+    accessId: process.env["ACCESS_ID"],
+    accessSecret: process.env["ACCESS_SECRET"],
+    ossRegion: process.env["OSS_REGION"]
+  };
+  Aliyun.setConfig(aliuyunConfig);
+
+  // send email
   const toAddresses: string[] = ["linxiaoyi@gagogroup.com", "jiangwei@gagogroup.com", "tangyongtao@gagogroup.com",
     "qifenglong@gagogroup.com", "heming@gagogroup.com", "cuixiangchang@gagogroup.com", "jialongfei@gagogroup.com"];
 
