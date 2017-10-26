@@ -392,10 +392,13 @@ export class MySqlQueryBuilder implements QueryBuilder {
       } else {
         value = `'${JSON.stringify(value)}'`;
       }
-    } else if (sqlType === SqlType.INT || sqlType === SqlType.BIGINT) {
+    } else if (sqlType === SqlType.INT ||
+      sqlType === SqlType.BIGINT ||
+      sqlType === SqlType.BOOLEAN ||
+      sqlType === SqlType.NUMERIC) {
       value = String(`${value}`);
     } else {
-      // do nothing
+      console.log(`Unknown SqlType is ${sqlType}, value is ${value}`);
     }
 
     return value;

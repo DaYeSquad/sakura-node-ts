@@ -417,7 +417,7 @@ export class PgQueryBuilder implements QueryBuilder {
       sqlType === SqlType.NUMERIC) {
       value = String(`${value}`);
     } else {
-      console.log(`SqlType is ${sqlType}, value is ${value}`);
+      console.log(`Unknown SqlType is ${sqlType}, value is ${value}`);
     }
 
     return value;
