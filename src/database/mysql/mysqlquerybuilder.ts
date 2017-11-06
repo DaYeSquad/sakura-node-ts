@@ -34,7 +34,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
     } else if (q.cls_) {
       const sqlFields: SqlField[] = sqlContext.findSqlFields(q.cls_);
       for (let field of sqlFields) {
-        q.selectFields_.push(field.name);
+        q.selectFields_.push(field.columnName);
       }
       fields = q.selectFields_.join(",");
     }

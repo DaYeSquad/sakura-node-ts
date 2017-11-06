@@ -61,7 +61,7 @@ describe("MySqlQueryBuilder", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select().joinUsing(`join enterprise_relationships using(uid)`)
         .joinUsing(`join enterprises using(enterprise_id)`).where(` enterprises.enterprise_id = 115237134`);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT uid,username,displayName,meta,createdAt,updatedAt FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
+      chai.expect(sql).to.equal(`SELECT uid,username,display_name,meta,created_at,updated_at FROM users join enterprise_relationships using(uid)  join enterprises using(enterprise_id)  WHERE  enterprises.enterprise_id = 115237134`);
     });
 
     it("查询语句 添加JOIN USING 查询部分属性", () => {
@@ -97,37 +97,37 @@ describe("MySqlQueryBuilder", () => {
     it("查询语句 添加LIMIT", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select().setLimit(3);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT uid,username,displayName,meta,createdAt,updatedAt FROM users LIMIT 3`);
+      chai.expect(sql).to.equal(`SELECT uid,username,display_name,meta,created_at,updated_at FROM users LIMIT 3`);
     });
 
     it("查询语句 添加LIMIT后，添加OFFSET", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select().setLimit(2).setOffset(1);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT uid,username,displayName,meta,createdAt,updatedAt FROM users LIMIT 2 OFFSET 1`);
+      chai.expect(sql).to.equal(`SELECT uid,username,display_name,meta,created_at,updated_at FROM users LIMIT 2 OFFSET 1`);
     });
 
     it("查询语句 添加OFFSET 负数则不设置OFFSET", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select().setOffset(-1);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT uid,username,displayName,meta,createdAt,updatedAt FROM users`);
+      chai.expect(sql).to.equal(`SELECT uid,username,display_name,meta,created_at,updated_at FROM users`);
     });
 
     it("查询语句 添加groupBy ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select().groupBy("username");
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT uid,username,displayName,meta,createdAt,updatedAt FROM users GROUP BY username`);
+      chai.expect(sql).to.equal(`SELECT uid,username,display_name,meta,created_at,updated_at FROM users GROUP BY username`);
     });
 
     it("查询语句 添加groupBy 两个参数 ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select().groupBy("username", "uid");
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT uid,username,displayName,meta,createdAt,updatedAt FROM users GROUP BY username,uid`);
+      chai.expect(sql).to.equal(`SELECT uid,username,display_name,meta,created_at,updated_at FROM users GROUP BY username,uid`);
     });
 
     it("查询语句 添加groupBy 数组参数 ", () => {
       const query: SelectQuery = new SelectQuery().fromClass(User).select().groupBy(...["username", "uid"]);
       const sql: string = queryBuilder.buildSelectQuery(query);
-      chai.expect(sql).to.equal(`SELECT uid,username,displayName,meta,createdAt,updatedAt FROM users GROUP BY username,uid`);
+      chai.expect(sql).to.equal(`SELECT uid,username,display_name,meta,created_at,updated_at FROM users GROUP BY username,uid`);
     });
   });
 
