@@ -4,7 +4,7 @@
 import * as mysql from "mysql";
 
 import {Driver} from "../driver";
-import {ClusterOptions, DriverConnectionOptions, DriverOptions} from "../driveroptions";
+import {ClusterOptions, DriverConnectionOptions, DriverOptions, DriverType} from "../driveroptions";
 import {QueryResult} from "../queryresult";
 import {ModelSqlInfo, QueryBuilder} from "../querybuilder";
 import {MySqlQueryBuilder} from "./mysqlquerybuilder";
@@ -21,6 +21,7 @@ export class MySqlDriver extends Driver {
   private cluster_: mysql.IPoolCluster;
 
   queryBuilder: QueryBuilder = new MySqlQueryBuilder();
+  type: DriverType = DriverType.MYSQL;
 
   constructor(driverOptions: DriverOptions) {
     super();

@@ -15,6 +15,7 @@ import {InsertQuery} from "../sqlquery/insertquery";
 import {DeleteQuery} from "../sqlquery/deletequery";
 import {InternalError} from "./error/internalerror";
 import {DBClient} from "./dbclient";
+import {DriverType} from "./driveroptions";
 
 /**
  * Each database should implements this interface.
@@ -25,6 +26,11 @@ export abstract class Driver {
    * Query builder of database.
    */
   queryBuilder: QueryBuilder;
+
+  /**
+   * Type of driver
+   */
+  abstract type: DriverType;
 
   /**
    * Executes SQL query.

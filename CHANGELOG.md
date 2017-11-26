@@ -1,3 +1,8 @@
+# 3.3.0 (2017.11.26.)
+
+* **对 driver 新增 type 方便判断数据库类型 :** dbClient.driver.type 可看数据库类型
+
+
 # 3.2.0 (2017.10.26.)
 
 * **SELECT 语句在构造时不使用 wildcard :** SELECT 语句在查询所有的时候不再使用 wildcard，改为使用具体的枚举 columns

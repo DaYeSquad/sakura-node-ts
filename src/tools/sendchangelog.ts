@@ -21,7 +21,7 @@ if (process.env["NODE_ENV"] !== "test") {
 
   // send email
   const toAddresses: string[] = ["linxiaoyi@gagogroup.com", "jiangwei@gagogroup.com", "tangyongtao@gagogroup.com",
-    "qifenglong@gagogroup.com", "heming@gagogroup.com", "cuixiangchang@gagogroup.com", "jialongfei@gagogroup.com"];
+    "huangtaihu@gagogroup.com", "heming@gagogroup.com", "cuixiangchang@gagogroup.com", "jialongfei@gagogroup.com"];
 
   const packageJson: any = require(path.resolve("./package.json"));
   const currentVersion: string = String(packageJson.version);

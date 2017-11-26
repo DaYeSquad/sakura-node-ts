@@ -4,7 +4,7 @@
 import * as pg from "pg";
 import {Driver} from "../driver";
 import {QueryResult} from "../queryresult";
-import {DriverOptions} from "../driveroptions";
+import {DriverOptions, DriverType} from "../driveroptions";
 import {QueryBuilder} from "../querybuilder";
 import {PgQueryBuilder} from "./pgquerybuilder";
 import {Query, QueryType} from "../../sqlquery/query";
@@ -18,6 +18,7 @@ export class PgDriver extends Driver {
   private pool_: pg.Pool;
 
   queryBuilder: QueryBuilder = new PgQueryBuilder();
+  type: DriverType = DriverType.MYSQL;
 
   constructor(driverOptions: DriverOptions) {
     super();
