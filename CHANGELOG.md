@@ -1,3 +1,7 @@
+# 3.3.1 (2017.11.27.)
+
+* **新增Geometry type和新增findPrimaryKeyByClass function :** 新增Geometry type和新增findPrimaryKeyByClass function于sqlcontext.ts，避免让每隔人都自行撰写搜索primary key栏位名称的function
+
 # 3.3.0 (2017.11.26.)
 
 * **对 driver 新增 type 方便判断数据库类型 :** dbClient.driver.type 可看数据库类型
