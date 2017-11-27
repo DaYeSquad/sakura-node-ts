@@ -100,7 +100,8 @@ export enum SqlType {
   TIMESTAMP,
   JSON,
   NUMERIC,
-  BOOLEAN
+  BOOLEAN,
+  GEOMETRY
 }
 
 /**

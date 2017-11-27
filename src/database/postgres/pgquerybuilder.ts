@@ -339,6 +339,7 @@ export class PgQueryBuilder implements QueryBuilder {
       case SqlType.DATE: return "DATE";
       case SqlType.TEXT: return "TEXT";
       case SqlType.BOOLEAN: return "BOOLEAN";
+      case SqlType.GEOMETRY: return "GEOMETRY";
       default: throw Error(`Undefined SqlType ${sqlType}`);
     }
   }
