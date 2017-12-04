@@ -414,6 +414,11 @@ export class PgQueryBuilder implements QueryBuilder {
       } else {
         value = `'${JSON.stringify(value)}'::json`;
       }
+    } else if (sqlType === SqlType.GEOMETRY) {
+      if (typeof value === "string") {
+        value = JSON.stringify(value);
+      }
+      value = `ST_GeomFromGeoJSON('${value}')::geometry`;
     } else if (sqlType === SqlType.INT ||
       sqlType === SqlType.BIGINT ||
       sqlType === SqlType.BOOLEAN ||
