@@ -96,7 +96,10 @@ export class MySqlDriver extends Driver {
       }
 
       this.getConnection_(q, (err: mysql.IError, connection: mysql.IConnection) => {
-        if (err) reject(err);
+        if (err) {
+          console.log(`sakura-node-ts: getConnection error ${err}`);
+          reject(err);
+        }
 
         connection.query(rawSql, (err: mysql.IError, rows: any[], fields: mysql.IFieldInfo[]) => {
           connection.release();
