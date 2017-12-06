@@ -18,7 +18,7 @@ export class PgDriver extends Driver {
   private pool_: pg.Pool;
 
   queryBuilder: QueryBuilder = new PgQueryBuilder();
-  type: DriverType = DriverType.MYSQL;
+  type: DriverType = DriverType.POSTGRES;
 
   constructor(driverOptions: DriverOptions) {
     super();
