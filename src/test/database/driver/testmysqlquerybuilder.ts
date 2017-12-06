@@ -131,6 +131,21 @@ describe("MySqlQueryBuilder", () => {
     });
   });
 
+
+@TableName("lands")
+class Land extends Model {
+
+  @Column("id", SqlType.INT, SqlFlag.PRIMARY_KEY, "", SqlDefaultValue.MAKE_RANDOM_ID())
+  id: number;
+
+  @Column("geometry", SqlType.GEOMETRY, SqlFlag.NOT_NULL)
+  geometry: any;
+
+  initAsNewLand(geometry: any) {
+    this.geometry = geometry;
+  }
+}
+
 @TableName("_weather_caches")
 class WeatherCacheInfo extends Model {
 
@@ -143,15 +158,19 @@ class WeatherCacheInfo extends Model {
   @Column("alias", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
   alias: string;
 
+  @Column("geometry", SqlType.GEOMETRY, SqlFlag.NOT_NULL)
+  geometry: any;
+
   @Column("meta", SqlType.JSON, SqlFlag.NOT_NULL)
   meta: any = {};
 
   @Column("expires_at", SqlType.TIMESTAMP, SqlFlag.NOT_NULL)
   expiresAt: timestamp;
 
-  initAsNewWeatherCache(uri: string, alias: string, meta: any, expiresAt: timestamp) {
+  initAsNewWeatherCache(uri: string, alias: string, geometry: any, meta: any, expiresAt: timestamp) {
     this.uri = uri;
     this.alias = alias;
+    this.geometry = geometry;
     this.meta = meta;
     this.expiresAt = expiresAt;
   }
@@ -212,7 +231,17 @@ PRIMARY KEY (\`id\`));`;
       user.initAsNewUser(111, "pig", "jiangwei", `{"a":"hello","b":"world"}`, 188821212, new Date(1));
       const query: InsertQuery = new InsertQuery().fromModel(user);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username,display_name,meta,created_at,updated_at,uid) VALUES ('jiangwei','pig','{"a":"hello","b":"world"}',FROM_UNIXTIME(Thu Jan 01 1970 08:00:00 GMT+0800 (CST)),FROM_UNIXTIME(188821212),make_random_id()); SELECT last_insert_id();`);
+      chai.expect(sql).to.equal(`INSERT INTO users (username,display_name,meta,created_at,updated_at,uid) VALUES ('jiangwei','pig','{"a":"hello","b":"world"}',FROM_UNIXTIME(0),FROM_UNIXTIME(188821212),make_random_id()); SELECT last_insert_id();`);
+    });
+
+    it("Test buildInsertQuery by table which has a geometry field", () => {
+      const geometry = { "type": "Feature", "properties": { "cropType": 1 }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 114.076225266848425, 33.784174652354928 ], [ 114.074887931956638, 33.784001741991787 ], [ 114.074828111457833, 33.784330868427169 ], [ 114.074776972229188, 33.784649082682222 ], [ 114.075574088559293, 33.78475934727242 ], [ 114.075634757830485, 33.784270431369173 ], [ 114.076190928393217, 33.784338584178599 ], [ 114.076225266848425, 33.784174652354928 ] ] ] ] } };
+      let land: Land = new Land();
+      land.initAsNewLand(geometry);
+      
+      const query: InsertQuery = new InsertQuery().fromModel(land);
+      const sql: string = queryBuilder.buildInsertQuery(query);
+      chai.expect(sql).to.equal(`INSERT INTO lands (geometry,id) VALUES (ST_GeomFromGeoJSON('${JSON.stringify(geometry)}'),make_random_id()); SELECT last_insert_id();`);
     });
 
     it("Test buildInsertQuery by table, set key - value handly", () => {
@@ -224,19 +253,21 @@ PRIMARY KEY (\`id\`));`;
 
   describe("Test buildReplaceQuery", () => {
     it("Test buildReplaceQuery", () => {
+      const geometry = { "type": "Feature", "properties": { "cropType": 1 }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 114.076225266848425, 33.784174652354928 ], [ 114.074887931956638, 33.784001741991787 ], [ 114.074828111457833, 33.784330868427169 ], [ 114.074776972229188, 33.784649082682222 ], [ 114.075574088559293, 33.78475934727242 ], [ 114.075634757830485, 33.784270431369173 ], [ 114.076190928393217, 33.784338584178599 ], [ 114.076225266848425, 33.784174652354928 ] ] ] ] } };
       let weatherCache: WeatherCacheInfo = new WeatherCacheInfo();
-      weatherCache.initAsNewWeatherCache("forecast_temperatures", "shuye_dikuai_1", {}, 1476842006);
+      weatherCache.initAsNewWeatherCache("forecast_temperatures", "shuye_dikuai_1", geometry, {}, 1476842006);
       const query: ReplaceQuery =
         new ReplaceQuery()
           .fromClass(WeatherCacheInfo)
           .where(`uri='${weatherCache.uri}'`, `alias='${weatherCache.alias}'`)
           .set("uri", weatherCache.uri, SqlType.VARCHAR_255)
+          .set("geometry", geometry, SqlType.GEOMETRY)
           .set("alias", weatherCache.alias, SqlType.VARCHAR_255)
           .set("expires_at", weatherCache.expiresAt, SqlType.TIMESTAMP);
       const sql: string = queryBuilder.buildReplaceQuery(query);
-      chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',alias='shuye_dikuai_1',expires_at=FROM_UNIXTIME(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
-            INSERT INTO _weather_caches (uri,alias,expires_at)
-            SELECT 'forecast_temperatures','shuye_dikuai_1',FROM_UNIXTIME(1476842006)
+      chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',geometry=ST_GeomFromGeoJSON('${JSON.stringify(geometry)}'),alias='shuye_dikuai_1',expires_at=FROM_UNIXTIME(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
+            INSERT INTO _weather_caches (uri,geometry,alias,expires_at)
+            SELECT 'forecast_temperatures',ST_GeomFromGeoJSON('${JSON.stringify(geometry)}'),'shuye_dikuai_1',FROM_UNIXTIME(1476842006)
             WHERE NOT EXISTS (SELECT 1 FROM _weather_caches WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1');`);
     });
   });
@@ -252,6 +283,15 @@ PRIMARY KEY (\`id\`));`;
       const query: UpdateQuery = new UpdateQuery().tableNameFromClass(User).set("kind", "Dramatic").where(`kind='Drama'`);
       const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET kind='Dramatic' WHERE kind='Drama';`);
+    });
+
+    it("UpdateQuery with geometry", () => {
+      const geometry = { "type": "Feature", "properties": { "cropType": 1 }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 114.076225266848425, 33.784174652354928 ], [ 114.074887931956638, 33.784001741991787 ], [ 114.074828111457833, 33.784330868427169 ], [ 114.074776972229188, 33.784649082682222 ], [ 114.075574088559293, 33.78475934727242 ], [ 114.075634757830485, 33.784270431369173 ], [ 114.076190928393217, 33.784338584178599 ], [ 114.076225266848425, 33.784174652354928 ] ] ] ] } };
+      let weatherModel = new WeatherCacheInfo();
+      weatherModel.geometry = geometry;
+      const query: UpdateQuery = new UpdateQuery().fromModel(weatherModel).where(`uri='forcast'`);
+      const sql: string = queryBuilder.buildUpdateQuery(query);
+      chai.expect(sql).to.equal(`UPDATE _weather_caches SET geometry=ST_GeomFromGeoJSON('${JSON.stringify(geometry)}'),meta='{}' WHERE uri='forcast';`);
     });
 
     it("更新语句添加set 过滤属性值为空的属性", () => {

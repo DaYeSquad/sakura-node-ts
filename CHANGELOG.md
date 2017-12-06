@@ -1,3 +1,8 @@
+# 3.3.7 (2017.12.6.)
+
+* **让 update query 和其他query一样都是透过 valueAsStringByType 获取最后产生 SQL 的 value:** 原本是把相同逻辑写了一份在valueAsStringByType和buildUpdateQuery，造成可以新增geometry但不能修改的问题
+* **修复了 pgdriver 类型错误问题:**
+
 # 3.3.6 (2017.12.6.)
 
 * **添加了一些错误输出:** 为错误输出增加标记，方便引用时判断是哪里报出的

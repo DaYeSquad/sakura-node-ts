@@ -168,25 +168,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
           let key: string = sqlField.columnName;
           let value: any = q.model_[sqlField.name];
           if (value !== undefined) {
-            if (sqlField.type === SqlType.VARCHAR_255 || sqlField.type === SqlType.TEXT || sqlField.type === SqlType.VARCHAR_1024) {
-              value = `'${value}'`;
-            } else if (sqlField.type === SqlType.DATE) {
-              let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
-              value = `STR_TO_DATE('${valueAsDateInSql}', '%Y-%m-%d')`;
-            } else if (sqlField.type === SqlType.TIMESTAMP) {
-              if (isNumber(value)) {
-                value = `FROM_UNIXTIME(${value})`;
-              } else if (isDate(value)) {
-                let tmp = Math.floor(new Date(value).getTime() / 1000);
-                value = `FROM_UNIXTIME(${tmp})`;
-              }
-            } else if (sqlField.type === SqlType.JSON) {
-              if (typeof value === "string") {
-                value = `${value}`;
-              } else {
-                value = `'${JSON.stringify(value)}'`;
-              }
-            }
+            value = this.valueAsStringByType(value, sqlField.type);
             updatesAry.push(`${key}=${value}`);
           }
         }
@@ -385,7 +367,12 @@ export class MySqlQueryBuilder implements QueryBuilder {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
       value = `STR_TO_DATE('${valueAsDateInSql}', '%Y-%m-%d')`;
     } else if (sqlType === SqlType.TIMESTAMP) {
-      value = `FROM_UNIXTIME(${value})`;
+      if (isNumber(value)) {
+        value = `FROM_UNIXTIME(${value})`;
+      } else if (isDate(value)) {
+        let tmp = Math.floor(new Date(value).getTime() / 1000);
+        value = `FROM_UNIXTIME(${tmp})`;
+      }
     } else if (sqlType === SqlType.JSON) {
       if (typeof value === "string") {
         value = `'${value}'`;
@@ -393,7 +380,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
         value = `'${JSON.stringify(value)}'`;
       }
     } else if (sqlType === SqlType.GEOMETRY) {
-      if (typeof value === "string") {
+      if (typeof value === "object") {
         value = JSON.stringify(value);
       }
       value = `ST_GeomFromGeoJSON('${value}')`;
