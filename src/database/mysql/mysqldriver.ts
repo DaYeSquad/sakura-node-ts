@@ -12,6 +12,7 @@ import {Query, QueryType} from "../../sqlquery/query";
 import {Operation} from "../migration/operation";
 import {InsertQuery} from "../../sqlquery/insertquery";
 import {query} from "winston";
+import {logError} from "../../util/logger";
 
 /**
  * MySQL driver.
@@ -97,7 +98,7 @@ export class MySqlDriver extends Driver {
 
       this.getConnection_(q, (err: mysql.IError, connection: mysql.IConnection) => {
         if (err) {
-          console.log(`sakura-node-ts: getConnection error ${err}`);
+          logError(`mysql.getConnection error ${err}`);
           reject(err);
         }
 

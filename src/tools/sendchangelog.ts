@@ -4,6 +4,7 @@
 import * as path from "path";
 import {BaseEmailService} from "gcs";
 import {Aliyun, AliyunConfigOptions} from "gago-cloud-service";
+import {logError, logInfo} from "../util/logger";
 
 /**
  * 将 CHANGELOG.md 发送给订阅更新邮件的人。
@@ -30,8 +31,8 @@ if (process.env["NODE_ENV"] !== "test") {
 
   BaseEmailService.sendChangelog(toAddresses, "基础库更新提示", `sakura ${currentVersion} 更新`, changelogPath,
     "/tmp/sakura-node-ts.version").then((requestId: string) => {
-    console.log(`Send CHANGELOG successes ${requestId}`);
+    logInfo(`Send CHANGELOG successes ${requestId}`);
   }).catch((error) => {
-    console.log(`Send CHANGELOG fails ${error.message}`);
+    logError(`Send CHANGELOG fails ${error.message}`);
   });
 }

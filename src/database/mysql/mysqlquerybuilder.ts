@@ -21,6 +21,7 @@ import {
 import {SqlDefaultValue, SqlDefaultValueType, SqlField, SqlFlag, SqlType, Model} from "../../base/model";
 import {SqlFieldNameNotFound} from "../error/sqlfieldnamenotfounderror";
 import {UnknownSqlFieldError} from "../error/unknownsqlfielderror";
+import {logError} from "../../util/logger";
 
 /**
  * MySQL query builder.
@@ -368,7 +369,6 @@ export class MySqlQueryBuilder implements QueryBuilder {
           throw new SqlFieldNameNotFound(sqlField.name);
         } else {
           // NULLABLE
-          // console.log(`value (model[${sqlField.name}]) not found`);
         }
       } else {
         throw new UnknownSqlFieldError(sqlField);
@@ -403,7 +403,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       sqlType === SqlType.NUMERIC) {
       value = String(`${value}`);
     } else {
-      console.log(`Unknown SqlType is ${sqlType}, value is ${value}`);
+      logError(`Unknown SqlType is ${sqlType}, value is ${value}`);
     }
 
     return value;

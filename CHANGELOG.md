@@ -1,6 +1,12 @@
+# 3.3.6 (2017.12.6.)
+
+* **添加了一些错误输出:** 为错误输出增加标记，方便引用时判断是哪里报出的
+
+
 # 3.3.1 (2017.11.27.)
 
 * **新增Geometry type和新增findPrimaryKeyByClass function :** 新增Geometry type和新增findPrimaryKeyByClass function于sqlcontext.ts，避免让每隔人都自行撰写搜索primary key栏位名称的function
+
 
 # 3.3.0 (2017.11.26.)
 

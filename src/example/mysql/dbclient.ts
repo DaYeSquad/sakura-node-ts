@@ -6,6 +6,7 @@ import {DriverOptions, DriverType} from "../../database/driveroptions";
 import {TableName, Column} from "../../base/decorator";
 import {Model, SqlType, SqlFlag} from "../../base/model";
 import {Migration} from "../../database/migration/migration";
+import {logError} from "../../util/logger";
 
 @TableName("users")
 export class User extends Model {
@@ -48,14 +49,7 @@ export class User extends Model {
     migration.addModel(User);
 
     await migration.migrate();
-
-    // 创建 DBClient 全局单例
-    // DBClient.createClient(driverOptions);
-    //
-    // const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
-    // const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
-    // console.log(`there are ${result.rows.length} users`);
   } catch (err) {
-    console.log(err);
+    logError(err);
   }
 })();

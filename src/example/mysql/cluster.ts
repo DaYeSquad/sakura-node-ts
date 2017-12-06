@@ -9,6 +9,7 @@ import {Migration} from "../../database/migration/migration";
 import {DBClient} from "../../database/dbclient";
 import {SelectQuery} from "../../sqlquery/selectquery";
 import {QueryResult} from "../../database/queryresult";
+import {logError, logInfo} from "../../util/logger";
 
 @TableName("users")
 export class User extends Model {
@@ -69,8 +70,8 @@ export class User extends Model {
 
     const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
     const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
-    console.log(`there are ${result.rows.length} users`);
+    logInfo(`there are ${result.rows.length} users`);
   } catch (err) {
-    console.log(err);
+    logError(err);
   }
 })();

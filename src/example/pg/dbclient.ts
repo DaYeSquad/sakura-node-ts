@@ -9,6 +9,7 @@ import {TableName, Column} from "../../base/decorator";
 import {Model, SqlType, SqlFlag} from "../../base/model";
 import {QueryResult} from "../../database/queryresult";
 import {Migration} from "../../database/migration/migration";
+import {logInfo} from "../../util/logger";
 
 @TableName("users")
 export class User extends Model {
@@ -56,5 +57,5 @@ export class User extends Model {
 
   const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
   const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
-  console.log(`there are ${result.rows.length} users`);
+  logInfo(`there are ${result.rows.length} users`);
 })();

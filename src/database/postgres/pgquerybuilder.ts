@@ -16,6 +16,7 @@ import {
   AddColumnOperation, AddCommentOperation, AddModelOperation, ChangeColumnTypeOperation, DropColumnOperation,
   RenameColumnOperation
 } from "../migration/operation";
+import {logInfo} from "../../util/logger";
 
 /**
  * PostgreSQL query builder.
@@ -389,11 +390,11 @@ export class PgQueryBuilder implements QueryBuilder {
           modelInfo.values.push(value);
         } else  {
           if (sqlField.flag === SqlFlag.NOT_NULL) { // if NOT_NULL value is undefined, log its error
-            console.log(`value (model[${sqlField.name}]) not found`);
+            logInfo(`value (model[${sqlField.name}]) not found`);
           }
         }
       } else {
-        console.log(`Unknown sqlField ${sqlField.name}, ${sqlField.columnName}`);
+        logInfo(`Unknown sqlField ${sqlField.name}, ${sqlField.columnName}`);
       }
     }
 
@@ -425,7 +426,7 @@ export class PgQueryBuilder implements QueryBuilder {
       sqlType === SqlType.NUMERIC) {
       value = String(`${value}`);
     } else {
-      console.log(`Unknown SqlType is ${sqlType}, value is ${value}`);
+      logInfo(`Unknown SqlType is ${sqlType}, value is ${value}`);
     }
 
     return value;
