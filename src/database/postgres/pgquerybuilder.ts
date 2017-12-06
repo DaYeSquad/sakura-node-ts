@@ -390,7 +390,12 @@ export class PgQueryBuilder implements QueryBuilder {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
       value = `'${valueAsDateInSql}'::date`;
     } else if (sqlType === SqlType.TIMESTAMP) {
-      value = `to_timestamp(${value})`;
+      if (isNumber(value)) {
+        value = `to_timestamp(${value})`;
+      } else if (isDate(value)) {
+        let tmp = Math.floor(new Date(value).getTime() / 1000);
+        value = `to_timestamp(${tmp})`;
+      }
     } else if (sqlType === SqlType.JSON) {
       if (typeof value === "string") {
         value = `'${value}'::json`;

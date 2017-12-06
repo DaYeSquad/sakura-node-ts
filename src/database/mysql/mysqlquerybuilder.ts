@@ -367,7 +367,12 @@ export class MySqlQueryBuilder implements QueryBuilder {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
       value = `STR_TO_DATE('${valueAsDateInSql}', '%Y-%m-%d')`;
     } else if (sqlType === SqlType.TIMESTAMP) {
-      value = `FROM_UNIXTIME(${value})`;
+      if (isNumber(value)) {
+        value = `FROM_UNIXTIME(${value})`;
+      } else if (isDate(value)) {
+        let tmp = Math.floor(new Date(value).getTime() / 1000);
+        value = `FROM_UNIXTIME(${tmp})`;
+      }
     } else if (sqlType === SqlType.JSON) {
       if (typeof value === "string") {
         value = `'${value}'`;
