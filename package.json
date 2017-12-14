@@ -1,6 +1,6 @@
 {
   "name": "sakura-node-3",
-  "version": "3.3.8",
+  "version": "3.3.9",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL, MySQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
@@ -19,7 +19,7 @@
     "url": "https://github.com/DaYeSquad/sakura-node-ts.git"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "http://npmjs.gagogroup.cn"
   },
   "author": "Frank Lin",
   "license": "MIT",

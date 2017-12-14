@@ -241,7 +241,7 @@ PRIMARY KEY (\`id\`));`;
       
       const query: InsertQuery = new InsertQuery().fromModel(land);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO lands (geometry,id) VALUES (ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 0),make_random_id()); SELECT last_insert_id();`);
+      chai.expect(sql).to.equal(`INSERT INTO lands (geometry,id) VALUES (ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 1, 0),make_random_id()); SELECT last_insert_id();`);
     });
 
     it("Test buildInsertQuery by table, set key - value handly", () => {
@@ -265,9 +265,9 @@ PRIMARY KEY (\`id\`));`;
           .set("alias", weatherCache.alias, SqlType.VARCHAR_255)
           .set("expires_at", weatherCache.expiresAt, SqlType.TIMESTAMP);
       const sql: string = queryBuilder.buildReplaceQuery(query);
-      chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',geometry=ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 0),alias='shuye_dikuai_1',expires_at=FROM_UNIXTIME(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
+      chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',geometry=ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 1, 0),alias='shuye_dikuai_1',expires_at=FROM_UNIXTIME(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
             INSERT INTO _weather_caches (uri,geometry,alias,expires_at)
-            SELECT 'forecast_temperatures',ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 0),'shuye_dikuai_1',FROM_UNIXTIME(1476842006)
+            SELECT 'forecast_temperatures',ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 1, 0),'shuye_dikuai_1',FROM_UNIXTIME(1476842006)
             WHERE NOT EXISTS (SELECT 1 FROM _weather_caches WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1');`);
     });
   });
@@ -291,7 +291,7 @@ PRIMARY KEY (\`id\`));`;
       weatherModel.geometry = geometry;
       const query: UpdateQuery = new UpdateQuery().fromModel(weatherModel).where(`uri='forcast'`);
       const sql: string = queryBuilder.buildUpdateQuery(query);
-      chai.expect(sql).to.equal(`UPDATE _weather_caches SET geometry=ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 0),meta='{}' WHERE uri='forcast';`);
+      chai.expect(sql).to.equal(`UPDATE _weather_caches SET geometry=ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 1, 0),meta='{}' WHERE uri='forcast';`);
     });
 
     it("更新语句添加set 过滤属性值为空的属性", () => {

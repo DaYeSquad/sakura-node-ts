@@ -383,7 +383,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       if (typeof value === "object") {
         value = JSON.stringify(value);
       }
-      value = `ST_GeomFromGeoJSON('${value}', 0)`;
+      value = `ST_GeomFromGeoJSON('${value}', 1, 0)`;
     } else if (sqlType === SqlType.INT ||
       sqlType === SqlType.BIGINT ||
       sqlType === SqlType.BOOLEAN ||
