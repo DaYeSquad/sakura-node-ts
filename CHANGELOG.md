@@ -1,3 +1,7 @@
+# 3.3.8 (2017.12.14.)
+
+* **修复了 MySQL 更新 Geometry 类型时坐标系问题:** 原先是没给，用了默认值 4326，改成了 0
+
 # 3.3.7 (2017.12.6.)
 
 * **让 update query 和其他query一样都是透过 valueAsStringByType 获取最后产生 SQL 的 value:** 原本是把相同逻辑写了一份在valueAsStringByType和buildUpdateQuery，造成可以新增geometry但不能修改的问题
