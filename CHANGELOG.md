@@ -3,6 +3,7 @@
 * **支持以 UUID v4 为主键:** 在 INSERT 语句的支持默认使用 UUID 的值
 * **修复注入攻击问题:** 引入 DBClient.escape(value: any)，同时有 static method 和 instance method
 * **忽略了泰瑚提出的 where 为空的情况:** 在 where 的 array 中如果有空值了话拼接时候会有错误，但是如果处理了该场景，可能会难以 debug
+* **支持 INNER JOIN:** 支持 INNER JOIN 的语法
 
 
 # 3.3.8 - 3.3.9 (2017.12.14.)

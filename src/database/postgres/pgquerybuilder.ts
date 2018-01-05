@@ -59,6 +59,9 @@ export class PgQueryBuilder implements QueryBuilder {
           case JoinType.RIGHT_JOIN:
             sql = `${sql} RIGHT JOIN ${eachJoinOn.tableName} ON (${eachJoinOn["on"]})`;
             break;
+          case JoinType.INNER:
+            sql = `${sql} INNER JOIN ${eachJoinOn.tableName} ON (${eachJoinOn["on"]})`;
+            break;
         }
       }
     }

@@ -8,7 +8,8 @@ import {SqlField} from "../base/model";
 export enum JoinType {
   JOIN,
   LEFT_JOIN,
-  RIGHT_JOIN
+  RIGHT_JOIN,
+  INNER
 }
 
 /**
@@ -66,6 +67,11 @@ export class SelectQuery extends Query {
 
   rightJoin(tableName: string): this {
     this.joinOn_.push({tableName: tableName, joinType: JoinType.RIGHT_JOIN, on: null});
+    return this;
+  }
+
+  innerJoin(tableName: string): this {
+    this.joinOn_.push({tableName: tableName, joinType: JoinType.INNER, on: null});
     return this;
   }
 
