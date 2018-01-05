@@ -1,10 +1,11 @@
-#3.4.0 (2018.1.4.)
+# 3.4.0 (2018.1.4.)
 
 * **支持以 UUID v4 为主键:** 在 INSERT 语句的支持默认使用 UUID 的值
 * **修复注入攻击问题:** 引入 DBClient.escape(value: any)，同时有 static method 和 instance method
+* **忽略了泰瑚提出的 where 为空的情况:** 在 where 的 array 中如果有空值了话拼接时候会有错误，但是如果处理了该场景，可能会难以 debug
 
 
-#3.3.8 - 3.3.9 (2017.12.14.)
+# 3.3.8 - 3.3.9 (2017.12.14.)
 
 * **修复了 MySQL 更新 Geometry 类型时坐标系问题:** 原先是没给，用了默认值 4326，改成了 0
 
@@ -13,6 +14,7 @@
 
 * **让 update query 和其他query一样都是透过 valueAsStringByType 获取最后产生 SQL 的 value:** 原本是把相同逻辑写了一份在valueAsStringByType和buildUpdateQuery，造成可以新增geometry但不能修改的问题
 * **修复了 pgdriver 类型错误问题:**
+
 
 # 3.3.6 (2017.12.6.)
 
