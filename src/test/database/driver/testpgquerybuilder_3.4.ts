@@ -33,8 +33,7 @@ describe("PgQueryBuilder", () => {
 
     const insertQuery: InsertQuery = new InsertQuery().fromModel(user);
     const result: string = queryBuilder.buildInsertQuery(insertQuery);
-    chai.expect(result).to.equal("");
-    // chai.expect(result.substr(0, 52)).to.equal("INSERT INTO users (username,uid) VALUES ('franklin',");
-    // chai.expect(result.indexOf("); SELECT last_insert_id();")).to.not.equal(-1);
+    chai.expect(result.indexOf("INSERT INTO users (uid, username) VALUES")).to.not.equal(-1);
+    chai.expect(result.indexOf("RETURNING uid;")).to.not.equal(-1);
   });
 });

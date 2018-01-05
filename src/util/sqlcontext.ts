@@ -59,14 +59,28 @@ export class SqlContext {
    * @returns {Array<SqlField>} the field name of the primary key, if it is existed, or it will return undefined.
    */
   findPrimaryKeyByClass(cls: Function): string | undefined {
-    const definitions = this.sqlDefinitions_.get(cls);
+    const primaryKeySqlField: SqlField = this.findPrimaryKeySqlFieldByClass(cls);
+    if (primaryKeySqlField) {
+      return primaryKeySqlField.columnName;
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
+   * Gets the field of primary key by class
+   * @param {Function} cls Class
+   * @returns {SqlField} SqlField, if the class has no primary key, undefined will be returned
+   */
+  findPrimaryKeySqlFieldByClass(cls: Function): SqlField | undefined {
+    const definitions: SqlField[] | undefined = this.sqlDefinitions_.get(cls);
     if (!definitions) {
       return undefined;
     }
 
     for (let definition of definitions) {
       if (definition.flag === SqlFlag.PRIMARY_KEY) {
-        return definition.columnName;
+        return definition;
       }
     }
   }

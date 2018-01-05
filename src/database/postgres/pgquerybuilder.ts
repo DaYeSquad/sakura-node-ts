@@ -1,6 +1,8 @@
 // Copyright 2017 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
+import * as uuid from "uuid";
+
 import {QueryBuilder} from "../querybuilder";
 import {SelectQuery, JoinType} from "../../sqlquery/selectquery";
 import {DeleteQuery} from "../../sqlquery/deletequery";
@@ -125,6 +127,19 @@ export class PgQueryBuilder implements QueryBuilder {
       const valuesStr: string = values.join(",");
 
       const tableName: string = sqlContext.findTableByClass(q.model_.constructor);
+      const primaryKeySqlField: SqlField | undefined = sqlContext.findPrimaryKeySqlFieldByClass(q.model_.constructor);
+
+      if (primaryKeySqlField) {
+        if (primaryKeySqlField.defaultValue) {
+          if (primaryKeySqlField.defaultValue.type === SqlDefaultValueType.UUID) {
+            if (q.returnId_) {
+              return `INSERT INTO ${tableName} (${primaryKey}, ${keysStr}) VALUES ('${uuid.v4()}', ${valuesStr}) RETURNING ${primaryKey};`;
+            } else {
+              return `INSERT INTO ${tableName} (${primaryKey}, ${keysStr}) VALUES ('${uuid.v4()}', ${valuesStr});`;
+            }
+          }
+        }
+      }
 
       if (q.returnId_ && primaryKey) {
         return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr}) RETURNING ${primaryKey};`;
