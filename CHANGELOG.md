@@ -1,6 +1,7 @@
 #3.4.0 (2018.1.4.)
 
-* **支持以 UUID v4 为主键**
+* **支持以 UUID v4 为主键:** 在 INSERT 语句的支持默认使用 UUID 的值
+* **修复注入攻击问题:** 引入 DBClient.escape(value: any)，同时有 static method 和 instance method
 
 
 #3.3.8 - 3.3.9 (2017.12.14.)

@@ -1,6 +1,8 @@
 // Copyright 2017 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
+import * as mysql from "mysql";
+
 import {Driver} from "./driver";
 import {QueryResult} from "./queryresult";
 import {UnknownDriverError} from "./error/unknowndrivererror";
@@ -44,6 +46,30 @@ export class DBClient {
    */
   static getClient(): DBClient {
     return DBClient.instance_;
+  }
+
+  /**
+   * Escape value
+   * @returns {string} Escaped value
+   */
+  static escape(value: any | undefined): string {
+    return DBClient.getClient().escape(value);
+  }
+
+  /**
+   * Escape value
+   * @returns {string} Escaped value
+   */
+  escape(value: any | undefined): string {
+    if (this.driver.type === DriverType.POSTGRES) {
+      if (value === null || value === undefined) {
+        return `''`;
+      } else {
+        return String(value);
+      }
+    } else if (this.driver.type === DriverType.MYSQL) {
+      return mysql.escape(value);
+    }
   }
 
   /**
