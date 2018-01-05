@@ -2,6 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import * as util from "util";
+import * as uuid from "uuid";
 
 import {QueryBuilder} from "../querybuilder";
 import {SelectQuery, JoinType} from "../../sqlquery/selectquery";
@@ -130,6 +131,9 @@ export class MySqlQueryBuilder implements QueryBuilder {
           if (field.defaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
             keys.push(primaryKey);
             values.push(`make_random_id()`);
+          } else if (field.defaultValue.type === SqlDefaultValueType.UUID) {
+            keys.push(primaryKey);
+            values.push(`'${uuid.v4()}'`);
           }
           break;
         }

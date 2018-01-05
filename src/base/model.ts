@@ -119,7 +119,8 @@ export enum SqlFlag {
 export enum SqlDefaultValueType {
   MAKE_RANDOM_ID,
   NUMBER,
-  SERIAL
+  SERIAL,
+  UUID
 }
 
 /**
@@ -157,6 +158,17 @@ export class SqlDefaultValue {
     let sqlDefaultValue: SqlDefaultValue = new SqlDefaultValue();
     sqlDefaultValue.type = SqlDefaultValueType.NUMBER;
     sqlDefaultValue.value_ = num;
+    return sqlDefaultValue;
+  }
+
+  /**
+   * Default value type VARCHAR_255 and value is UUID
+   * @constructor
+   */
+  static UUID(version: number = 4): SqlDefaultValue {
+    let sqlDefaultValue: SqlDefaultValue = new SqlDefaultValue();
+    sqlDefaultValue.type = SqlDefaultValueType.UUID;
+    sqlDefaultValue.value_ = version;
     return sqlDefaultValue;
   }
 }

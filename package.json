@@ -24,13 +24,14 @@
   "author": "Frank Lin",
   "license": "MIT",
   "dependencies": {
+    "@types/mysql": "0.0.33",
+    "@types/pg": "^6.1.33",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "moment": "^2.17.1",
     "mysql": "^2.13.0",
     "pg": "^6.1.0",
-    "@types/mysql": "0.0.33",
-    "@types/pg": "^6.1.33"
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "@types/body-parser": "0.0.33",
@@ -44,6 +45,7 @@
     "@types/sinon": "^1.16.31",
     "@types/superagent": "^2.0.34",
     "@types/supertest": "^1.1.31",
+    "@types/uuid": "^3.4.3",
     "@types/winston": "0.0.28",
     "chai": "^3.5.0",
     "child_process": "^1.0.2",

@@ -2,7 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import * as path from "path";
-import {BaseEmailService} from "gcs";
+import {BaseEmailService} from "gago-cloud-service";
 import {Aliyun, AliyunConfigOptions} from "gago-cloud-service";
 import {logError, logInfo} from "../util/logger";
 
