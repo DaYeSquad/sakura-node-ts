@@ -5,7 +5,7 @@
 * **忽略了泰瑚提出的 where 为空的情况:** 在 where 的 array 中如果有空值了话拼接时候会有错误，但是如果处理了该场景，可能会难以 debug
 * **支持 INNER JOIN:** 支持 INNER JOIN 的语法
 * **支持自动插入 created_at、updated_at 以及 is_deleted:** 如果该类继承自 GGModel 则会自动插入 created_at、updated_at 以及 is_deleted
-
+* **InsertQuery、UpdateQuery 支持自动填充 created_at、updated_at:** 另外还有参数可以关闭该功能，详见 GGModel 注释
 
 # 3.3.8 - 3.3.9 (2017.12.14.)
 
