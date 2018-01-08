@@ -23,6 +23,8 @@ import {SqlDefaultValue, SqlDefaultValueType, SqlField, SqlFlag, SqlType, Model}
 import {SqlFieldNameNotFound} from "../error/sqlfieldnamenotfounderror";
 import {UnknownSqlFieldError} from "../error/unknownsqlfielderror";
 import {logError} from "../../util/logger";
+import {GGModel} from "../../gg/ggmodel";
+import {DateUtil} from "../../util/dateutil";
 
 /**
  * MySQL query builder.
@@ -121,25 +123,39 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
   buildInsertQuery(q: InsertQuery): string {
     if (q.model_) {
+      // 处理 GGModel 中 created_at, updated_at 的默认值
+      if (q.model_ instanceof GGModel) {
+        const modelRef: GGModel = q.model_;
+        if (modelRef.config.autoInsertCreatedAtUsingNow && modelRef.createdAt === undefined) {
+          modelRef.createdAt = DateUtil.nowInTimestamp();
+        }
+
+        if (modelRef.config.autoInsertUpdatedAtUsingNow && modelRef.updatedAt === undefined) {
+          modelRef.updatedAt = DateUtil.nowInTimestamp();
+        }
+      }
+
       let modelSqlInfo: ModelSqlInfo = this.getSqlInfoFromDefinition(q.model_);
 
       let primaryKey: string = modelSqlInfo.primaryKey;
       let keys: Array<string> = modelSqlInfo.keys;
       let values: Array<string> = modelSqlInfo.values;
 
-      // 如果主键默认值是随机数， 则在插入时自动添加一个随机数主键
+      // 处理一些特殊的 sql fields
       let fields: SqlField[] = sqlContext.findSqlFields(q.model_.constructor);
       for (let field of fields) {
         if (field.flag === SqlFlag.PRIMARY_KEY) {
-          if (field.defaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
+          // 主键的特殊场景
+          if (field.defaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) { // 如果主键默认值是随机数， 则在插入时自动添加一个随机数主键
             keys.push(primaryKey);
             values.push(`make_random_id()`);
-          } else if (field.defaultValue.type === SqlDefaultValueType.UUID) {
+          } else if (field.defaultValue.type === SqlDefaultValueType.UUID) { // 如果主键默认值是 UUID，则使用 UUID v4
             keys.push(primaryKey);
             values.push(`'${uuid.v4()}'`);
           }
           break;
         }
+
       }
 
       const keysStr: string = keys.join(",");
@@ -165,6 +181,14 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
   buildUpdateQuery(q: UpdateQuery): string {
     if (q.model_) {
+      // 处理 GGModel 中 updated_at 的默认值
+      if (q.model_ instanceof GGModel) {
+        const modelRef: GGModel = q.model_;
+        if (modelRef.config.autoUpdateUpdatedAtUsingNow && modelRef.updatedAt === undefined) {
+          modelRef.updatedAt = DateUtil.nowInTimestamp();
+        }
+      }
+
       let updatesAry: string[] = [];
       const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(q.model_.constructor);
 
@@ -353,7 +377,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
           let value: any = model[sqlField.name];
           value = this.valueAsStringByType(value, sqlField.type);
           modelInfo.values.push(value);
-        }else if (sqlField.flag === SqlFlag.NOT_NULL){
+        } else if (sqlField.flag === SqlFlag.NOT_NULL){
           // NOT_NULL
           throw new SqlFieldNameNotFound(sqlField.name);
         } else {

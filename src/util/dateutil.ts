@@ -47,4 +47,12 @@ export class DateUtil {
   static timestampToMillisecond(ts: timestamp): number {
     return ts * 1000;
   }
+
+  /**
+   * Date.now() in seconds
+   * @returns {number} Timestamp of now
+   */
+  static nowInTimestamp(): number {
+    return Math.round(Date.now() / 1000);
+  }
 }

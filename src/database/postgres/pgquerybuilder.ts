@@ -19,6 +19,8 @@ import {
   RenameColumnOperation
 } from "../migration/operation";
 import {logInfo} from "../../util/logger";
+import {GGModel} from "../../gg/ggmodel";
+import {DateUtil} from "../../util/dateutil";
 
 /**
  * PostgreSQL query builder.
@@ -120,6 +122,18 @@ export class PgQueryBuilder implements QueryBuilder {
 
   buildInsertQuery(q: InsertQuery): string {
     if (q.model_) {
+      // 处理 GGModel 中 created_at, updated_at 的默认值
+      if (q.model_ instanceof GGModel) {
+        const modelRef: GGModel = q.model_;
+        if (modelRef.config.autoInsertCreatedAtUsingNow && modelRef.createdAt === undefined) {
+          modelRef.createdAt = DateUtil.nowInTimestamp();
+        }
+
+        if (modelRef.config.autoInsertUpdatedAtUsingNow && modelRef.updatedAt === undefined) {
+          modelRef.updatedAt = DateUtil.nowInTimestamp();
+        }
+      }
+
       let modelSqlInfo: ModelSqlInfo = this.getSqlInfoFromDefinition(q.model_);
 
       let primaryKey: string = modelSqlInfo.primaryKey;
@@ -162,6 +176,14 @@ export class PgQueryBuilder implements QueryBuilder {
 
   buildUpdateQuery(q: UpdateQuery): string {
     if (q.model_) {
+      // 处理 GGModel 中 updated_at 的默认值
+      if (q.model_ instanceof GGModel) {
+        const modelRef: GGModel = q.model_;
+        if (modelRef.config.autoUpdateUpdatedAtUsingNow && modelRef.updatedAt === undefined) {
+          modelRef.updatedAt = DateUtil.nowInTimestamp();
+        }
+      }
+
       let updatesAry: string[] = [];
       const sqlDefinitions: Array<SqlField> = sqlContext.findSqlFields(q.model_.constructor);
 
