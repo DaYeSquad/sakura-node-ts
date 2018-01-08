@@ -138,4 +138,9 @@ Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint
 Node 6.11.0
 
 
+# 特殊规定
+
+如果该类继承自 `GGModel` 了话则会自动补全 `created_at`、`updated_at` 以及 `is_deleted` 三个属性
+
+
 [npm-url]: https://www.npmjs.com/package/sakura-node-3

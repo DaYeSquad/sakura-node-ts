@@ -3,11 +3,12 @@
 
 import {sqlContext} from "../util/sqlcontext";
 import {DateUtil} from "../util/dateutil";
+import {stat} from "fs";
 
 export type ModelClass<T> = { new(): T; };
 
 /**
- * All model object in trustself should inherit from model and declare its table name and sql definition.
+ * All model object should inherit from model and declare its table name and sql definition.
  */
 export class Model {
   [key: string]: any; // indexer for TypeScript

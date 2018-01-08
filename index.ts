@@ -68,3 +68,9 @@ export * from "./src/database/mysql/mysqlquerybuilder";
 export { sqlContext } from "./src/util/sqlcontext";
 export { DateFormatter, DateFormtOption } from "./src/util/dateformatter";
 export { DateUtil, DateEqualityPrecision } from "./src/util/dateutil";
+
+// -------------------------------------------------------------------------
+// GG
+// -------------------------------------------------------------------------
+
+export * from "./src/gg/ggmodel";

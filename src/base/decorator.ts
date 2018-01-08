@@ -3,6 +3,7 @@
 
 import {Model, SqlType, SqlFlag, SqlDefaultValue} from "./model";
 import {sqlContext} from "../util/sqlcontext";
+import {GGModel} from "../gg/ggmodel";
 
 export interface ColumnParameters {
   name: string;
@@ -20,6 +21,33 @@ export function TableName(name: string): Function {
   return function(target: Function) {
     if (target.prototype instanceof Model) {
       sqlContext.addSqlTableRelation({target: target, name: name});
+
+      if (target.prototype instanceof GGModel) {
+        // 如果该类继承自 GGModel，则自动加入 created_at, updated_at 以及 is_deleted
+        sqlContext.addSqlField(target.prototype.constructor,
+          { name: "createdAt",
+            columnName: GGModel.CREATED_AT_COLUMN_PARAM.name,
+            type: GGModel.CREATED_AT_COLUMN_PARAM.type,
+            flag: GGModel.CREATED_AT_COLUMN_PARAM.flag,
+            comment: GGModel.CREATED_AT_COLUMN_PARAM.comment
+          });
+
+        sqlContext.addSqlField(target.prototype.constructor,
+          { name: "updatedAt",
+            columnName: GGModel.UPDATED_AT_COLUMN_PARAM.name,
+            type: GGModel.UPDATED_AT_COLUMN_PARAM.type,
+            flag: GGModel.UPDATED_AT_COLUMN_PARAM.flag,
+            comment: GGModel.UPDATED_AT_COLUMN_PARAM.comment
+          });
+
+        sqlContext.addSqlField(target.prototype.constructor,
+          { name: "isDeleted",
+            columnName: GGModel.IS_DELETED_COLUMN_PARAM.name,
+            type: GGModel.IS_DELETED_COLUMN_PARAM.type,
+            flag: GGModel.IS_DELETED_COLUMN_PARAM.flag,
+            comment: GGModel.IS_DELETED_COLUMN_PARAM.comment
+          });
+      }
     }
   };
 }
