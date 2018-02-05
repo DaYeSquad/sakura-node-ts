@@ -42,8 +42,7 @@ describe("MySqlQueryBuilder", () => {
 
     const insertQuery: InsertQuery = new InsertQuery().fromModel(user);
     const result: string = queryBuilder.buildInsertQuery(insertQuery);
-    chai.expect(result.substr(0, 52)).to.equal("INSERT INTO users (username,uid) VALUES ('franklin',");
-    chai.expect(result.indexOf("); SELECT last_insert_id();")).to.not.equal(-1);
+    chai.expect(result).to.match(/INSERT INTO users \(username\,uid\) VALUES \(\'franklin\'\,\'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\'\)\; SELECT \'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\' AS uid\;/)
   });
 
   it("Test buildInsertQuery(GGModel) should take three default parameters", () => {

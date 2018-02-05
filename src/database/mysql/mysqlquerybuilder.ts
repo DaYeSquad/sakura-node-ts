@@ -140,6 +140,8 @@ export class MySqlQueryBuilder implements QueryBuilder {
       let primaryKey: string = modelSqlInfo.primaryKey;
       let keys: Array<string> = modelSqlInfo.keys;
       let values: Array<string> = modelSqlInfo.values;
+      let noneSerialId: string = "";
+      let isNoneSerialId: boolean = false;
 
       // 处理一些特殊的 sql fields
       let fields: SqlField[] = sqlContext.findSqlFields(q.model_.constructor);
@@ -148,10 +150,14 @@ export class MySqlQueryBuilder implements QueryBuilder {
           // 主键的特殊场景
           if (field.defaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) { // 如果主键默认值是随机数， 则在插入时自动添加一个随机数主键
             keys.push(primaryKey);
-            values.push(`make_random_id()`);
+            noneSerialId = `'${`${Math.random()}`.slice(2)}'`;
+            values.push(noneSerialId);
+            isNoneSerialId = true;
           } else if (field.defaultValue.type === SqlDefaultValueType.UUID) { // 如果主键默认值是 UUID，则使用 UUID v4
             keys.push(primaryKey);
-            values.push(`'${uuid.v4()}'`);
+            noneSerialId = `'${uuid.v4()}'`;
+            isNoneSerialId = true;
+            values.push(noneSerialId);
           }
           break;
         }
@@ -162,18 +168,51 @@ export class MySqlQueryBuilder implements QueryBuilder {
       const valuesStr: string = values.join(",");
 
       const tableName: string = sqlContext.findTableByClass(q.model_.constructor);
+      const lastInsertId: string = isNoneSerialId ? noneSerialId : "last_insert_id()";
 
-      if (q.returnId_ && primaryKey) {
-        return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr}); SELECT last_insert_id();`;
+      if (q.returnId_ && primaryKey && modelSqlInfo.primaryKey) {
+        return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr}); SELECT ${lastInsertId} AS ${primaryKey};`;
       }
 
       return `INSERT INTO ${tableName} (${keysStr}) VALUES (${valuesStr})`;
     } else if (q.table_) {
       if (q.columns_.length > 0 && (q.columns_.length === q.values_.length)) {
+        let keyIteration: IterableIterator<Function> = sqlContext.getTables().keys();
+        let specificPrimaryKey: SqlField;
+        let iterationValue: Function = keyIteration.next().value;
+        while (typeof iterationValue !== "undefined") {
+          const tableName: string = sqlContext.findTableByClass(iterationValue);
+          if (tableName === q.table_) {
+            specificPrimaryKey = sqlContext.findPrimaryKeySqlFieldByClass(iterationValue);
+            break;
+          }
+          iterationValue = keyIteration.next().value;
+        }
+
+        let noneSerialId: string = "";
+        let isNoneSerialId: boolean = false;
+        let lastInsertId: string = "last_insert_id()";
+
+        if (typeof specificPrimaryKey !== "undefined" && q.columns_.indexOf(specificPrimaryKey.columnName) === -1) {
+          q.columns_.push(specificPrimaryKey.columnName);
+          if (specificPrimaryKey.defaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) { // 如果主键默认值是随机数， 则在插入时自动添加一个随机数主键
+            noneSerialId = `'${`${Math.random()}`.slice(2)}'`;
+            q.values_.push(noneSerialId);
+            isNoneSerialId = true;
+            lastInsertId = `${noneSerialId} AS ${specificPrimaryKey.columnName}`;
+          } else if (specificPrimaryKey.defaultValue.type === SqlDefaultValueType.UUID) { // 如果主键默认值是 UUID，则使用 UUID v4
+            noneSerialId = `'${uuid.v4()}'`;
+            q.values_.push(noneSerialId);
+            isNoneSerialId = true;
+            lastInsertId = `${noneSerialId} AS ${specificPrimaryKey.columnName}`;
+          }
+        }
+
         let keysStr: string = q.columns_.join(",");
         let valuesStr: string = q.values_.join(",");
         let returnValue: string = q.returnValue_;
-        return `INSERT INTO ${q.table_} (${keysStr}) VALUES (${valuesStr}); SELECT last_insert_id();`;
+        
+        return `INSERT INTO ${q.table_} (${keysStr}) VALUES (${valuesStr}); SELECT ${lastInsertId};`;
       }
     }
     return "";

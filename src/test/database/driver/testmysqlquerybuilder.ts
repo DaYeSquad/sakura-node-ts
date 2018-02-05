@@ -231,7 +231,7 @@ PRIMARY KEY (\`id\`));`;
       user.initAsNewUser(111, "pig", "jiangwei", `{"a":"hello","b":"world"}`, 188821212, new Date(1));
       const query: InsertQuery = new InsertQuery().fromModel(user);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username,display_name,meta,created_at,updated_at,uid) VALUES ('jiangwei','pig','{"a":"hello","b":"world"}',FROM_UNIXTIME(0),FROM_UNIXTIME(188821212),make_random_id()); SELECT last_insert_id();`);
+      chai.expect(sql).to.match(/INSERT INTO users \(username\,display_name\,meta\,created_at\,updated_at\,uid\) VALUES \(\'jiangwei\'\,\'pig\'\,\'\{\"a\"\:\"hello\"\,\"b\"\:\"world\"\}\',FROM_UNIXTIME\(0\)\,FROM_UNIXTIME\(188821212\)\,\'[\d]+\'\)\; SELECT \'[\d]+\' AS uid\;/);
     });
 
     it("Test buildInsertQuery by table which has a geometry field", () => {
@@ -241,7 +241,8 @@ PRIMARY KEY (\`id\`));`;
       
       const query: InsertQuery = new InsertQuery().fromModel(land);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO lands (geometry,id) VALUES (ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 1, 0),make_random_id()); SELECT last_insert_id();`);
+      chai.expect(sql).to.match(/INSERT INTO lands \(geometry,id\) VALUES \(ST_GeomFromGeoJSON\(\'\{\"type\"\:\"Feature\",\"properties\"\:\{\"cropType\"\:1\}\,\"geometry\"\:\{\"type\"\:\"MultiPolygon\"\,\"coordinates\"\:\[\[\[\[114\.07622526684843\,33\.78417465235493\]\,\[114\.07488793195664\,33\.78400174199179\]\,\[114\.07482811145783\,33\.78433086842717\]\,\[114\.07477697222919\,33\.78464908268222\]\,\[114\.07557408855929\,33\.78475934727242\]\,\[114\.07563475783049\,33\.78427043136917\]\,\[114\.07619092839322,33\.7843385841786\]\,\[114\.07622526684843\,33\.78417465235493\]\]\]\]\}\}\'\, 1\, 0\)\,\'[\d]+\'\)\; SELECT \'[\d]+\' AS id\;/);
+      // chai.expect(sql).to.equal(`INSERT INTO lands (geometry,id) VALUES (ST_GeomFromGeoJSON('${JSON.stringify(geometry)}', 1, 0),make_random_id()); SELECT last_insert_id();`);
     });
 
     it("Test buildInsertQuery by table, set key - value handly", () => {
@@ -339,7 +340,7 @@ PRIMARY KEY (\`id\`));`;
       user.username = "jiangwei";
       const query: InsertQuery  = new InsertQuery().fromModel(user);
       const sql: string = queryBuilder.buildInsertQuery(query);
-      chai.expect(sql).to.equal(`INSERT INTO users (username,uid) VALUES (\'jiangwei\',make_random_id()); SELECT last_insert_id();`);
+      chai.expect(sql).to.match(/INSERT INTO users \(username\,uid\) VALUES \(\'jiangwei\'\,\'[\d]+\'\); SELECT \'[\d]+\' AS uid\;/);
     });
 
     it("TIMESTAMP default  CURRENT_TIMESTAMP to NULL", () => {
