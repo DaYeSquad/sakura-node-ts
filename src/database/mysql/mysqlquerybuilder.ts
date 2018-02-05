@@ -191,7 +191,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
         let noneSerialId: string = "";
         let isNoneSerialId: boolean = false;
-        let lastInsertId = "last_insert_id()";
+        let lastInsertId: string = "last_insert_id()";
 
         if (typeof specificPrimaryKey !== "undefined" && q.columns_.indexOf(specificPrimaryKey.columnName) === -1) {
           q.columns_.push(specificPrimaryKey.columnName);
