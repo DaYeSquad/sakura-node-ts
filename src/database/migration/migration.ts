@@ -170,7 +170,7 @@ export class Migration {
   /**
    * Executes migrate sql commands, it is highly recommended to use preview() to see sql before use this method.
    */
-  async migrate(setupEnv: boolean = false): Promise<void> {
+  async migrate(setupEnv: boolean = false): Promise<boolean> {
     // check version
     const currentVersion: number | undefined = await this.currentVersion_();
     if (currentVersion === undefined) { // first time to execute query
@@ -185,7 +185,7 @@ export class Migration {
       const insertQuery: InsertQuery = new InsertQuery().fromModel(version);
       await this.dbClient_.query(insertQuery);
     } else if (this.version_ === currentVersion) { // version does not change
-      return;
+      return false;
     }
 
     // run dependencies
@@ -216,7 +216,8 @@ export class Migration {
     version.version = this.version_;
     version.appName = this.appName_;
     const updateQuery: UpdateQuery = new UpdateQuery().fromModel(version).where(`app_name = '${version.appName}'`,
-      `version = ${version.version}`);
+      `version = ${currentVersion}`);
     await this.dbClient_.query(updateQuery);
+    return true;
   }
 }
