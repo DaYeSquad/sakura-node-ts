@@ -193,7 +193,7 @@ export class PgQueryBuilder implements QueryBuilder {
         } else if (sqlField.name) {
           let key: string = sqlField.columnName;
           let value: any = q.model_[sqlField.name];
-          if (value !== undefined) {
+          if (value !== undefined && value !== null ) {
             value = this.valueAsStringByType(value, sqlField.type);
             updatesAry.push(`${key}=${value}`);
           }
@@ -206,7 +206,7 @@ export class PgQueryBuilder implements QueryBuilder {
       return `UPDATE ${q.table_} SET ${q.setValuesSqlFromModel_} WHERE ${q.where_};`;
     } else {
       let updatesAry: string[] = [];
-      q.updates_.forEach((update: {key: string, value: any}) => {
+      q.updates_.forEach((update: { key: string, value: any }) => {
         if (typeof(update.value) === "string") {
           updatesAry.push(`${update.key}='${update.value}'`);
         } else {
@@ -273,7 +273,7 @@ export class PgQueryBuilder implements QueryBuilder {
         if (sqlField.defaultValue.type === SqlDefaultValueType.SERIAL) {
           if (flag !== "") {
             sql += `${sqlField.columnName} SERIAL ${flagWithWhiteSpace} ${comma}${comment}\n`;
-          }else {
+          } else {
             sql += `${sqlField.columnName} SERIAL${comma}${comment}\n`;
           }
           return;
@@ -296,7 +296,7 @@ export class PgQueryBuilder implements QueryBuilder {
     let sql: string = "";
     const tableName: string = sqlContext.findTableByClass(op.modelClass);
     const sqlFields: SqlField[] = sqlContext.findSqlFields(op.modelClass);
-    for (let sqlField of sqlFields){
+    for (let sqlField of sqlFields) {
       if (sqlField.comment) {
         sql += `COMMENT ON COLUMN ${tableName}.${sqlField.columnName} IS '${sqlField.comment}';\n`;
       }
@@ -352,18 +352,30 @@ export class PgQueryBuilder implements QueryBuilder {
    */
   private sqlTypeToCreateSyntaxString_(sqlType: SqlType): string {
     switch (sqlType) {
-      case SqlType.INT: return "INTEGER";
-      case SqlType.BIGINT: return "BIGINT";
-      case SqlType.VARCHAR_1024: return "VARCHAR(1024)";
-      case SqlType.VARCHAR_255: return "VARCHAR(255)";
-      case SqlType.TIMESTAMP: return "TIMESTAMP";
-      case SqlType.JSON: return "JSON";
-      case SqlType.NUMERIC: return "NUMERIC";
-      case SqlType.DATE: return "DATE";
-      case SqlType.TEXT: return "TEXT";
-      case SqlType.BOOLEAN: return "BOOLEAN";
-      case SqlType.GEOMETRY: return "GEOMETRY";
-      default: throw Error(`Undefined SqlType ${sqlType}`);
+      case SqlType.INT:
+        return "INTEGER";
+      case SqlType.BIGINT:
+        return "BIGINT";
+      case SqlType.VARCHAR_1024:
+        return "VARCHAR(1024)";
+      case SqlType.VARCHAR_255:
+        return "VARCHAR(255)";
+      case SqlType.TIMESTAMP:
+        return "TIMESTAMP";
+      case SqlType.JSON:
+        return "JSON";
+      case SqlType.NUMERIC:
+        return "NUMERIC";
+      case SqlType.DATE:
+        return "DATE";
+      case SqlType.TEXT:
+        return "TEXT";
+      case SqlType.BOOLEAN:
+        return "BOOLEAN";
+      case SqlType.GEOMETRY:
+        return "GEOMETRY";
+      default:
+        throw Error(`Undefined SqlType ${sqlType}`);
     }
   }
 
@@ -410,7 +422,7 @@ export class PgQueryBuilder implements QueryBuilder {
           let value: any = model[sqlField.name];
           value = this.valueAsStringByType(value, sqlField.type);
           modelInfo.values.push(value);
-        } else  {
+        } else {
           if (sqlField.flag === SqlFlag.NOT_NULL) { // if NOT_NULL value is undefined, log its error
             logInfo(`value (model[${sqlField.name}]) not found`);
           }

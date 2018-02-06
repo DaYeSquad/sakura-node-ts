@@ -237,7 +237,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
         } else if (sqlField.name) {
           let key: string = sqlField.columnName;
           let value: any = q.model_[sqlField.name];
-          if (value !== undefined) {
+          if (value !== undefined && value !== null) {
             value = this.valueAsStringByType(value, sqlField.type);
             updatesAry.push(`${key}=${value}`);
           }
