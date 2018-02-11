@@ -66,6 +66,7 @@
     "supertest": "^2.0.0",
     "tslint": "^4.3.1",
     "tslint-sakura-contrib": "^1.0.6",
+    "typedoc": "^0.10.0",
     "typescript": "^2.0.3"
   }
 }
