@@ -14,6 +14,11 @@ Gago 后端最基础功能的库，以 ORM 为核心
 * Email service: 常用发信的封装
 
 
+# 安装
+
+`npm install sakura-node-3`
+
+
 # ORM Example
 
 ## 最基本的 Mapping
@@ -84,28 +89,7 @@ export class User extends Model { // 需要 ORM 的类必须继承自 Model 或�
 })();
 ```
 
-更多的示例, 可以查看 `src/example`.
-
-
-# BUILD
-
-Run `gulp` and all releases will be under `./lib`.
-
-
-# TEST
-
-We highly recommend to use docker as test database container, for MySQL, you can use [this image](https://hub.docker.com/_/mysql/), 
-run `docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -e MYSQL_DATABASE=gagotest -v /tmp/mysql:/var/lib/mysql -d mysql:latest`
-
-`npm test`
-
-
-# INSTALL
-
-`npm install sakura-node-3`
-
-
-# CLUSTER
+## MySQL Cluster 模式
 
 ```TypeScript
 const driverOptions: DriverOptions = {
@@ -135,6 +119,21 @@ const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
 const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
 console.log(`there are ${result.rows.length} users`);
 ```
+
+更多的示例, 可以查看 `src/example`.
+
+
+# 构建工程
+
+Run `gulp` and all releases will be under `./lib`.
+
+
+# 单元测试
+
+We highly recommend to use docker as test database container, for MySQL, you can use [this image](https://hub.docker.com/_/mysql/), 
+run `docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -e MYSQL_DATABASE=gagotest -v /tmp/mysql:/var/lib/mysql -d mysql:latest`
+
+`npm test`
 
 
 # 代码规范
