@@ -1,29 +1,34 @@
-[![NPM Version][npm-image]][npm-url]
-[![Build Status](https://travis-ci.org/DaYeSquad/sakura-node-ts.svg?branch=master)](https://travis-ci.org/DaYeSquad/sakura-node-ts)
+# 概述
+
+Gago 后端最基础功能的库，以 ORM 为核心
 
 
-# OVERVIEW
+# 功能
 
-Utility of building back end serviced in [Gago Group](https://gagogroup.cn/).
-
-
-# FEATURES
-
-* ORM: Supports PostgreSQL ORM and migration
+* 轻量级 ORM: 支持 PostgreSQL、MySQL，支持空间数据格式
 
 * HTTP: Wrapper of Request/Response
 
-* Frequently used Express middleware
+* 常用的一些 Express 的 middleware，如 timeout、CORS 等
 
-* Email service: Wraps Aliyun Email Service
+* Email service: 常用发信的封装
 
 
-# EXAMPLE
+# ORM Example
+
+## 最基本的 Mapping
 
 ```TypeScript
-@TableName("users")
-export class User extends Model {
-  @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY, "主键")
+@TableName("users") // 声明当前类对应的表
+export class User extends Model { // 需要 ORM 的类必须继承自 Model 或者是 GGModel，GGModel 会自动添加 is_deleted、created_at 和 updated_at 三个字段
+
+  // 声明该属性对应的数据库中的属性，支持顺序罗列和 interface 两种形式
+  // name(必填) 用于声明数据库中字段的名字
+  // type(必填) 用于声明对应数据库中的类型，常见的有 INT、VARCHAR_255、VARCHAR_1024、TIMESTAMP、JSON、GEOMETRY
+  // flag(必填) 用于声明一些情况，如是否是主键、是否可以为空，可选的有 PRIMARY_KEY、NOT_NULL、NULLABLE
+  // comment(选填) 注释
+  // defaultValue (选填) 默认值，支持随机数(MAKE_RANDOM_ID)、自增(SERIAL)、UUID(UUID)，推荐尽可能用自增
+  @Column({ name: "uid", type: SqlType.INT, flag: SqlFlag.PRIMARY_KEY, comment: "主键"})
   uid: number;
 
   @Column("username", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
@@ -41,7 +46,11 @@ export class User extends Model {
   @Column("updated_at", SqlType.TIMESTAMP, SqlFlag.NULLABLE)
   updatedAt: number;
 }
+````
 
+## Migration (数据库迁移)
+
+```TypeScript
 (async () => {
   try {
     const driverOptions: DriverOptions = {
@@ -75,7 +84,7 @@ export class User extends Model {
 })();
 ```
 
-For more information, see `src/example`.
+更多的示例, 可以查看 `src/example`.
 
 
 # BUILD
@@ -128,19 +137,11 @@ console.log(`there are ${result.rows.length} users`);
 ```
 
 
-# LINT
+# 代码规范
 
-Use [tslint](https://palantir.github.io/tslint/usage/cli/). Run `sh ./bin/tslint.sh` before commit.
+在提交代码前需要使用 tslint 在检查一次 [tslint](https://palantir.github.io/tslint/usage/cli/). (`sh ./bin/tslint.sh`)
 
 
-# RUNTIME
+# Node Runtime
 
 Node 6.11.0
-
-
-# 特殊规定
-
-如果该类继承自 `GGModel` 了话则会自动补全 `created_at`、`updated_at` 以及 `is_deleted` 三个属性
-
-
-[npm-url]: https://www.npmjs.com/package/sakura-node-3

@@ -6,7 +6,7 @@ import {Model, SqlType, SqlFlag} from "../../base/model";
 
 @TableName("users")
 export class User extends Model {
-  @Column("uid", SqlType.INT, SqlFlag.PRIMARY_KEY, "主键")
+  @Column({ name: "uid", type: SqlType.INT, flag: SqlFlag.PRIMARY_KEY, comment: "主键"})
   uid: number;
 
   @Column("username", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
