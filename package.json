@@ -12,7 +12,10 @@
     "postpublish": "rm -rf ./lib; gulp ts; node ./lib/js/src/tools/sendchangelog.js; rm -rf ./lib;",
     "lint": "sh bin/tslint.sh",
     "test-mysql": "sh bin/test-mysql.sh",
-    "sample-mysql": "rm -rf ./lib; gulp ts; node ./lib/js/src/example/mysql/dbclient.js;"
+    "sample-mysql": "rm -rf ./lib; gulp ts; node ./lib/js/src/example/mysql/dbclient.js;",
+    "pretypedoc": "mkdir docs",
+    "typedoc": "./node_modules/typedoc/bin/typedoc --ignoreCompilerErrors --out ./docs --exclude test --excludePrivate --hideGenerator  --mode modules --tsconfig ./tsconfig.json ./src/",
+    "posttypedoc": "touch docs/.nojekyll"
   },
   "repository": {
     "type": "git",
@@ -63,6 +66,7 @@
     "supertest": "^2.0.0",
     "tslint": "^4.3.1",
     "tslint-sakura-contrib": "^1.0.6",
+    "typedoc": "^0.10.0",
     "typescript": "^2.0.3"
   }
 }

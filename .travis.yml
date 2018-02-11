@@ -6,5 +6,14 @@ node_js:
 script:
   - sh ./bin/tslint.sh
 
+after_success:
+  - npm run typedoc
+
+deploy:
+  - provider: pages
+    skip_cleanup: true
+    local_dir: docs/
+    github_token: $GITHUB_PAGE_TOKEN
+
 notifications:
   slack: gagobigdata:674GLiXxbWRk8BXDTMQ076Ud
