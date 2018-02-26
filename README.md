@@ -122,7 +122,7 @@ const driverOptions: DriverOptions = {
 // 创建 DBClient 全局单例
 DBClient.createClient(driverOptions);
 
-const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
+const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select().whereWithParam("name = :name",{name : "franklin" });
 const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
 console.log(`there are ${result.rows.length} users`);
 ```

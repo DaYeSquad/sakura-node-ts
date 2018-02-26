@@ -4,6 +4,7 @@
 import {sqlContext} from "../util/sqlcontext";
 import {Query, QueryType} from "./query";
 import {SqlField} from "../base/model";
+import {DBClient} from "../database/dbclient";
 
 export enum JoinType {
   JOIN,
@@ -24,7 +25,7 @@ export class SelectQuery extends Query {
   limit_: number;
   offset_: number;
   joinUsings_: string[] = [];
-  joinOn_: Array<{tableName: string, joinType: JoinType, on: string}> = [];
+  joinOn_: Array<{ tableName: string, joinType: JoinType, on: string }> = [];
   groupBy_: string[] = [];
 
   type(): QueryType {
@@ -76,7 +77,7 @@ export class SelectQuery extends Query {
   }
 
   on(onStr: string): this {
-    let lastJoinIn: {tableName: string, joinType: JoinType, on: string} = this.joinOn_.pop();
+    let lastJoinIn: { tableName: string, joinType: JoinType, on: string } = this.joinOn_.pop();
     lastJoinIn["on"] = onStr;
     this.joinOn_.push(lastJoinIn);
     return this;
@@ -94,6 +95,22 @@ export class SelectQuery extends Query {
 
   where(...args: any[]): this {
     this.where_ = args.join(" AND ");
+    return this;
+  }
+
+  whereWithParam(sql: string, sqlValues: any) {
+    if (sql.indexOf(":") >= 0) {
+      Object.keys(sqlValues).forEach(key => {
+        // String and Date need to add ''
+        if (typeof sqlValues[key] === "string" || sqlValues[key] instanceof Date) {
+          let value: string = DBClient.escape(sqlValues[key]);
+          sql = sql.replace(":" + key, `'${value}'`);
+        } else {
+          sql = sql.replace(":" + key, sqlValues[key]);
+        }
+      });
+    }
+    this.where_ = sql;
     return this;
   }
 
