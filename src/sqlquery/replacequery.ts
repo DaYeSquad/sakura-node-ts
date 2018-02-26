@@ -4,6 +4,7 @@
 import {sqlContext} from "../util/sqlcontext";
 import {SqlType} from "../base/model";
 import {Query, QueryType} from "./query";
+import {DBClient} from "../database/dbclient";
 
 /**
  * Insert or replace.
@@ -31,6 +32,22 @@ export class ReplaceQuery extends Query {
 
   where(...args: any[]): this {
     this.where_ = args.join(" AND ");
+    return this;
+  }
+
+  whereWithParam(sql: string, sqlValues: any) {
+    if (sql.indexOf(":") >= 0) {
+      Object.keys(sqlValues).forEach(key => {
+        // String and Date need to add ''
+        if (typeof sqlValues[key] === "string" || sqlValues[key] instanceof Date) {
+          let value: string = DBClient.escape(sqlValues[key]);
+          sql = sql.replace(":" + key, `'${value}'`);
+        } else {
+          sql = sql.replace(":" + key, sqlValues[key]);
+        }
+      });
+    }
+    this.where_ = sql;
     return this;
   }
 
