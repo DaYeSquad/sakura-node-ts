@@ -17,6 +17,11 @@ https://dayesquad.github.io/sakura-node-ts/
 * Email service: 常用发信的封装
 
 
+# 安装
+
+`npm install sakura-node-3`
+
+
 # ORM Example
 
 ## 最基本的 Mapping
@@ -189,6 +194,8 @@ run `docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -
 
 # CLUSTER
 
+## MySQL Cluster 模式
+
 ```TypeScript
 const driverOptions: DriverOptions = {
   type: DriverType.MYSQL,
@@ -213,10 +220,25 @@ const driverOptions: DriverOptions = {
 // 创建 DBClient 全局单例
 DBClient.createClient(driverOptions);
 
-const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select();
+const fetchUsersQuery: SelectQuery = new SelectQuery().fromClass(User).select().whereWithParam("name = :name",{name : "franklin" });
 const result: QueryResult = await DBClient.getClient().query(fetchUsersQuery);
 console.log(`there are ${result.rows.length} users`);
 ```
+
+更多的示例, 可以查看 `src/example`.
+
+
+# 构建工程
+
+Run `gulp` and all releases will be under `./lib`.
+
+
+# 单元测试
+
+We highly recommend to use docker as test database container, for MySQL, you can use [this image](https://hub.docker.com/_/mysql/), 
+run `docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -e MYSQL_DATABASE=gagotest -v /tmp/mysql:/var/lib/mysql -d mysql:latest`
+
+`npm test`
 
 
 # 代码规范

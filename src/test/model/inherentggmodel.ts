@@ -9,6 +9,7 @@ import {MySqlQueryBuilder} from "../../database/mysql/mysqlquerybuilder";
 import {InsertQuery} from "../../sqlquery/insertquery";
 import {GGModel} from "../../gg/ggmodel";
 import {SelectQuery} from "../../sqlquery/selectquery";
+import {readdirSync} from "fs";
 
 @TableName("users")
 class User extends GGModel {
@@ -43,4 +44,15 @@ describe("GGModel", () => {
     const result: string = queryBuilder.buildSelectQuery(selectQuery);
     chai.expect(result).to.equal("SELECT username,created_at,updated_at,is_deleted FROM users");
   });
+
+  /*
+  it("Test use parameters in the where SQL statement in SelectQuery", () => {
+    const selectQuery: SelectQuery = new SelectQuery().fromClass(User).select().whereWithParam("user.name = :name and user.is_deleted = :is_deleted", {
+      name: "franklin",
+      is_deleted: false
+    });
+    const result: string = queryBuilder.buildSelectQuery(selectQuery);
+    chai.expect(result).to.equal("SELECT username,created_at,updated_at,is_deleted FROM users WHERE user.name = 'franklin' and user.is_deleted = false");
+  });
+  */
 });
