@@ -2,6 +2,9 @@
 
 Gago 后端最基础功能的库，以 ORM 为核心
 
+# 文件
+
+https://dayesquad.github.io/sakura-node-ts/
 
 # 功能
 
@@ -17,6 +20,8 @@ Gago 后端最基础功能的库，以 ORM 为核心
 # ORM Example
 
 ## 最基本的 Mapping
+
+### 基本的 model
 
 ```TypeScript
 @TableName("users") // 声明当前类对应的表
@@ -46,7 +51,39 @@ export class User extends Model { // 需要 ORM 的类必须继承自 Model 或�
   @Column("updated_at", SqlType.TIMESTAMP, SqlFlag.NULLABLE)
   updatedAt: number;
 }
-````
+```
+
+### 自带 created_at, updated_at, is_deleted 的 model
+
+Insert 时会自动更新 created_at, updated_at，Update 和 Delete 时会自动更新 updated_at
+
+```TypeScript
+@TableName("gps_devices")
+export class GPSDevice extends GGModel {
+
+  @Column("gps_device_id", SqlType.BIGINT, SqlFlag.PRIMARY_KEY, "设备 id", SqlDefaultValue.SERIAL())
+  gpsDeviceId: number;
+
+  @Column("gps_device_serial", SqlType.VARCHAR_255, SqlFlag.NULLABLE, "设备编号")
+  gpsDeviceSerial: string;
+
+  @Column("gps_device_battery_level", SqlType.INT, SqlFlag.NULLABLE, "电池")
+  gpsDeviceBatteryLevel: number;
+
+  @Column("gps_device_gsm_level", SqlType.INT, SqlFlag.NULLABLE, "信号")
+  gpsDeviceGsmLevel: number;
+
+  @Column("gps_device_gps_status", SqlType.BOOLEAN, SqlFlag.NULLABLE, "设备状态")
+  gpsDeviceGpsStatus: boolean;
+
+  @Column("cooperative_id", SqlType.BIGINT, SqlFlag.NULLABLE, "合作社 id")
+  cooperativeId: number;
+
+  @Column("gps_device_type", SqlType.VARCHAR_255, SqlFlag.NULLABLE, "gps服务类型")
+  gpsDeviceType: string;
+}
+```
+
 
 ## Migration (数据库迁移)
 
@@ -82,6 +119,51 @@ export class User extends Model { // 需要 ORM 的类必须继承自 Model 或�
     console.log(err);
   }
 })();
+```
+
+## Model mapping from rows
+
+### Mapping from a single model
+
+```TypeScript
+  const query: SelectQuery = new SelectQuery()
+    .fromClass(User)
+    .select(["username"]);
+  const results: QueryResult = await DBClient.getClient().query(query);
+  const users: User[] = Model.modelsFromRows<User>(results.rows, Task);
+  console.log(users); 
+  // [  
+  //   { 
+  //     "username": "aaa", 
+  //     "display_name": undefined,
+  //     ...
+  //   } 
+  //   ... 
+  // ]
+```
+
+### Mapping from multiple models
+
+```TypeScript
+   const query: SelectQuery = new SelectQuery()
+      .fromClass(GPSDevice)
+      .select(["gps_device_id", "gps_device_serial", "gps_device_type", "gps_device_battery_level", "users.connection_info", "users.username", "uid", "user_display_name"])
+      .innerJoin("users")
+      .on("gps_devices.gps_device_id=users.device_id")
+  const results: QueryResult = await DBClient.getClient().query(query);
+  const data: (User & GPSDevice)[] = results.rows.map((ele: any) => {
+    return Model.compositeModelFromRow<User, GPSDevice>(ele, User, GPSDevice);
+  });
+  console.log(data); 
+  // [  
+  //   { 
+  //     "username": "aaa", 
+  //     "displayName": "bbb",
+  //     "gpsDeviceSerial": "ccc",
+  //     ...
+  //   } 
+  //   ... 
+  // ]
 ```
 
 更多的示例, 可以查看 `src/example`.
