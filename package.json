@@ -1,6 +1,6 @@
 {
   "name": "sakura-node-3",
-  "version": "3.4.5",
+  "version": "3.4.6",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL, MySQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
