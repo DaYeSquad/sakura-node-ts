@@ -53,7 +53,11 @@ export class Model {
           instance[sqlField.name] = undefined;
         }
       } else if (sqlField.type === SqlType.INT || sqlField.type === SqlType.BIGINT || sqlField.type === SqlType.NUMERIC) {
-        instance[sqlField.name] = Number(row[sqlField.columnName]);
+        if (row[sqlField.columnName] === null) {
+          instance[sqlField.name] = null;
+        } else {
+          instance[sqlField.name] = Number(row[sqlField.columnName]);
+        }
       } else {
         instance[sqlField.name] = row[sqlField.columnName];
       }
