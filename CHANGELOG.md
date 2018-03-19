@@ -1,6 +1,6 @@
 # 3.4.6 (2018.3.18.)
 
-* **修正 column name 为空的问题:**
+* **修正了在 SELECT 的时候的一处错误:** 在 SELECT 的时候如果你设置 column type 为 NUMERIC，但是实际值为 null，在之前会返回 0
 
 
 # 3.4.0 (2018.1.4.)
@@ -11,6 +11,7 @@
 * **支持 INNER JOIN:** 支持 INNER JOIN 的语法
 * **支持自动插入 created_at、updated_at 以及 is_deleted:** 如果该类继承自 GGModel 则会自动插入 created_at、updated_at 以及 is_deleted
 * **InsertQuery、UpdateQuery 支持自动填充 created_at、updated_at:** 另外还有参数可以关闭该功能，详见 GGModel 注释
+
 
 # 3.3.8 - 3.3.9 (2017.12.14.)
 
