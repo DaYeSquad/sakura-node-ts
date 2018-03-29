@@ -1,3 +1,7 @@
+# 3.4.7 (2018.3.29.)
+
+* **QueryResult 支持回传 query 后影响的总 row 数:** 若为 select 会是 select 到的总 row 数，若为 update, delete 则为影响的总 row 数，transation 目前底层框架不支持，会回传 NaN 
+
 # 3.4.6 (2018.3.18.)
 
 * **修正了在 SELECT 的时候的一处错误:** 在 SELECT 的时候如果你设置 column type 为 NUMERIC，但是实际值为 null，在之前会返回 0

@@ -57,7 +57,7 @@ export class PgDriver extends Driver {
     let client: pg.Client = await this.pool_.connect();
     try {
       const pgQueryResult: pg.QueryResult = await client.query(rawSql);
-      return {rows: pgQueryResult.rows};
+      return {rows: pgQueryResult.rows, rowCount: pgQueryResult.rowCount};
     } finally {
       client.release();
     }

@@ -102,7 +102,7 @@ export class MySqlDriver extends Driver {
           reject(err);
         }
 
-        connection.query(rawSql, (err: mysql.IError, rows: any[], fields: mysql.IFieldInfo[]) => {
+        connection.query(rawSql, (err: mysql.IError, rows: any, fields: mysql.IFieldInfo[]) => {
           connection.release();
 
           if (err) reject(err);
@@ -114,7 +114,7 @@ export class MySqlDriver extends Driver {
             }
           }
 
-          resolve({rows: rows});
+          resolve({rows: rows, rowCount: (typeof rows.affectedRows  === "undefined") ? rows.length : rows.affectedRows });
         });
       });
     });

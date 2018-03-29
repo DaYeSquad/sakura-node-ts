@@ -3,4 +3,5 @@
 
 export interface QueryResult {
   rows: any[];
+  rowCount: number;
 }
