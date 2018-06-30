@@ -211,7 +211,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
         let keysStr: string = q.columns_.join(",");
         let valuesStr: string = q.values_.join(",");
         let returnValue: string = q.returnValue_;
-        
+
         return `INSERT INTO ${q.table_} (${keysStr}) VALUES (${valuesStr}); SELECT ${lastInsertId};`;
       }
     }
@@ -250,7 +250,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
       return `UPDATE ${q.table_} SET ${q.setValuesSqlFromModel_} WHERE ${q.where_};`;
     } else {
       let updatesAry: string[] = [];
-      q.updates_.forEach((update: {key: string, value: any}) => {
+      q.updates_.forEach((update: { key: string, value: any }) => {
         if (typeof(update.value) === "string") {
           updatesAry.push(`${update.key}='${update.value}'`);
         } else {
@@ -416,7 +416,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
           let value: any = model[sqlField.name];
           value = this.valueAsStringByType(value, sqlField.type);
           modelInfo.values.push(value);
-        } else if (sqlField.flag === SqlFlag.NOT_NULL){
+        } else if (sqlField.flag === SqlFlag.NOT_NULL) {
           // NOT_NULL
           throw new SqlFieldNameNotFound(sqlField.name);
         } else {
@@ -432,7 +432,11 @@ export class MySqlQueryBuilder implements QueryBuilder {
 
   valueAsStringByType(value: any, sqlType: SqlType): string {
     if (sqlType === SqlType.VARCHAR_255 || sqlType === SqlType.TEXT || sqlType === SqlType.VARCHAR_1024) {
-      value = `'${value}'`;
+      if (value !== null) {
+        value = `'${value}'`;
+      } else {
+        value = `${value}`;
+      }
     } else if (sqlType === SqlType.DATE) {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
       value = `STR_TO_DATE('${valueAsDateInSql}', '%Y-%m-%d')`;
@@ -473,18 +477,30 @@ export class MySqlQueryBuilder implements QueryBuilder {
    */
   private sqlTypeToCreateSyntaxString_(sqlType: SqlType): string {
     switch (sqlType) {
-      case SqlType.INT: return "INT";
-      case SqlType.BIGINT: return "BIGINT";
-      case SqlType.VARCHAR_1024: return "VARCHAR(1024)";
-      case SqlType.VARCHAR_255: return "VARCHAR(255)";
-      case SqlType.TIMESTAMP: return "TIMESTAMP NULL DEFAULT NULL";
-      case SqlType.JSON: return "JSON";
-      case SqlType.NUMERIC: return "DECIMAL(18,8)";
-      case SqlType.DATE: return "DATE";
-      case SqlType.TEXT: return "TEXT";
-      case SqlType.BOOLEAN: return "BOOLEAN";
-      case SqlType.GEOMETRY: return "GEOMETRY";
-      default: throw Error(`Undefined SqlType ${sqlType}`);
+      case SqlType.INT:
+        return "INT";
+      case SqlType.BIGINT:
+        return "BIGINT";
+      case SqlType.VARCHAR_1024:
+        return "VARCHAR(1024)";
+      case SqlType.VARCHAR_255:
+        return "VARCHAR(255)";
+      case SqlType.TIMESTAMP:
+        return "TIMESTAMP NULL DEFAULT NULL";
+      case SqlType.JSON:
+        return "JSON";
+      case SqlType.NUMERIC:
+        return "DECIMAL(18,8)";
+      case SqlType.DATE:
+        return "DATE";
+      case SqlType.TEXT:
+        return "TEXT";
+      case SqlType.BOOLEAN:
+        return "BOOLEAN";
+      case SqlType.GEOMETRY:
+        return "GEOMETRY";
+      default:
+        throw Error(`Undefined SqlType ${sqlType}`);
     }
   }
 

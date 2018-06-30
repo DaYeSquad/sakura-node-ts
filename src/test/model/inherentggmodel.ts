@@ -10,6 +10,7 @@ import {InsertQuery} from "../../sqlquery/insertquery";
 import {GGModel} from "../../gg/ggmodel";
 import {SelectQuery} from "../../sqlquery/selectquery";
 import {readdirSync} from "fs";
+import {UpdateQuery} from "../../sqlquery/updatequery";
 
 @TableName("users")
 class User extends GGModel {
@@ -37,6 +38,29 @@ describe("GGModel", () => {
     const insertQuery: InsertQuery = new InsertQuery().fromModel(user);
     const result: string = queryBuilder.buildInsertQuery(insertQuery);
     chai.expect(result).to.equal("INSERT INTO users (username,created_at,updated_at,is_deleted) VALUES ('franklin',FROM_UNIXTIME(1515140547),FROM_UNIXTIME(1515140547),false)");
+  });
+
+
+  it("Test User Attribute is null in InsertQuery", () => {
+    let user: User = new User();
+    user.username = null;
+    user.createdAt = 1515140547;
+    user.updatedAt = 1515140547;
+    user.isDeleted = false;
+
+    const insertQuery: InsertQuery = new InsertQuery().fromModel(user);
+    const result: string = queryBuilder.buildInsertQuery(insertQuery);
+    chai.expect(result).to.equal("INSERT INTO users (username,created_at,updated_at,is_deleted) VALUES (null,FROM_UNIXTIME(1515140547),FROM_UNIXTIME(1515140547),false)");
+  });
+
+
+  it("Test User Attribute is null in UpdateQuery", () => {
+    const updateQuery: UpdateQuery = new UpdateQuery().table("user")
+      .set("username", null)
+      .set("display_name", null)
+      .whereWithParam("id = :id", {id: 1});
+    const result: string = queryBuilder.buildUpdateQuery(updateQuery);
+    chai.expect(result).to.equal("UPDATE user SET username=null,display_name=null WHERE id = 1;");
   });
 
   it("Test User that inherent GGModel that should take three additional parameters in SelectQuery", () => {
