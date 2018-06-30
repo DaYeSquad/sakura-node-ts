@@ -193,7 +193,7 @@ export class PgQueryBuilder implements QueryBuilder {
         } else if (sqlField.name) {
           let key: string = sqlField.columnName;
           let value: any = q.model_[sqlField.name];
-          if (value !== undefined && value !== null ) {
+          if (value !== undefined && value !== null) {
             value = this.valueAsStringByType(value, sqlField.type);
             updatesAry.push(`${key}=${value}`);
           }
@@ -437,7 +437,11 @@ export class PgQueryBuilder implements QueryBuilder {
 
   valueAsStringByType(value: any, sqlType: SqlType): string {
     if (sqlType === SqlType.VARCHAR_255 || sqlType === SqlType.TEXT || sqlType === SqlType.VARCHAR_1024) {
-      value = `'${value}'`;
+      if (value !== null) {
+        value = `'${value}'`;
+      } else {
+        value = `${value}`;
+      }
     } else if (sqlType === SqlType.DATE) {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
       value = `'${valueAsDateInSql}'::date`;
