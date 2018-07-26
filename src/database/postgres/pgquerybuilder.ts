@@ -362,6 +362,8 @@ export class PgQueryBuilder implements QueryBuilder {
         return "VARCHAR(255)";
       case SqlType.TIMESTAMP:
         return "TIMESTAMP";
+      case SqlType.TIMESTAMP_WITH_TIMEZONE:
+        return "TIMESTAMP WITH TIME ZONE"
       case SqlType.JSON:
         return "JSON";
       case SqlType.NUMERIC:

@@ -3,7 +3,6 @@
 
 import {sqlContext} from "../util/sqlcontext";
 import {DateUtil} from "../util/dateutil";
-import {stat} from "fs";
 
 export type ModelClass<T> = { new(): T; };
 
@@ -103,6 +102,7 @@ export enum SqlType {
   BIGINT,
   DATE,
   TIMESTAMP,
+  TIMESTAMP_WITH_TIMEZONE,
   JSON,
   NUMERIC,
   BOOLEAN,
