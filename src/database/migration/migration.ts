@@ -212,12 +212,14 @@ export class Migration {
     await this.dbClient_.queryRawInTransaction(sqls);
 
     // update table version
-    let version: Version = new Version();
-    version.version = this.version_;
-    version.appName = this.appName_;
-    const updateQuery: UpdateQuery = new UpdateQuery().fromModel(version).where(`app_name = '${version.appName}'`,
-      `version = ${currentVersion}`);
-    await this.dbClient_.query(updateQuery);
-    return true;
+    if (currentVersion !== undefined) {
+      let version: Version = new Version();
+      version.version = this.version_;
+      version.appName = this.appName_;
+      const updateQuery: UpdateQuery = new UpdateQuery().fromModel(version).where(`app_name = '${version.appName}'`,
+        `version = ${currentVersion}`);
+      await this.dbClient_.query(updateQuery);
+      return true;
+    }
   }
 }
