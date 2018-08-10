@@ -19,8 +19,8 @@ export class ApiDocContext {
     this.docs_ = [];
   }
 
-  generateBlueprintDocument(): string {
-    let content: string = "";
+  generateBlueprintDocument(host: string): string {
+    let content: string = `FORMAT: 1A\nHOST: ${host}\n\n`;
 
     for (let doc of this.docs_) {
       content += `## ${doc.description} [${doc.uri}]\n\n`;
@@ -43,7 +43,7 @@ export class ApiDocContext {
     }
 
     // debug code
-    // fs.writeFileSync("/tmp/test.md", content);
+    fs.writeFileSync("/tmp/test.md", content);
 
     return content;
   }

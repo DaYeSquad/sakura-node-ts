@@ -20,6 +20,11 @@ export interface ApiDocParameters {
   function: Function;
 
   /**
+   * group displayed in API Blueprint
+   */
+  group?: string;
+
+  /**
    * HTTP Methods
    */
   method: "GET" | "PUT" | "POST" | "DELETE";

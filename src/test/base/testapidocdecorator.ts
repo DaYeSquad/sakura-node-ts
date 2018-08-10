@@ -51,7 +51,7 @@ describe("Test API doc decorator", () => {
     });
 
     const expectString: string = fs.readFileSync("testdata/base/api-get-with-queryparameters.md", "utf8");
-    const blueprint: string = apiDocContext.generateBlueprintDocument();
+    const blueprint: string = apiDocContext.generateBlueprintDocument("https://api.gagogroup.cn/api");
     chai.expect(blueprint).to.equal(expectString);
   });
 
@@ -82,7 +82,7 @@ describe("Test API doc decorator", () => {
     });
 
     const expectString: string = fs.readFileSync("testdata/base/api-get-without-queryparameters.md", "utf8");
-    const blueprint: string = apiDocContext.generateBlueprintDocument();
+    const blueprint: string = apiDocContext.generateBlueprintDocument("https://api.gagogroup.cn/api");
     chai.expect(blueprint).to.equal(expectString);
   });
 
@@ -111,7 +111,7 @@ describe("Test API doc decorator", () => {
     });
 
     const expectString: string = fs.readFileSync("testdata/base/api-delete-with-queryparameters.md", "utf8");
-    const blueprint: string = apiDocContext.generateBlueprintDocument();
+    const blueprint: string = apiDocContext.generateBlueprintDocument("https://api.gagogroup.cn/api");
     chai.expect(blueprint).to.equal(expectString);
   });
 
@@ -144,7 +144,7 @@ describe("Test API doc decorator", () => {
     });
 
     const expectString: string = fs.readFileSync("testdata/base/api-post-with-queryparameters-body.md", "utf8");
-    const blueprint: string = apiDocContext.generateBlueprintDocument();
+    const blueprint: string = apiDocContext.generateBlueprintDocument("https://api.gagogroup.cn/api");
     chai.expect(blueprint).to.equal(expectString);
   });
 
@@ -200,7 +200,7 @@ describe("Test API doc decorator", () => {
     });
 
     const expectString: string = fs.readFileSync("testdata/base/api-multiple-docs.md", "utf8");
-    const blueprint: string = apiDocContext.generateBlueprintDocument();
+    const blueprint: string = apiDocContext.generateBlueprintDocument("https://api.gagogroup.cn/api");
     chai.expect(blueprint).to.equal(expectString);
   });
 });

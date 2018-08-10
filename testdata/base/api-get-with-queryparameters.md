@@ -1,3 +1,6 @@
+FORMAT: 1A
+HOST: https://api.gagogroup.cn/api
+
 ## 获得所有用户信息 [/products?{pid}]
 
 ### 获得所有用户信息，以数组的形式返回 [GET]
