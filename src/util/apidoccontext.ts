@@ -4,7 +4,6 @@
 
 import {ApiDocParameters} from "../base/apidoc";
 import * as fs from "fs";
-import {query} from "winston";
 
 /**
  * API document context
@@ -16,23 +15,32 @@ export class ApiDocContext {
     this.docs_.push(doc);
   }
 
-  apiBlueprintDocument(): string {
+  removeAllDocs(): void {
+    this.docs_ = [];
+  }
+
+  generateBlueprintDocument(): string {
     let content: string = "";
 
     for (let doc of this.docs_) {
       content += `## ${doc.description} [${doc.uri}]\n\n`;
-      content += `### ${doc.description} [${doc.method}]\n\n`;
-      content += `${this.queryParametersToString_(doc)}`;
-      content += `+ Request (application/json)\n\n`;
-      content += `    + Body\n\n`;
-      content += `            ${doc.requestBody}\n\n`;
-      content += `+ Response 200 (application/json)\n\n`;
-      content += `    + Body\n\n`;
-      content += `            ${doc.responseBody}\n\n`;
+      content += `### ${doc.detailDescription} [${doc.method}]\n\n`;
 
-      // debug code
-      fs.writeFileSync("/tmp/test.md", content);
+      if (doc.queryParameters) {
+        content += `${this.queryParametersToString_(doc)}`;
+      }
+
+      if (doc.requestBody) {
+        content += `${this.requestBodyToString_(doc.requestBody)}`;
+      }
+
+      if (doc.responseBody) {
+        content += `${this.responseBodyToString_(doc.responseBody)}`;
+      }
     }
+
+    // debug code
+    fs.writeFileSync("/tmp/test.md", content);
 
     return content;
   }
@@ -57,9 +65,26 @@ export class ApiDocContext {
         isRequiredString = `(${queryParameter.type}, required)`;
       }
 
-      content += `    + ${queryParameter.key}: ${queryParameter.example} ${isRequiredString} -${queryParameter.description}\n\n`;
+      content += `    + ${queryParameter.key}: ${queryParameter.example} ${isRequiredString} - ${queryParameter.description}\n\n`;
     }
 
+    return content;
+  }
+
+  private requestBodyToString_(requestBody: any): string {
+    let content: string = "";
+    content += `+ Request (application/json)\n\n`;
+    content += `    + Body\n\n`;
+    content += `            ${JSON.stringify(requestBody, null, 4)}\n\n`;
+    return content;
+  }
+
+  private responseBodyToString_(responseBody: any): string {
+    let content: string = "";
+    content += `+ Response 200 (application/json)\n\n`;
+    content += `    + Body\n\n`;
+    content += `            ${JSON.stringify(responseBody, null, 4)}\n\n`.replace(/\n\r?/g, "\n            ");
+    content = content.slice(0, -26);
     return content;
   }
 }

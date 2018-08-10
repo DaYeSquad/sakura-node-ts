@@ -40,6 +40,11 @@ export interface ApiDocParameters {
   description: string;
 
   /**
+   * detail description of API
+   */
+  detailDescription?: string;
+
+  /**
    * request headers
    */
   requestHeaders?: any;
