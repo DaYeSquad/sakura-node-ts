@@ -1,0 +1,17 @@
+## 删除所有用户信息 [/products/{pid}]
+
+### 删除所有用户信息 [DELETE]
+
++ Parameters
+
+    + pid: 15 (number, required) - 产品 ID
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "data": {
+                    "message": "ok"
+                }
+            }

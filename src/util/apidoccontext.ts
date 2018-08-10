@@ -24,7 +24,7 @@ export class ApiDocContext {
 
     for (let doc of this.docs_) {
       content += `## ${doc.description} [${doc.uri}]\n\n`;
-      content += `### ${doc.detailDescription} [${doc.method}]\n\n`;
+      content += `### ${doc.detailDescription ? doc.detailDescription : doc.description} [${doc.method}]\n\n`;
 
       if (doc.queryParameters) {
         content += `${this.queryParametersToString_(doc)}`;
@@ -32,6 +32,7 @@ export class ApiDocContext {
 
       if (doc.requestBody) {
         content += `${this.requestBodyToString_(doc.requestBody)}`;
+        content += `\n\n`;
       }
 
       if (doc.responseBody) {
@@ -75,7 +76,8 @@ export class ApiDocContext {
     let content: string = "";
     content += `+ Request (application/json)\n\n`;
     content += `    + Body\n\n`;
-    content += `            ${JSON.stringify(requestBody, null, 4)}\n\n`;
+    content += `            ${JSON.stringify(requestBody, null, 4)}\n\n`.replace(/\n\r?/g, "\n            ");
+    content = content.slice(0, -26); // remove unused line
     return content;
   }
 
@@ -84,7 +86,7 @@ export class ApiDocContext {
     content += `+ Response 200 (application/json)\n\n`;
     content += `    + Body\n\n`;
     content += `            ${JSON.stringify(responseBody, null, 4)}\n\n`.replace(/\n\r?/g, "\n            ");
-    content = content.slice(0, -26);
+    content = content.slice(0, -26); // remove unused line
     return content;
   }
 }
