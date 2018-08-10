@@ -23,7 +23,9 @@
                 "data": {
                     "message": "ok"
                 }
-            }## 删除所有用户信息 [/products/{pid}]
+            }
+
+## 删除所有用户信息 [/products/{pid}]
 
 ### 删除所有用户信息 [DELETE]
 
@@ -40,3 +42,4 @@
                     "message": "ok"
                 }
             }
+

@@ -38,10 +38,12 @@ export class ApiDocContext {
       if (doc.responseBody) {
         content += `${this.responseBodyToString_(doc.responseBody)}`;
       }
+
+      content += "\n\n";
     }
 
     // debug code
-    fs.writeFileSync("/tmp/test.md", content);
+    // fs.writeFileSync("/tmp/test.md", content);
 
     return content;
   }
