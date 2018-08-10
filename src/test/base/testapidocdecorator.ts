@@ -145,7 +145,62 @@ describe("Test API doc decorator", () => {
 
     const expectString: string = fs.readFileSync("testdata/base/api-post-with-queryparameters-body.md", "utf8");
     const blueprint: string = apiDocContext.generateBlueprintDocument();
-    fs.writeFileSync("/tmp/post.md", blueprint);
+    chai.expect(blueprint).to.equal(expectString);
+  });
+
+  it("Test API doc decorator with POST request with body and parameters", () => {
+    apiDoc({
+      function: UserController.getUserInfo,
+      description: "新增所有用户信息",
+      method: "POST",
+      uri: "/products/{pid}",
+      queryParameters: [
+        {
+          key: "pid",
+          example: 15,
+          type: "number",
+          description: "产品 ID"
+        }
+      ],
+      requestHeaders: {
+        "Token": "it-is-a-token"
+      },
+      requestBody: {
+        "username": "linxiaoyi",
+        "displayName": "lindaxian"
+      },
+      responseBody: {
+        "data": {
+          "message": "ok"
+        }
+      }
+    });
+
+    apiDoc({
+      function: UserController.getUserInfo,
+      description: "删除所有用户信息",
+      method: "DELETE",
+      uri: "/products/{pid}",
+      queryParameters: [
+        {
+          key: "pid",
+          example: 15,
+          type: "number",
+          description: "产品 ID"
+        }
+      ],
+      requestHeaders: {
+        "Token": "it-is-a-token"
+      },
+      responseBody: {
+        "data": {
+          "message": "ok"
+        }
+      }
+    });
+
+    const expectString: string = fs.readFileSync("testdata/base/api-multiple-docs.md", "utf8");
+    const blueprint: string = apiDocContext.generateBlueprintDocument();
     chai.expect(blueprint).to.equal(expectString);
   });
 });
