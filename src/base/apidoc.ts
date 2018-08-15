@@ -1,8 +1,6 @@
 // Copyright 2018 Frank Lin (lin.xiaoe.f@gmail.com). All rights reserved.
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
-import {apiDocContext} from "../util/apidoccontext";
-
 export interface ApiDocQueryParameters {
   key: string;
   example: any;
@@ -11,18 +9,21 @@ export interface ApiDocQueryParameters {
 }
 
 /**
- * API Doc parameters
+ * API Group of api descriptions
  */
-export interface ApiDocParameters {
+export interface ApiDoc {
+  groupName: string;
+  descriptions: ApiDescription[];
+}
+
+/**
+ * API description
+ */
+export interface ApiDescription {
   /**
    * Function that being described
    */
   function: Function;
-
-  /**
-   * group displayed in API Blueprint
-   */
-  group?: string;
 
   /**
    * HTTP Methods
@@ -63,8 +64,4 @@ export interface ApiDocParameters {
    * expect response body
    */
   responseBody?: any;
-}
-
-export function apiDoc(parameters: ApiDocParameters): void {
-  apiDocContext.addDoc(parameters);
 }

@@ -30,7 +30,7 @@ export { Validator } from "./src/api/validator";
 
 export { TableName, Column } from "./src/base/decorator";
 export { Model, SqlFlag, SqlType, SqlField, SqlDefaultValue, SqlDefaultValueType } from "./src/base/model";
-export { apiDoc } from "./src/base/apidoc";
+export { ApiDescription } from "./src/base/apidoc";
 
 // -------------------------------------------------------------------------
 // Database
