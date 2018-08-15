@@ -16,6 +16,23 @@ export interface ApiDoc {
   descriptions: ApiDescription[];
 }
 
+export interface ApiDocComparator {
+  /**
+   * JSON Key
+   */
+  keyPath: string;
+
+  /**
+   * Comparator type
+   */
+  type: "ValueEqual" | "KeyExist" | "Ignore" | "ValueRange";
+
+  /**
+   * If type is ValueRange, the range should be specified
+   */
+  valueRange?: Range;
+}
+
 /**
  * API description
  */
@@ -64,4 +81,10 @@ export interface ApiDescription {
    * expect response body
    */
   responseBody?: any;
+
+  /**
+   * sometimes you want to generate unit test or monitor that doesn't just compare fully equality between key and value
+   * you may want to use this option to specify the conditions
+   */
+  additionalConditions?: ApiDocComparator[];
 }

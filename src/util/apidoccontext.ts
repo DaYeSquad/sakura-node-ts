@@ -4,6 +4,7 @@
 import * as fs from "fs";
 
 import {ApiDescription, ApiDoc} from "../base/apidoc";
+import {isNumber} from "util";
 
 
 /**
@@ -52,7 +53,40 @@ export class ApiDocContext {
 
         content += `      .expect((res: supertest.Response) => {\n`;
 
-        content += this.responseBodyToChaiExpect_(apiDescription.responseBody);
+        let responseBodyChai: string = this.responseBodyToChaiExpect_(apiDescription.responseBody);
+        if (apiDescription.additionalConditions && apiDescription.additionalConditions.length > 0) {
+          for (let condition of apiDescription.additionalConditions) {
+            const paths: string[] = condition.keyPath.split("/");
+            let jsonPath: string = "";
+            let lastJsonKey: string = "";
+            let maybeValue: any = apiDescription.responseBody;
+            for (let path of paths) {
+              if (!isNaN(Number(path))) { // array index
+                jsonPath += `[${path}]`;
+              } else { // object key
+                jsonPath += `["${path}"]`;
+              }
+
+              maybeValue = maybeValue[path];
+              lastJsonKey = path;
+            }
+
+            const originalStr: string = `chai.expect(res${jsonPath}).to.equal(${maybeValue});`;
+
+            if (condition.type === "ValueEqual") {
+              // it's default, just pass
+            } else if (condition.type === "KeyExist") {
+              const jsonPathWithoutLastKey: string = jsonPath.replace(`["${lastJsonKey}"]`, "");
+              responseBodyChai = responseBodyChai.replace(originalStr,
+                `chai.expect(res${jsonPathWithoutLastKey}).to.have.property("${lastJsonKey}");`);
+            } else if (condition.type === "Ignore") {
+              responseBodyChai = responseBodyChai.replace(originalStr, "");
+            } else {
+              throw new Error("Unknown type");
+            }
+          }
+        }
+        content += responseBodyChai;
 
         content += `      })\n`;
         content += `      .expect(200, done);\n`;
