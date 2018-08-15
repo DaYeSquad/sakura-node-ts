@@ -81,6 +81,9 @@ export class ApiDocContext {
                 `chai.expect(res${jsonPathWithoutLastKey}).to.have.property("${lastJsonKey}");`);
             } else if (condition.type === "Ignore") {
               responseBodyChai = responseBodyChai.replace(originalStr, "");
+            } else if (condition.type === "ValueRange") {
+              responseBodyChai = responseBodyChai.replace(originalStr,
+                `chai.expect(res${jsonPath}).to.greaterThan(${condition.valueRange[0]}).and.lessThan(${condition.valueRange[1]});`);
             } else {
               throw new Error("Unknown type");
             }

@@ -161,4 +161,59 @@ describe("Test API doc to unit test cases", () => {
 
     chai.expect(realContent).to.equal(expectString);
   });
+
+  it("Test generating unit test cases with conditions which is lt and gt", () => {
+    const doc: ApiDoc = {
+      groupName: "Monitor",
+      descriptions: [
+        {
+          function: UserController.getUserInfo,
+          description: "获得所有用户信息",
+          detailDescription: "获得所有用户信息，以数组的形式返回",
+          method: "GET",
+          uri: "/products?pid={pid}",
+          queryParameters: [
+            {
+              key: "pid",
+              example: 5,
+              type: "number",
+              description: "产品的 ID"
+            }
+          ],
+          requestHeaders: {
+            "Token": "it-is-a-token"
+          },
+          responseBody: {
+            "data": {
+              "users": [
+                {
+                  "uid": 1,
+                  "displayName": "linxiaoyi"
+                },
+                {
+                  "uid": 2,
+                  "displayName": "huangtaihu"
+                }
+              ]
+            }
+          },
+          additionalConditions: [
+            {
+              keyPath: "data/users/0/uid",
+              type: "ValueRange",
+              valueRange: [0, 30]
+            }
+          ]
+        }
+      ]
+    };
+
+    const expectString: string = fs.readFileSync("testdata/base/fake-test-usercontroller-with-conditions-ltgt.txt", "utf8");
+    ApiDocContext.generateUnitTests({ host: "https://api.gagogroup.cn/api", docs: [doc], path: "/tmp"});
+
+    const expectPath: string = `/tmp/test-monitor-controller.ts`;
+    const realContent: string = fs.readFileSync(expectPath, "utf8");
+
+    chai.expect(realContent).to.equal(expectString);
+  });
 });

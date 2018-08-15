@@ -28,9 +28,9 @@ export interface ApiDocComparator {
   type: "ValueEqual" | "KeyExist" | "Ignore" | "ValueRange";
 
   /**
-   * If type is ValueRange, the range should be specified
+   * If type is ValueRange, the range should be specified, it should be like [0, 30]
    */
-  valueRange?: Range;
+  valueRange?: number[];
 }
 
 /**
