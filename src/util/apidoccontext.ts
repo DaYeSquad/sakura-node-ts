@@ -42,8 +42,10 @@ export class ApiDocContext {
         }
 
         let uri: string = `      .${apiDescription.method.toLowerCase()}("${apiDescription.uri}")\n`;
-        for (let queryParameter of apiDescription.queryParameters) {
-          uri = uri.replace(`{${queryParameter.key}}`, queryParameter.example);
+        if (apiDescription.queryParameters) {
+          for (let queryParameter of apiDescription.queryParameters) {
+            uri = uri.replace(`{${queryParameter.key}}`, queryParameter.example);
+          }
         }
 
         content += uri; // replace parameters

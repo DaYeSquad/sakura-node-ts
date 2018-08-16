@@ -230,9 +230,6 @@ describe("Test API doc to unit test cases", () => {
           requestHeaders: {
             "Token": "token"
           },
-          queryParameters: [
-
-          ],
           requestBody: {
             "projectId": 1882
           },
