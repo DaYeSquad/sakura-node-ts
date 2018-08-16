@@ -31,7 +31,8 @@ export class ApiDocContext {
         content += `  it("${apiDescription.description}", (done: MochaDone) => {\n`;
 
         if (apiDescription.requestBody) {
-          content += `    const request: any = ${JSON.stringify(apiDescription.requestBody, null, 4)}\n`;
+          content += `    const request: any = ${JSON.stringify(apiDescription.requestBody, null, 2)};\n`.replace(/\n\r?/g, "\n    ");
+          content += "\n";
         }
 
         if (params.host) {

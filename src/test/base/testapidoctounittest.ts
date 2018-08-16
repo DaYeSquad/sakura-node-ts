@@ -216,4 +216,41 @@ describe("Test API doc to unit test cases", () => {
 
     chai.expect(realContent).to.equal(expectString);
   });
+
+  it("Test generating unit test cases with put request", () => {
+    const doc: ApiDoc = {
+      groupName: "Monitor",
+      descriptions: [
+        {
+          function: UserController.getUserInfo,
+          description: "注册监控请求",
+          detailDescription: "由项目的 server 发起，注册项目的接口的监控",
+          method: "PUT",
+          uri: "/monitor_config",
+          requestHeaders: {
+            "Token": "token"
+          },
+          queryParameters: [
+
+          ],
+          requestBody: {
+            "projectId": 1882
+          },
+          responseBody: {
+            "data": {
+              "message": "ok"
+            }
+          }
+        }
+      ]
+    };
+
+    const expectString: string = fs.readFileSync("testdata/base/fake-test-usercontroller-put-with-queryparameters.txt", "utf8");
+    ApiDocContext.generateUnitTests({ host: "https://api.gagogroup.cn/api", docs: [doc], path: "/tmp"});
+
+    const expectPath: string = `/tmp/test-monitor-controller.ts`;
+    const realContent: string = fs.readFileSync(expectPath, "utf8");
+
+    chai.expect(realContent.replace(/(^[ \t]*\n)/gm, "")).to.equal(expectString.replace(/(^[ \t]*\n)/gm, ""));
+  });
 });
