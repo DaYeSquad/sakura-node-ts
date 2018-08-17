@@ -50,6 +50,12 @@ export class ApiDocContext {
 
         content += uri; // replace parameters
 
+        if (apiDescription.requestHeaders) {
+          for (let key in apiDescription.requestHeaders) {
+            content += `      .set("${key}", "${apiDescription.requestHeaders[key]}")\n`;
+          }
+        }
+
         if (apiDescription.requestBody) {
           content += `      .send(JSON.stringify(request))\n`;
         }

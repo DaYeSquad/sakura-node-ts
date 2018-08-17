@@ -5,6 +5,7 @@ import {ApiDocContext} from "../../util/apidoccontext";
 import * as fs from "fs";
 import * as chai from "chai";
 import {ApiDoc} from "../../base/apidoc";
+import {StringUtil} from "../../util/stringutil";
 
 class UserController {
   static async getUserInfo(): Promise<void> {}
@@ -30,9 +31,6 @@ describe("Test API doc to unit test cases", () => {
               description: "产品的 ID"
             }
           ],
-          requestHeaders: {
-            "Token": "it-is-a-token"
-          },
           responseBody: {
             "data": {
               "users": [
@@ -78,9 +76,6 @@ describe("Test API doc to unit test cases", () => {
               description: "产品的 ID"
             }
           ],
-          requestHeaders: {
-            "Token": "it-is-a-token"
-          },
           responseBody: {
             "data": {
               "user": {
@@ -126,9 +121,6 @@ describe("Test API doc to unit test cases", () => {
               description: "产品的 ID"
             }
           ],
-          requestHeaders: {
-            "Token": "it-is-a-token"
-          },
           responseBody: {
             "data": {
               "users": [
@@ -180,9 +172,6 @@ describe("Test API doc to unit test cases", () => {
               description: "产品的 ID"
             }
           ],
-          requestHeaders: {
-            "Token": "it-is-a-token"
-          },
           responseBody: {
             "data": {
               "users": [
@@ -228,7 +217,7 @@ describe("Test API doc to unit test cases", () => {
           method: "PUT",
           uri: "/monitor_config",
           requestHeaders: {
-            "Token": "token"
+            "Token": "test-token"
           },
           requestBody: {
             "projectId": 1882
@@ -248,6 +237,6 @@ describe("Test API doc to unit test cases", () => {
     const expectPath: string = `/tmp/test-monitor-controller.ts`;
     const realContent: string = fs.readFileSync(expectPath, "utf8");
 
-    chai.expect(realContent.replace(/(^[ \t]*\n)/gm, "")).to.equal(expectString.replace(/(^[ \t]*\n)/gm, ""));
+    chai.expect(StringUtil.removeBreaklines(realContent)).to.equal(StringUtil.removeBreaklines(expectString));
   });
 });

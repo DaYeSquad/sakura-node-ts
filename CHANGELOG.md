@@ -1,3 +1,7 @@
+# 3.5.6 (2018.8.17.)
+
+* **支持面向文档编程:** 新增 apiDoc 直接生成 api blueprint 文件和单元测试代码
+
 # 3.4.7 (2018.3.29.)
 
 * **QueryResult 支持回传 query 后影响的总 row 数:** 若为 select 会是 select 到的总 row 数，若为 update, delete 则为影响的总 row 数，transation 目前底层框架不支持，会回传 NaN 
