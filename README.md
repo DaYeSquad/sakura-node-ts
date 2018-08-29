@@ -14,7 +14,7 @@ https://dayesquad.github.io/sakura-node-ts/
 
 * 常用的一些 Express 的 middleware，如 timeout、CORS 等
 
-* Email service: 常用发信的封装
+* 文档到 api blueprint、到 postman collection、到 unit test、到监控一波流
 
 
 # 安装
@@ -172,6 +172,54 @@ export class GPSDevice extends GGModel {
 ```
 
 更多的示例, 可以查看 `src/example`.
+
+# DOC
+
+```TypeScript
+const doc: ApiDoc = {
+  groupName: "Monitor",
+  descriptions: [
+    {
+      function: UserController.getUserInfo,
+      description: "获得所有用户信息",
+      detailDescription: "获得所有用户信息，以数组的形式返回",
+      method: "GET",
+      uri: "/products?pid={pid}",
+      queryParameters: [
+        {
+          key: "pid",
+          example: 5,
+          type: "number",
+          description: "产品的 ID"
+        }
+      ],
+      responseBody: {
+        "data": {
+          "users": [
+            {
+              "uid": 1,
+              "displayName": "linxiaoyi"
+            },
+            {
+              "uid": 2,
+              "displayName": "huangtaihu"
+            }
+          ]
+        }
+      },
+      additionalConditions: [
+        {
+          keyPath: "data/users/0/uid",
+          type: "ValueRange",
+          valueRange: [0, 30]
+        }
+      ]
+    }
+  ]
+};
+```
+
+通过编写一个 apiDoc，便可以通过 sakura-cli
 
 
 # BUILD
