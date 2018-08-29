@@ -219,7 +219,8 @@ const doc: ApiDoc = {
 };
 ```
 
-通过编写一个 apiDoc，便可以通过 sakura-cli
+通过编写一个 apiDoc，可以通过 [sakura-cli](http://git.azure.gagogroup.cn/efficiency/sakura-cli) 来生成文档、单元测试、postman collection，也可以
+参考 `src/base/testapidocdecorator.ts`、`testapidoctounittest.ts` 使用的方式来创建对应内容
 
 
 # BUILD
@@ -296,4 +297,4 @@ run `docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -
 
 # Node Runtime
 
-Node 6.11.0
+Node 6+
