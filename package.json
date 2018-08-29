@@ -1,6 +1,6 @@
 {
   "name": "sakura-node-3",
-  "version": "3.5.6",
+  "version": "3.5.7",
   "description": "Helpful startup framework for building RESTful service with PostgreSQL, MySQL",
   "main": "./lib/js/index.js",
   "types": "./lib/definitions/index.d.ts",
@@ -9,7 +9,7 @@
     "test": "export NODE_ENV=test; mocha  './lib/js/src/test/**/*.js'   --recursive; export NODE_ENV=;",
     "posttest": "rm -rf ./lib",
     "prepublish": "rm -rf ./lib; gulp ts;",
-    "postpublish": "rm -rf ./lib; gulp ts; node ./llxib/js/src/tools/sendchangelog.js; rm -rf ./lib;",
+    "postpublish": "rm -rf ./lib; gulp ts; rm -rf ./lib;",
     "lint": "sh bin/tslint.sh",
     "test-mysql": "sh bin/test-mysql.sh",
     "sample-mysql": "rm -rf ./lib; gulp ts; node ./lib/js/src/example/mysql/dbclient.js;",
@@ -20,9 +20,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/DaYeSquad/sakura-node-ts.git"
-  },
-  "publishConfig": {
-    "registry": "http://npmjs.gagogroup.cn"
   },
   "author": "Frank Lin",
   "license": "MIT",
