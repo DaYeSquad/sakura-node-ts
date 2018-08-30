@@ -6,16 +6,18 @@
 import * as supertest from "supertest";
 import * as chai from "chai";
 
+interface ResDictionary { [id: string]: any; }
+
 describe("Test  Dog harry UP API", () => {
 
   it("获得所有用户信息", (done: MochaDone) => {
     supertest("https://api.gagogroup.cn/api")
       .get("/products?pid=5")
-      .expect((res: supertest.Response) => {
-        chai.expect(res["data"]["users"][0]["uid"]).to.equal(1);
-        chai.expect(res["data"]["users"][0]["displayName"]).to.equal("linxiaoyi");
-        chai.expect(res["data"]["users"][1]["uid"]).to.equal(2);
-        chai.expect(res["data"]["users"][1]["displayName"]).to.equal("huangtaihu");
+      .expect((res: supertest.Response & ResDictionary) => {
+        chai.expect(res.body["data"]["users"][0]["uid"]).to.equal(1);
+        chai.expect(res.body["data"]["users"][0]["displayName"]).to.equal("linxiaoyi");
+        chai.expect(res.body["data"]["users"][1]["uid"]).to.equal(2);
+        chai.expect(res.body["data"]["users"][1]["displayName"]).to.equal("huangtaihu");
       })
       .expect(200, done);
   });
