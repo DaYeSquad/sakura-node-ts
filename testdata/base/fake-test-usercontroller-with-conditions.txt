@@ -14,8 +14,8 @@ describe("Test Monitor API", () => {
     supertest("https://api.gagogroup.cn/api")
       .get("/products?pid=5")
       .expect((res: supertest.Response & ResDictionary) => {
-        chai.expect(res["data"]["user"]).to.have.property("uid");
-        chai.expect(res["data"]["user"]["displayName"]).to.equal("linxiaoyi");
+        chai.expect(res.body["data"]["user"]).to.have.property("uid");
+        chai.expect(res.body["data"]["user"]["displayName"]).to.equal("linxiaoyi");
       })
       .expect(200, done);
   });

@@ -20,7 +20,7 @@ describe("Test Monitor API", () => {
       .set("Token", "test-token")
       .send(JSON.stringify(request))
       .expect((res: supertest.Response & ResDictionary) => {
-        chai.expect(res["data"]["message"]).to.equal("ok");
+        chai.expect(res.body["data"]["message"]).to.equal("ok");
       })
       .expect(200, done);
   });

@@ -83,19 +83,19 @@ export class ApiDocContext {
               lastJsonKey = path;
             }
 
-            const originalStr: string = `chai.expect(res${jsonPath}).to.equal(${maybeValue});`;
+            const originalStr: string = `chai.expect(res.body${jsonPath}).to.equal(${maybeValue});`;
 
             if (condition.type === "ValueEqual") {
               // it's default, just pass
             } else if (condition.type === "KeyExist") {
               const jsonPathWithoutLastKey: string = jsonPath.replace(`["${lastJsonKey}"]`, "");
               responseBodyChai = responseBodyChai.replace(originalStr,
-                `chai.expect(res${jsonPathWithoutLastKey}).to.have.property("${lastJsonKey}");`);
+                `chai.expect(res.body${jsonPathWithoutLastKey}).to.have.property("${lastJsonKey}");`);
             } else if (condition.type === "Ignore") {
               responseBodyChai = responseBodyChai.replace(originalStr, "");
             } else if (condition.type === "ValueRange") {
               responseBodyChai = responseBodyChai.replace(originalStr,
-                `chai.expect(res${jsonPath}).to.greaterThan(${condition.valueRange[0]}).and.lessThan(${condition.valueRange[1]});`);
+                `chai.expect(res.body${jsonPath}).to.greaterThan(${condition.valueRange[0]}).and.lessThan(${condition.valueRange[1]});`);
             } else {
               throw new Error("Unknown type");
             }
@@ -196,11 +196,11 @@ export class ApiDocContext {
       if (typeof responseBody === "boolean" ||
           typeof responseBody === "number" ||
           typeof responseBody === "undefined") {
-        content += `        chai.expect(res${stack}).to.equal(${responseBody});\n`;
+        content += `        chai.expect(res.body${stack}).to.equal(${responseBody});\n`;
         return content;
       }
       if (typeof responseBody === "string") {
-        content += `        chai.expect(res${stack}).to.equal("${responseBody}");\n`;
+        content += `        chai.expect(res.body${stack}).to.equal("${responseBody}");\n`;
         return content;
       }
     }
@@ -223,9 +223,9 @@ export class ApiDocContext {
           }
 
           if (stack !== "") {
-            content += `        chai.expect(res${stack}["${property}"]).to.equal(${value});\n`;
+            content += `        chai.expect(res.body${stack}["${property}"]).to.equal(${value});\n`;
           } else {
-            content += `        chai.expect(res["${property}"]).to.equal(${value});\n`;
+            content += `        chai.expect(res.body["${property}"]).to.equal(${value});\n`;
           }
         }
       }
