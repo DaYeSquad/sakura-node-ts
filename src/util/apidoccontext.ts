@@ -5,6 +5,7 @@ import * as fs from "fs";
 
 import {ApiDescription, ApiDoc} from "../base/apidoc";
 import {isNumber} from "util";
+import { StringUtil } from "./stringutil";
 
 
 /**
@@ -107,7 +108,7 @@ export class ApiDocContext {
 
       content += "});";
 
-      fs.writeFileSync(`${params.path}/test-${doc.groupName.toLowerCase()}-controller.ts`, content);
+      fs.writeFileSync(`${params.path}/test-${StringUtil.repalceSpaceWithMiddleLine(doc.groupName).toLowerCase()}-controller.ts`, content);
     }
   }
 
