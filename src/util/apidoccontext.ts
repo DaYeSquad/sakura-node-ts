@@ -192,9 +192,12 @@ export class ApiDocContext {
     } else { // responseBody may already being a primitives
       if (typeof responseBody === "boolean" ||
           typeof responseBody === "number" ||
-          typeof responseBody === "string" ||
           typeof responseBody === "undefined") {
         content += `        chai.expect(res${stack}).to.equal(${responseBody});\n`;
+        return content;
+      }
+      if (typeof responseBody === "string") {
+        content += `        chai.expect(res${stack}).to.equal("${responseBody}");\n`;
         return content;
       }
     }
