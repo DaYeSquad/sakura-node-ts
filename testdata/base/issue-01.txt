@@ -6,13 +6,15 @@
 import * as supertest from "supertest";
 import * as chai from "chai";
 
+interface ResDictionary { [id: string]: any; }
+
 describe("Test Monitor API", () => {
 
   it("获取所有农事记录", (done: MochaDone) => {
     supertest("https://api.gagogroup.cn/api")
       .get("/farmrecord/all")
       .set("token", "f7ce2aae08d917292fb20c8ec4a41ea707bea715f61a89729a77116f3cc9cb6f2a73e1f2e97ebf5cdc384e458b592e4e")
-      .expect((res: supertest.Response) => {
+      .expect((res: supertest.Response & ResDictionary) => {
         chai.expect(res["data"]["farmrecords"][0]).to.have.property("id");
         chai.expect(res["data"]["farmrecords"][0]).to.have.property("recordLatitude");
         chai.expect(res["data"]["farmrecords"][0]).to.have.property("recordLongitude");

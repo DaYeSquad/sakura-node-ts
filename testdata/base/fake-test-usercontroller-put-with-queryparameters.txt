@@ -6,6 +6,8 @@
 import * as supertest from "supertest";
 import * as chai from "chai";
 
+interface ResDictionary { [id: string]: any; }
+
 describe("Test Monitor API", () => {
 
   it("注册监控请求", (done: MochaDone) => {
@@ -17,7 +19,7 @@ describe("Test Monitor API", () => {
       .put("/monitor_config")
       .set("Token", "test-token")
       .send(JSON.stringify(request))
-      .expect((res: supertest.Response) => {
+      .expect((res: supertest.Response & ResDictionary) => {
         chai.expect(res["data"]["message"]).to.equal("ok");
       })
       .expect(200, done);

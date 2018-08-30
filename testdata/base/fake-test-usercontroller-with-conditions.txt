@@ -6,12 +6,14 @@
 import * as supertest from "supertest";
 import * as chai from "chai";
 
+interface ResDictionary { [id: string]: any; }
+
 describe("Test Monitor API", () => {
 
   it("获得所有用户信息", (done: MochaDone) => {
     supertest("https://api.gagogroup.cn/api")
       .get("/products?pid=5")
-      .expect((res: supertest.Response) => {
+      .expect((res: supertest.Response & ResDictionary) => {
         chai.expect(res["data"]["user"]).to.have.property("uid");
         chai.expect(res["data"]["user"]["displayName"]).to.equal("linxiaoyi");
       })
