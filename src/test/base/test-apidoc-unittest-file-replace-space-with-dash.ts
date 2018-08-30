@@ -48,7 +48,7 @@ describe("Test API doc to unit test replace space with middler line", () => {
       ]
     };
 
-    const expectString: string = fs.readFileSync("testdata/base/fake-create-unittest-file-replace-space-with-middler-line.txt", "utf8");
+    const expectString: string = fs.readFileSync("testdata/base/fake-create-unittest-file-replace-space-with-dash.txt", "utf8");
     ApiDocContext.generateUnitTests({ host: "https://api.gagogroup.cn/api", docs: [doc], path: "/tmp"});
 
     const expectPath: string = `/tmp/test-dog-harry-up-controller.ts`;

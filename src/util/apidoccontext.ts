@@ -108,7 +108,7 @@ export class ApiDocContext {
 
       content += "});";
 
-      fs.writeFileSync(`${params.path}/test-${StringUtil.repalceSpaceWithMiddleLine(doc.groupName).toLowerCase()}-controller.ts`, content);
+      fs.writeFileSync(`${params.path}/test-${StringUtil.repalceSpaceWithDash(doc.groupName).toLowerCase()}-controller.ts`, content);
     }
   }
 
