@@ -12,4 +12,7 @@ export class StringUtil {
   static removeBreaklines(str: string): string {
     return str.replace(/(^[ \t]*\n)/gm, "");
   }
+  static repalceSpaceWithMiddleLine(str: string): string {
+    return str.trim().replace(new RegExp("[ \f\n\r\t\v]+", "g"), "-");
+  }
 }
