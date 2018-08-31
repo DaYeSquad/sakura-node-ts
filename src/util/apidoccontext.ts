@@ -7,11 +7,43 @@ import {ApiDescription, ApiDoc} from "../base/apidoc";
 import {isNumber} from "util";
 import { StringUtil } from "./stringutil";
 
+/**
+ * Monitor config
+ */
+export interface ProjectApiDescription {
+  appId: number;
+  version: number;
+  createdAt: Date;
+  timeInterval: number;
+  host: string;
+  apis: ApiDescription[];
+}
 
 /**
  * API document context
  */
 export class ApiDocContext {
+
+  /**
+   * Generating monitor config file to specific path, the path name is like "api-v4.json"
+   */
+  static generateMonitorConfig(params: {appId: number, host: string, timeInterval: number, docs: ApiDoc[], outputFilePath: string}): void {
+    let apis: ApiDescription[] = [];
+    for (let doc of params.docs) {
+      apis = apis.concat(doc.descriptions);
+    }
+
+    const config: ProjectApiDescription = {
+      appId: params.appId,
+      version: 1,
+      createdAt: new Date(),
+      timeInterval: params.timeInterval,
+      host: params.host,
+      apis: apis
+    };
+
+    fs.writeFileSync(params.outputFilePath, JSON.stringify(config));
+  }
 
   /**
    * Generating unit test to path
