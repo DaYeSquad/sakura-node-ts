@@ -12,20 +12,20 @@ describe("Test Monitor API", () => {
     supertest("https://api.gagogroup.cn/api")
       .get("/farmrecord/all")
       .set("token", "f7ce2aae08d917292fb20c8ec4a41ea707bea715f61a89729a77116f3cc9cb6f2a73e1f2e97ebf5cdc384e458b592e4e")
-      .expect((res: supertest.Response) => {
-        chai.expect(res["data"]["farmrecords"][0]).to.have.property("id");
-        chai.expect(res["data"]["farmrecords"][0]).to.have.property("recordLatitude");
-        chai.expect(res["data"]["farmrecords"][0]).to.have.property("recordLongitude");
-        chai.expect(res["data"]["farmrecords"][0]["recordText"]).to.equal("");
-        chai.expect(res["data"]["farmrecords"][0]["recordAudioUrl"]).to.equal("https://gago-data.oss-cn-beijing.aliyuncs.com/agri3/14-0.0015465769743243651-iat.mp3");
-        chai.expect(res["data"]["farmrecords"][0]).to.have.property("recordAudioLen");
-        chai.expect(res["data"]["farmrecords"][0]["recordPictureUrls"][0]).to.equal("https://gago-data.oss-cn-beijing.aliyuncs.com/agri3/14-0.0015465769743243651-1535414232000.jpg");
-        chai.expect(res["data"]["farmrecords"][0]["recordPictureUrls"][1]).to.equal("https://gago-data.oss-cn-beijing.aliyuncs.com/agri3/14-0.0015465769743243651-1535414232287.jpg");
-        chai.expect(res["data"]["farmrecords"][0]["recordPictureUrls"][2]).to.equal("https://gago-data.oss-cn-beijing.aliyuncs.com/agri3/14-0.0015465769743243651-1535414232152.jpg");
-        chai.expect(res["data"]["farmrecords"][0]["recordPictureUrls"]["userName"]).to.equal("栖霞木村");
-        chai.expect(res["data"]["farmrecords"][0]["recordPictureUrls"]["userId"]).to.equal(14);
-        chai.expect(res["data"]["farmrecords"][0]["recordPictureUrls"]["updatedAt"]).to.equal("2018-08-28T06:09:21.000Z");
-        chai.expect(res["data"]["farmrecords"]["code"]).to.equal(200);
+      .expect((res: supertest.Response)=> {
+        chai.expect(res.body["data"]["farmrecords"][0]).to.have.property("id");
+        chai.expect(res.body["data"]["farmrecords"][0]).to.have.property("recordLatitude");
+        chai.expect(res.body["data"]["farmrecords"][0]).to.have.property("recordLongitude");
+        chai.expect(res.body["data"]["farmrecords"][0]["recordText"]).to.equal("");
+        chai.expect(res.body["data"]["farmrecords"][0]["recordAudioUrl"]).to.equal("https://gago-data.oss-cn-beijing.aliyuncs.com/agri3/14-0.0015465769743243651-iat.mp3");
+        chai.expect(res.body["data"]["farmrecords"][0]).to.have.property("recordAudioLen");
+        chai.expect(res.body["data"]["farmrecords"][0]["recordPictureUrls"][0]).to.equal("https://gago-data.oss-cn-beijing.aliyuncs.com/agri3/14-0.0015465769743243651-1535414232000.jpg");
+        chai.expect(res.body["data"]["farmrecords"][0]["recordPictureUrls"][1]).to.equal("https://gago-data.oss-cn-beijing.aliyuncs.com/agri3/14-0.0015465769743243651-1535414232287.jpg");
+        chai.expect(res.body["data"]["farmrecords"][0]["recordPictureUrls"][2]).to.equal("https://gago-data.oss-cn-beijing.aliyuncs.com/agri3/14-0.0015465769743243651-1535414232152.jpg");
+        chai.expect(res.body["data"]["farmrecords"][0]["recordPictureUrls"]["userName"]).to.equal("栖霞木村");
+        chai.expect(res.body["data"]["farmrecords"][0]["recordPictureUrls"]["userId"]).to.equal(14);
+        chai.expect(res.body["data"]["farmrecords"][0]["recordPictureUrls"]["updatedAt"]).to.equal("2018-08-28T06:09:21.000Z");
+        chai.expect(res.body["data"]["farmrecords"]["code"]).to.equal(200);
       })
       .expect(200, done);
   });
