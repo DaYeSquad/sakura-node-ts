@@ -17,6 +17,13 @@ export class ApiDocContext {
    * Generating unit test to path
    */
   static generateUnitTests(params: {host?: string, docs: ApiDoc[], path: string}): void {
+    for (let doc of params.docs) {
+      const content = ApiDocContext.generateUnitTestString({host: params.host, doc});
+      fs.writeFileSync(`${params.path}/test-${StringUtil.repalceSpaceWithDash(doc.groupName).toLowerCase()}-controller.ts`, content);
+    }
+  }
+  static generateUnitTestString(params: {host?: string, doc: ApiDoc}): string {
+    const {doc} = params;
     const copyright: string = "// Copyright Gago Group. All rights reserved.\n" +
       "// Use of this source code is governed a license that can be found in the LICENSE file.\n" +
       "//\n" +
@@ -24,93 +31,90 @@ export class ApiDocContext {
     const importStatement: string = `import * as supertest from "supertest";\nimport * as chai from "chai";\n\n`;
 
 
-    for (let doc of params.docs) {
-      let content: string = copyright + importStatement;
+    let content: string = copyright + importStatement;
 
-      content += `describe("Test ${doc.groupName} API", () => {\n\n`;
+    content += `describe("Test ${doc.groupName} API", () => {\n\n`;
 
-      for (let apiDescription of doc.descriptions) {
-        content += `  it("${apiDescription.description}", (done: MochaDone) => {\n`;
+    for (let apiDescription of doc.descriptions) {
+      content += `  it("${apiDescription.description}", (done: MochaDone) => {\n`;
 
-        if (apiDescription.requestBody) {
-          content += `    const request: any = ${JSON.stringify(apiDescription.requestBody, null, 2)};\n`.replace(/\n\r?/g, "\n    ");
-          content += "\n";
-        }
-
-        if (params.host) {
-          content += `    supertest("${params.host}")\n`;
-        } else {
-          content += `    supertest(url)\n`;
-        }
-
-        let uri: string = `      .${apiDescription.method.toLowerCase()}("${apiDescription.uri}")\n`;
-        if (apiDescription.queryParameters) {
-          for (let queryParameter of apiDescription.queryParameters) {
-            uri = uri.replace(`{${queryParameter.key}}`, queryParameter.example);
-          }
-        }
-
-        content += uri; // replace parameters
-
-        if (apiDescription.requestHeaders) {
-          for (let key in apiDescription.requestHeaders) {
-            content += `      .set("${key}", "${apiDescription.requestHeaders[key]}")\n`;
-          }
-        }
-
-        if (apiDescription.requestBody) {
-          content += `      .send(JSON.stringify(request))\n`;
-        }
-
-        content += `      .expect((res: supertest.Response)=> {\n`;
-
-        let responseBodyChai: string = this.responseBodyToChaiExpect_(apiDescription.responseBody);
-        if (apiDescription.additionalConditions && apiDescription.additionalConditions.length > 0) {
-          for (let condition of apiDescription.additionalConditions) {
-            const paths: string[] = condition.keyPath.split("/");
-            let jsonPath: string = "";
-            let lastJsonKey: string = "";
-            let maybeValue: any = apiDescription.responseBody;
-            for (let path of paths) {
-              if (!isNaN(Number(path))) { // array index
-                jsonPath += `[${path}]`;
-              } else { // object key
-                jsonPath += `["${path}"]`;
-              }
-
-              maybeValue = maybeValue[path];
-              lastJsonKey = path;
-            }
-
-            const originalStr: string = `chai.expect(res.body${jsonPath}).to.equal(${maybeValue});`;
-
-            if (condition.type === "ValueEqual") {
-              // it's default, just pass
-            } else if (condition.type === "KeyExist") {
-              const jsonPathWithoutLastKey: string = jsonPath.replace(`["${lastJsonKey}"]`, "");
-              responseBodyChai = responseBodyChai.replace(originalStr,
-                `chai.expect(res.body${jsonPathWithoutLastKey}).to.have.property("${lastJsonKey}");`);
-            } else if (condition.type === "Ignore") {
-              responseBodyChai = responseBodyChai.replace(originalStr, "");
-            } else if (condition.type === "ValueRange") {
-              responseBodyChai = responseBodyChai.replace(originalStr,
-                `chai.expect(res.body${jsonPath}).to.greaterThan(${condition.valueRange[0]}).and.lessThan(${condition.valueRange[1]});`);
-            } else {
-              throw new Error("Unknown type");
-            }
-          }
-        }
-        content += responseBodyChai;
-
-        content += `      })\n`;
-        content += `      .expect(200, done);\n`;
-        content += `  });\n\n`;
+      if (apiDescription.requestBody) {
+        content += `    const request: any = ${JSON.stringify(apiDescription.requestBody, null, 2)};\n`.replace(/\n\r?/g, "\n    ");
+        content += "\n";
       }
 
-      content += "});";
+      if (params.host) {
+        content += `    supertest("${params.host}")\n`;
+      } else {
+        content += `    supertest(url)\n`;
+      }
 
-      fs.writeFileSync(`${params.path}/test-${StringUtil.repalceSpaceWithDash(doc.groupName).toLowerCase()}-controller.ts`, content);
+      let uri: string = `      .${apiDescription.method.toLowerCase()}("${apiDescription.uri}")\n`;
+      if (apiDescription.queryParameters) {
+        for (let queryParameter of apiDescription.queryParameters) {
+          uri = uri.replace(`{${queryParameter.key}}`, queryParameter.example);
+        }
+      }
+
+      content += uri; // replace parameters
+
+      if (apiDescription.requestHeaders) {
+        for (let key in apiDescription.requestHeaders) {
+          content += `      .set("${key}", "${apiDescription.requestHeaders[key]}")\n`;
+        }
+      }
+
+      if (apiDescription.requestBody) {
+        content += `      .send(JSON.stringify(request))\n`;
+      }
+
+      content += `      .expect((res: supertest.Response)=> {\n`;
+
+      let responseBodyChai: string = this.responseBodyToChaiExpect_(apiDescription.responseBody);
+      if (apiDescription.additionalConditions && apiDescription.additionalConditions.length > 0) {
+        for (let condition of apiDescription.additionalConditions) {
+          const paths: string[] = condition.keyPath.split("/");
+          let jsonPath: string = "";
+          let lastJsonKey: string = "";
+          let maybeValue: any = apiDescription.responseBody;
+          for (let path of paths) {
+            if (!isNaN(Number(path))) { // array index
+              jsonPath += `[${path}]`;
+            } else { // object key
+              jsonPath += `["${path}"]`;
+            }
+
+            maybeValue = maybeValue[path];
+            lastJsonKey = path;
+          }
+
+          const originalStr: string = `chai.expect(res.body${jsonPath}).to.equal(${maybeValue});`;
+
+          if (condition.type === "ValueEqual") {
+            // it's default, just pass
+          } else if (condition.type === "KeyExist") {
+            const jsonPathWithoutLastKey: string = jsonPath.replace(`["${lastJsonKey}"]`, "");
+            responseBodyChai = responseBodyChai.replace(originalStr,
+              `chai.expect(res.body${jsonPathWithoutLastKey}).to.have.property("${lastJsonKey}");`);
+          } else if (condition.type === "Ignore") {
+            responseBodyChai = responseBodyChai.replace(originalStr, "");
+          } else if (condition.type === "ValueRange") {
+            responseBodyChai = responseBodyChai.replace(originalStr,
+              `chai.expect(res.body${jsonPath}).to.greaterThan(${condition.valueRange[0]}).and.lessThan(${condition.valueRange[1]});`);
+          } else {
+            throw new Error("Unknown type");
+          }
+        }
+      }
+      content += responseBodyChai;
+
+      content += `      })\n`;
+      content += `      .expect(200, done);\n`;
+      content += `  });\n\n`;
     }
+
+    content += "});";
+    return content;
   }
 
   static generateBlueprintDocument(params: {host: string, docs: ApiDoc[]}): string {
