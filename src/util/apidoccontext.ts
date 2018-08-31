@@ -239,9 +239,9 @@ export class ApiDocContext {
     for (let property in responseBody) {
       if (responseBody.hasOwnProperty(property)) {
         if (Array.isArray(responseBody[property])) {
-          stack += `["${property}"]`;
+          // stack += `["${property}"]`;
           for (let i = 0; i < responseBody[property].length; i++) {
-            let iStack = `${stack}[${i}]`;
+            let iStack = `${stack}["${property}"][${i}]`;
             content += this.responseBodyToChaiExpect_(responseBody[property][i], iStack);
           }
         } else if (typeof responseBody[property] === "object") {
