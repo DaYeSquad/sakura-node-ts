@@ -17,7 +17,7 @@ describe("Test Monitor API", () => {
       .put("/monitor_config")
       .set("Token", "test-token")
       .send(JSON.stringify(request))
-      .expect((res: supertest.Response & ResDictionary) => {
+      .expect((res: supertest.Response)=> {
         chai.expect(res.body["data"]["message"]).to.equal("ok");
       })
       .expect(200, done);

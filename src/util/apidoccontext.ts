@@ -62,7 +62,7 @@ export class ApiDocContext {
           content += `      .send(JSON.stringify(request))\n`;
         }
 
-        content += `      .expect((res: supertest.Response & ResDictionary) => {\n`;
+        content += `      .expect((res: supertest.Response)=> {\n`;
 
         let responseBodyChai: string = this.responseBodyToChaiExpect_(apiDescription.responseBody);
         if (apiDescription.additionalConditions && apiDescription.additionalConditions.length > 0) {
