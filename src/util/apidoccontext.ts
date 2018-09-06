@@ -6,7 +6,7 @@ import * as fs from "fs";
 import {ApiDescription, ApiDoc} from "../base/apidoc";
 import {isNumber} from "util";
 import { StringUtil } from "./stringutil";
-import { KeyPathError } from "./keypath-error";
+import { KeyPathError } from "./keypatherror";
 
 /**
  * Monitor config
