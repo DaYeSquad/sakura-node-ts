@@ -6,6 +6,7 @@ import * as fs from "fs";
 import {ApiDescription, ApiDoc} from "../base/apidoc";
 import {isNumber} from "util";
 import { StringUtil } from "./stringutil";
+import { KeyPathError } from "./keypatherror";
 
 /**
  * Monitor config
@@ -23,7 +24,7 @@ export interface ProjectApiDescription {
  * API document context
  */
 export class ApiDocContext {
-
+  static KeyPathError = KeyPathError;
   /**
    * Generating monitor config file to specific path, the path name is like "api-v4.json"
    */
@@ -118,7 +119,9 @@ export class ApiDocContext {
             } else { // object key
               jsonPath += `["${path}"]`;
             }
-
+            if (typeof maybeValue === "undefined") {
+              throw new KeyPathError(apiDescription.responseBody, condition.keyPath);
+            }
             maybeValue = maybeValue[path];
             lastJsonKey = path;
           }
