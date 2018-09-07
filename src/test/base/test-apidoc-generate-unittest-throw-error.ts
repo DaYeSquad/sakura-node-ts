@@ -53,6 +53,7 @@ describe("Test API throw KeyPathError", () => {
       ]
     };
     try {
+      chai.expect(() => ApiDocContext.generateUnitTestString({ host: "https://api.gagogroup.cn/api", doc})).throw(ApiDocContext.KeyPathError);
       ApiDocContext.generateUnitTestString({ host: "https://api.gagogroup.cn/api", doc});
     } catch (error) {
       chai.expect(error).instanceOf(ApiDocContext.KeyPathError);
