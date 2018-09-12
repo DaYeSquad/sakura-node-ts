@@ -175,17 +175,17 @@ export class GPSDevice extends GGModel {
 
 # DOC
 
-```TypeScript
+```ts
 const doc: ApiDoc = {
   groupName: "Monitor",
   descriptions: [
     {
-      function: UserController.getUserInfo,
-      description: "获得所有用户信息",
-      detailDescription: "获得所有用户信息，以数组的形式返回",
-      method: "GET",
-      uri: "/products?pid={pid}",
-      queryParameters: [
+      function: UserController.getUserInfo, // 关联的 controller 方法、函数
+      description: "获得所有用户信息", // 描述
+      detailDescription: "获得所有用户信息，以数组的形式返回", // 详细描述(用于 API Blueprint 的详细描述部分)
+      method: "GET", // HTTP 方法
+      uri: "/products?pid={pid}", // URL
+      queryParameters: [ // 注入 {} 语法的参数
         {
           key: "pid",
           example: 5,
@@ -193,7 +193,7 @@ const doc: ApiDoc = {
           description: "产品的 ID"
         }
       ],
-      responseBody: {
+      responseBody: { // 期望的响应结果
         "data": {
           "users": [
             {
@@ -207,7 +207,7 @@ const doc: ApiDoc = {
           ]
         }
       },
-      additionalConditions: [
+      additionalConditions: [ // 对结果的注解，默认为等于比较，也可以如下声明为范围比较，也可以声明为只比较 Key (type: KeyExist)
         {
           keyPath: "data/users/0/uid",
           type: "ValueRange",
