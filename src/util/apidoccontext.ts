@@ -17,7 +17,7 @@ export interface ProjectApiDescription {
   createdAt: Date;
   timeInterval: number;
   host: string;
-  apis: ApiDescription[];
+  apis: ApiDoc[];
 }
 
 /**
@@ -29,18 +29,13 @@ export class ApiDocContext {
    * Generating monitor config file to specific path, the path name is like "api-v4.json"
    */
   static generateMonitorConfig(params: {appId: number, host: string, timeInterval: number, docs: ApiDoc[], outputFilePath: string}): void {
-    let apis: ApiDescription[] = [];
-    for (let doc of params.docs) {
-      apis = apis.concat(doc.descriptions);
-    }
-
     const config: ProjectApiDescription = {
       appId: params.appId,
       version: 1,
       createdAt: new Date(),
       timeInterval: params.timeInterval,
       host: params.host,
-      apis: apis
+      apis: params.docs
     };
 
     fs.writeFileSync(params.outputFilePath, JSON.stringify(config));
