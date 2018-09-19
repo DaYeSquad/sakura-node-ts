@@ -48,6 +48,18 @@ class User extends Model {
   }
 }
 
+@TableName("departments")
+class Departments extends Model {
+  @Column("department_id", SqlType.INT, SqlFlag.PRIMARY_KEY, "系统编号，唯一标识", SqlDefaultValue.MAKE_RANDOM_ID())
+  uid: number;
+
+  @Column("department_name", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
+  username: string;
+
+  @Column("children_departments", SqlType.JSONB, SqlFlag.NULLABLE)
+  meta: any;
+}
+
 describe("MySqlQueryBuilder", () => {
 
   let queryBuilder: MySqlQueryBuilder;
@@ -188,6 +200,19 @@ PRIMARY KEY (\`id\`));`;
       const sql: string = queryBuilder.buildAddModelOperation(addModelOperation);
       chai.expect(sql).to.equal(expectSql);
     });
+  });
+
+  it("Test buildAddModelOperation which contains JSONB", () => {
+    let expectResult: string = `CREATE TABLE IF NOT EXISTS \`departments\` (
+\`department_id\` INT DEFAULT make_random_id() COMMENT '系统编号，唯一标识',
+\`department_name\` VARCHAR(255),
+\`children_departments\` JSON
+,
+PRIMARY KEY (\`department_id\`));`;
+    const operation: AddModelOperation = new AddModelOperation(Departments);
+    let sql: string = queryBuilder.buildAddModelOperation(operation);
+
+    chai.expect(sql).to.equal(expectResult);
   });
 
   it("Test buildAddCommentOperation", () => {
