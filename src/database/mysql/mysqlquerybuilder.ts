@@ -447,7 +447,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
         let tmp = Math.floor(new Date(value).getTime() / 1000);
         value = `FROM_UNIXTIME(${tmp})`;
       }
-    } else if (sqlType === SqlType.JSON) {
+    } else if (sqlType === SqlType.JSON || sqlType === SqlType.JSONB) {
       if (typeof value === "string") {
         value = `'${value}'`;
       } else {
@@ -489,6 +489,8 @@ export class MySqlQueryBuilder implements QueryBuilder {
         return "TIMESTAMP NULL DEFAULT NULL";
       case SqlType.JSON:
         return "JSON";
+      case SqlType.JSONB:
+        return "JSON";
       case SqlType.NUMERIC:
         return "DECIMAL(18,8)";
       case SqlType.DATE:
@@ -525,6 +527,11 @@ export class MySqlQueryBuilder implements QueryBuilder {
     if (sqlDefaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
       return "make_random_id()";
     }
+
+    if (sqlDefaultValue.type === SqlDefaultValueType.NUMBER) {
+      return `${sqlDefaultValue.getValue()}`;
+    }
+
     return "";
   }
 }

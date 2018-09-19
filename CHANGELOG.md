@@ -1,3 +1,9 @@
+# 3.5.16 (2018.9.19.)
+
+**修改 monitor config 返回数据:** 于 monitor config 中增加 groupName
+**新增 JSONB 类型:** 新增 JSONB 类型，如果为 MySql JSON 与v JSONB 皆为 JSON
+**修复 Default Value 为 Number 的问题:** 修复 Default Value 为 Number 的问题
+
 # 3.5.7 - 3.5.8 (2018.8.30.)
 
 * **修复当 apiDoc 产生 unit test 的错误:** 当 responseBody 有数组时，会产生大量测试代码的问题

@@ -3,19 +3,19 @@
 
 import * as chai from "chai";
 
-import {PgDriver} from "../../../database/postgres/pgdriver";
-import {DriverType} from "../../../database/driveroptions";
-import {DeleteQuery} from "../../../sqlquery/deletequery";
-import {SelectQuery} from "../../../sqlquery/selectquery";
-import {Column, TableName} from "../../../base/decorator";
-import {Model, SqlDefaultValue, SqlFlag, SqlType} from "../../../base/model";
-import {InsertQuery} from "../../../sqlquery/insertquery";
-import {timestamp} from "../../../base/typedefines";
-import {ReplaceQuery} from "../../../sqlquery/replacequery";
-import {UpdateQuery} from "../../../sqlquery/updatequery";
-import {PgQueryBuilder} from "../../../database/postgres/pgquerybuilder";
-import {AddModelOperation} from "../../../database/migration/operation";
-import {Version} from "../../../database/migration/version";
+import { PgDriver } from "../../../database/postgres/pgdriver";
+import { DriverType } from "../../../database/driveroptions";
+import { DeleteQuery } from "../../../sqlquery/deletequery";
+import { SelectQuery } from "../../../sqlquery/selectquery";
+import { Column, TableName } from "../../../base/decorator";
+import { Model, SqlDefaultValue, SqlFlag, SqlType } from "../../../base/model";
+import { InsertQuery } from "../../../sqlquery/insertquery";
+import { timestamp } from "../../../base/typedefines";
+import { ReplaceQuery } from "../../../sqlquery/replacequery";
+import { UpdateQuery } from "../../../sqlquery/updatequery";
+import { PgQueryBuilder } from "../../../database/postgres/pgquerybuilder";
+import { AddModelOperation } from "../../../database/migration/operation";
+import { Version } from "../../../database/migration/version";
 
 @TableName("users")
 class TestSelectUser extends Model {
@@ -53,7 +53,7 @@ class TestInsertUser extends Model {
   @Column("age", SqlType.INT, SqlFlag.NULLABLE)
   age: number;
 
-  initAsNewUser(username: string,  displayName?: string, age?: number) {
+  initAsNewUser(username: string, displayName?: string, age?: number) {
     this.username = username;
     this.displayName = displayName;
     this.age = age;
@@ -155,6 +155,27 @@ class WeatherCacheInfo extends Model {
   }
 }
 
+@TableName("departments")
+class TestCreateTableDepartment extends Model {
+  @Column("department_id", SqlType.INT, SqlFlag.PRIMARY_KEY, "系统编号，唯一标识", SqlDefaultValue.MAKE_RANDOM_ID())
+  departmentId: number;
+
+  @Column("department_name", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
+  departmentName: string;
+
+  @Column("children_departments", SqlType.JSONB, SqlFlag.NULLABLE)
+  childrenDepartments: any;
+}
+
+@TableName("farm_records")
+class TestCreateTableFarmRecord extends Model {
+  @Column("farm_records_id", SqlType.INT, SqlFlag.PRIMARY_KEY, "系统编号，唯一标识", SqlDefaultValue.MAKE_RANDOM_ID())
+  farmRecordsId: number;
+
+  @Column("department_id", SqlType.BIGINT, SqlFlag.NOT_NULL, "department id", SqlDefaultValue.NUMBER(1))
+  departmentId: number;
+}
+
 describe("PgQueryBuilder", () => {
 
   let queryBuilder: PgQueryBuilder;
@@ -189,22 +210,22 @@ describe("PgQueryBuilder", () => {
 
     it("查询语句 join in 关联查询", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid"])
-                              .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
+        .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
       const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
     });
 
     it("查询语句 left join in 关联查询", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid"])
-                              .leftJoin("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
+        .leftJoin("enterprise_relationships").on("enterprise_relationships.uid = users.uid");
       const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid FROM users LEFT JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid)`);
     });
 
     it("查询语句 多个 join in 关联查询", () => {
       const query: SelectQuery = new SelectQuery().fromClass(TestSelectUser).select(["users.username", "enterprise_relationships.eid", "enterprises.name"])
-                              .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid")
-                              .join("enterprises").on("enterprise_relationships.eid = enterprises.eid");
+        .join("enterprise_relationships").on("enterprise_relationships.uid = users.uid")
+        .join("enterprises").on("enterprise_relationships.eid = enterprises.eid");
       const sql: string = queryBuilder.buildSelectQuery(query);
       chai.expect(sql).to.equal(`SELECT users.username,enterprise_relationships.eid,enterprises.name FROM users JOIN enterprise_relationships ON (enterprise_relationships.uid = users.uid) JOIN enterprises ON (enterprise_relationships.eid = enterprises.eid)`);
     });
@@ -258,7 +279,7 @@ describe("PgQueryBuilder", () => {
 
   describe("Test buildReplaceQuery", () => {
     it("Test buildReplaceQuery", () => {
-      const geometry = { "type": "Feature", "properties": { "cropType": 1 }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 114.076225266848425, 33.784174652354928 ], [ 114.074887931956638, 33.784001741991787 ], [ 114.074828111457833, 33.784330868427169 ], [ 114.074776972229188, 33.784649082682222 ], [ 114.075574088559293, 33.78475934727242 ], [ 114.075634757830485, 33.784270431369173 ], [ 114.076190928393217, 33.784338584178599 ], [ 114.076225266848425, 33.784174652354928 ] ] ] ] } };
+      const geometry = { "type": "Feature", "properties": { "cropType": 1 }, "geometry": { "type": "MultiPolygon", "coordinates": [[[[114.076225266848425, 33.784174652354928], [114.074887931956638, 33.784001741991787], [114.074828111457833, 33.784330868427169], [114.074776972229188, 33.784649082682222], [114.075574088559293, 33.78475934727242], [114.075634757830485, 33.784270431369173], [114.076190928393217, 33.784338584178599], [114.076225266848425, 33.784174652354928]]]] } };
       let weatherCache: WeatherCacheInfo = new WeatherCacheInfo();
       weatherCache.init("forecast_temperatures", "shuye_dikuai_1", geometry, {}, 1476842006);
       const query: ReplaceQuery =
@@ -273,7 +294,7 @@ describe("PgQueryBuilder", () => {
       chai.expect(sql).to.equal(`UPDATE _weather_caches SET uri='forecast_temperatures',geometry=ST_GeomFromGeoJSON('${JSON.stringify(geometry)}')::geometry,alias='shuye_dikuai_1',expires_at=to_timestamp(1476842006) WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1';
             INSERT INTO _weather_caches (uri,geometry,alias,expires_at)
             SELECT 'forecast_temperatures',ST_GeomFromGeoJSON('${JSON.stringify(geometry)}')::geometry,'shuye_dikuai_1',to_timestamp(1476842006)
-            WHERE NOT EXISTS (SELECT 1 FROM _weather_caches WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1');`);      
+            WHERE NOT EXISTS (SELECT 1 FROM _weather_caches WHERE uri='forecast_temperatures' AND alias='shuye_dikuai_1');`);
     });
   });
 
@@ -291,7 +312,7 @@ describe("PgQueryBuilder", () => {
     });
 
     it("UpdateQuery with geometry", () => {
-      const geometry = { "type": "Feature", "properties": { "cropType": 1 }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 114.076225266848425, 33.784174652354928 ], [ 114.074887931956638, 33.784001741991787 ], [ 114.074828111457833, 33.784330868427169 ], [ 114.074776972229188, 33.784649082682222 ], [ 114.075574088559293, 33.78475934727242 ], [ 114.075634757830485, 33.784270431369173 ], [ 114.076190928393217, 33.784338584178599 ], [ 114.076225266848425, 33.784174652354928 ] ] ] ] } };
+      const geometry = { "type": "Feature", "properties": { "cropType": 1 }, "geometry": { "type": "MultiPolygon", "coordinates": [[[[114.076225266848425, 33.784174652354928], [114.074887931956638, 33.784001741991787], [114.074828111457833, 33.784330868427169], [114.074776972229188, 33.784649082682222], [114.075574088559293, 33.78475934727242], [114.075634757830485, 33.784270431369173], [114.076190928393217, 33.784338584178599], [114.076225266848425, 33.784174652354928]]]] } };
       let weatherModel = new WeatherCacheInfo();
       weatherModel.geometry = geometry;
       const query: UpdateQuery = new UpdateQuery().fromModel(weatherModel).where(`uri='forcast'`);
@@ -303,7 +324,7 @@ describe("PgQueryBuilder", () => {
       let user: TestUpdateQueryUser = new TestUpdateQueryUser();
       user.uid = 1;
       user.username = "hello";
-      const query: UpdateQuery  = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
+      const query: UpdateQuery = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
       const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET username='hello' WHERE  uid = 1;`);
     });
@@ -311,8 +332,8 @@ describe("PgQueryBuilder", () => {
     it("更新语句 JSON类型字段添加表达式", () => {
       let user: TestUpdateQueryUser = new TestUpdateQueryUser();
       user.uid = 1;
-      user.meta = {version: 1, test: "aaaa"};
-      const query: UpdateQuery  = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
+      user.meta = { version: 1, test: "aaaa" };
+      const query: UpdateQuery = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
       const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET meta='{"version":1,"test":"aaaa"}'::json WHERE  uid = 1;`);
     });
@@ -322,7 +343,7 @@ describe("PgQueryBuilder", () => {
       user.uid = 1;
       user.createdAt = new Date();
       user.updatedAt = Math.floor(new Date().getTime() / 1000);
-      const query: UpdateQuery  = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
+      const query: UpdateQuery = new UpdateQuery().fromModel(user).where(` uid = ${user.uid}`);
       const sql: string = queryBuilder.buildUpdateQuery(query);
       chai.expect(sql).to.equal(`UPDATE users SET created_at=to_timestamp(${user.updatedAt}),updated_at=to_timestamp(${user.updatedAt}) WHERE  uid = 1;`);
     });
@@ -339,6 +360,33 @@ created_at TIMESTAMP,
 updated_at TIMESTAMP
 );`;
       const operation: AddModelOperation = new AddModelOperation(TestCreateTableUser);
+      let sql: string = queryBuilder.buildAddModelOperation(operation);
+
+      chai.expect(sql).to.equal(expectResult);
+    });
+  });
+
+  describe("Test buildAddModelOperation", () => {
+    it("Test buildAddModelOperation which contains JSONB", () => {
+      let expectResult: string = `CREATE TABLE IF NOT EXISTS departments (
+department_id INTEGER PRIMARY KEY DEFAULT make_random_id(), --系统编号，唯一标识
+department_name VARCHAR(255),
+children_departments JSONB
+);`;
+      const operation: AddModelOperation = new AddModelOperation(TestCreateTableDepartment);
+      let sql: string = queryBuilder.buildAddModelOperation(operation);
+
+      chai.expect(sql).to.equal(expectResult);
+    });
+  });
+
+  describe("Test buildAddModelOperation", () => {
+    it("Test buildAddModelOperation which contains default number", () => {
+      let expectResult: string = `CREATE TABLE IF NOT EXISTS farm_records (
+farm_records_id INTEGER PRIMARY KEY DEFAULT make_random_id(), --系统编号，唯一标识
+department_id BIGINT DEFAULT 1 --department id
+);`;
+      const operation: AddModelOperation = new AddModelOperation(TestCreateTableFarmRecord);
       let sql: string = queryBuilder.buildAddModelOperation(operation);
 
       chai.expect(sql).to.equal(expectResult);

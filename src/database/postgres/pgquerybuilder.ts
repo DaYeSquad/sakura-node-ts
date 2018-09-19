@@ -366,6 +366,8 @@ export class PgQueryBuilder implements QueryBuilder {
         return "TIMESTAMP WITH TIME ZONE"
       case SqlType.JSON:
         return "JSON";
+      case SqlType.JSONB:
+        return "JSONB";
       case SqlType.NUMERIC:
         return "NUMERIC";
       case SqlType.DATE:
@@ -402,6 +404,11 @@ export class PgQueryBuilder implements QueryBuilder {
     if (sqlDefaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
       return "make_random_id()";
     }
+
+    if (sqlDefaultValue.type === SqlDefaultValueType.NUMBER) {
+      return `${sqlDefaultValue.getValue()}`;
+    }
+
     return "";
   }
 
@@ -454,11 +461,12 @@ export class PgQueryBuilder implements QueryBuilder {
         let tmp = Math.floor(new Date(value).getTime() / 1000);
         value = `to_timestamp(${tmp})`;
       }
-    } else if (sqlType === SqlType.JSON) {
+    } else if (sqlType === SqlType.JSON || sqlType === SqlType.JSONB) {
+      const castType: string = sqlType === SqlType.JSONB ? "jsonb" : "json";
       if (typeof value === "string") {
-        value = `'${value}'::json`;
+        value = `'${value}'::${castType}`;
       } else {
-        value = `'${JSON.stringify(value)}'::json`;
+        value = `'${JSON.stringify(value)}'::${castType}`;
       }
     } else if (sqlType === SqlType.GEOMETRY) {
       if (typeof value === "object") {
