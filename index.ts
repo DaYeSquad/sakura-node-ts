@@ -71,7 +71,7 @@ export * from "./src/database/mysql/mysqlquerybuilder";
 export { sqlContext } from "./src/util/sqlcontext";
 export { DateFormatter, DateFormtOption } from "./src/util/dateformatter";
 export { DateUtil, DateEqualityPrecision } from "./src/util/dateutil";
-export { ApiDocContext } from "./src/util/apidoccontext";
+export { ApiDocContext, ProjectApiDescription } from "./src/util/apidoccontext";
 
 // -------------------------------------------------------------------------
 // GG

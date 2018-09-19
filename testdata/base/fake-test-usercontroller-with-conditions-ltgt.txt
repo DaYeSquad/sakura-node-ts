@@ -11,6 +11,7 @@ describe("Test Monitor API", () => {
   it("获得所有用户信息", (done: MochaDone) => {
     supertest("https://api.gagogroup.cn/api")
       .get("/products?pid=5")
+      .set("Content-Type", "application/json")
       .expect((res: supertest.Response)=> {
         chai.expect(res.body["data"]["users"][0]["uid"]).to.greaterThan(0).and.lessThan(30);
         chai.expect(res.body["data"]["users"][0]["displayName"]).to.equal("linxiaoyi");

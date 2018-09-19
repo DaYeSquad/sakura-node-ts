@@ -11,6 +11,7 @@ describe("Test farm-record API", () => {
   it("获取所有农事记录", (done: MochaDone) => {
     supertest("https://api.gagogroup.cn/api")
       .get("/api/farmrecord/all")
+      .set("Content-Type", "application/json")
       .set("token", "eccb7dff5d52a0bf20906be10abb4b6d57fd3f84f29c19b90f423d1e9c32479efb27e2137a1b44627dff7c1ca59f0c89")
       .expect((res: supertest.Response)=> {
         chai.expect(res.body["data"]["farmrecords"][0]).to.have.property("id");
