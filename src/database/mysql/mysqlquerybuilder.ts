@@ -527,6 +527,11 @@ export class MySqlQueryBuilder implements QueryBuilder {
     if (sqlDefaultValue.type === SqlDefaultValueType.MAKE_RANDOM_ID) {
       return "make_random_id()";
     }
+
+    if (sqlDefaultValue.type === SqlDefaultValueType.NUMBER) {
+      return `${sqlDefaultValue.getValue()}`;
+    }
+
     return "";
   }
 }

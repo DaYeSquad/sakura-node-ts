@@ -137,6 +137,13 @@ export class SqlDefaultValue {
   private value_: any;
 
   /**
+   * to get value in SqlDefaultValue
+   */
+  getValue() {
+    return this.value_;
+  }
+
+  /**
    * Default value type INTEGER and value is random ID.
    * @constructor
    */

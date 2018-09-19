@@ -158,13 +158,22 @@ class WeatherCacheInfo extends Model {
 @TableName("departments")
 class TestCreateTableDepartment extends Model {
   @Column("department_id", SqlType.INT, SqlFlag.PRIMARY_KEY, "系统编号，唯一标识", SqlDefaultValue.MAKE_RANDOM_ID())
-  uid: number;
+  departmentId: number;
 
   @Column("department_name", SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
-  username: string;
+  departmentName: string;
 
   @Column("children_departments", SqlType.JSONB, SqlFlag.NULLABLE)
-  meta: any;
+  childrenDepartments: any;
+}
+
+@TableName("farm_records")
+class TestCreateTableFarmRecord extends Model {
+  @Column("farm_records_id", SqlType.INT, SqlFlag.PRIMARY_KEY, "系统编号，唯一标识", SqlDefaultValue.MAKE_RANDOM_ID())
+  farmRecordsId: number;
+
+  @Column("department_id", SqlType.BIGINT, SqlFlag.NOT_NULL, "department id", SqlDefaultValue.NUMBER(1))
+  departmentId: number;
 }
 
 describe("PgQueryBuilder", () => {
@@ -365,6 +374,19 @@ department_name VARCHAR(255),
 children_departments JSONB
 );`;
       const operation: AddModelOperation = new AddModelOperation(TestCreateTableDepartment);
+      let sql: string = queryBuilder.buildAddModelOperation(operation);
+
+      chai.expect(sql).to.equal(expectResult);
+    });
+  });
+
+  describe("Test buildAddModelOperation", () => {
+    it("Test buildAddModelOperation which contains default number", () => {
+      let expectResult: string = `CREATE TABLE IF NOT EXISTS farm_records (
+farm_records_id INTEGER PRIMARY KEY DEFAULT make_random_id(), --系统编号，唯一标识
+department_id BIGINT DEFAULT 1 --department id
+);`;
+      const operation: AddModelOperation = new AddModelOperation(TestCreateTableFarmRecord);
       let sql: string = queryBuilder.buildAddModelOperation(operation);
 
       chai.expect(sql).to.equal(expectResult);
