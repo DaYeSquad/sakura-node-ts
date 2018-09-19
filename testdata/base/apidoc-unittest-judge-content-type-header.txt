@@ -6,12 +6,12 @@
 import * as supertest from "supertest";
 import * as chai from "chai";
 
-describe("Test Monitor API", () => {
+describe("Test  Dog harry UP API", () => {
 
   it("获得所有用户信息", (done: MochaDone) => {
     supertest("https://api.gagogroup.cn/api")
       .get("/products?pid=5")
-      .set("Content-Type", "application/json")
+      .set("content-type", "application/pdf")
       .expect((res: supertest.Response)=> {
         chai.expect(res.body["data"]["users"][0]["uid"]).to.equal(1);
         chai.expect(res.body["data"]["users"][0]["displayName"]).to.equal("linxiaoyi");

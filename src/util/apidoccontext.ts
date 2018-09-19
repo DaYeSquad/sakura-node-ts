@@ -96,9 +96,15 @@ export class ApiDocContext {
       content += uri; // replace parameters
 
       if (apiDescription.requestHeaders) {
+        const hasContentTypeHeader: boolean = "content-type" in apiDescription.requestHeaders || "Content-Type" in apiDescription.requestHeaders;
+        if (!hasContentTypeHeader) {
+          content += `      .set("Content-Type", "application/json")\n`;
+        }
         for (let key in apiDescription.requestHeaders) {
           content += `      .set("${key}", "${apiDescription.requestHeaders[key]}")\n`;
         }
+      } else {
+        content += `      .set("Content-Type", "application/json")\n`;
       }
 
       if (apiDescription.requestBody) {
