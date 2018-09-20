@@ -28,7 +28,7 @@ export class ApiDocContext {
   /**
    * Generating monitor config file to specific path, the path name is like "api-v4.json"
    */
-  static generateMonitorConfig(params: {appId: number, host: string, timeInterval: number, docs: ApiDoc[], outputFilePath: string}): void {
+  static generateMonitorConfig(params: {appId: number, host: string, timeInterval: number, docs: ApiDoc[], outputFilePath: string, version?: number, createdAt?: Date}): void {
     const config: ProjectApiDescription = ApiDocContext.generateMonitorConfigObject(params);
 
     fs.writeFileSync(params.outputFilePath, JSON.stringify(config));
@@ -36,11 +36,11 @@ export class ApiDocContext {
   /**
    * @description Generate monitor config from ApiDoc
    */
-  static generateMonitorConfigObject(params: {appId: number, host: string, timeInterval: number, docs: ApiDoc[]}): ProjectApiDescription {
+  static generateMonitorConfigObject(params: {appId: number, host: string, timeInterval: number, docs: ApiDoc[], version?: number, createdAt?: Date}): ProjectApiDescription {
     const config: ProjectApiDescription = {
       appId: params.appId,
-      version: 1,
-      createdAt: new Date(),
+      version: params.version ? params.version : 1,
+      createdAt: params.createdAt ? params.createdAt : new Date(),
       timeInterval: params.timeInterval,
       host: params.host,
       apis: params.docs
