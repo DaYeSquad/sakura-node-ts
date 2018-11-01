@@ -1,3 +1,7 @@
+# 3.5.18 (2018.11.1.)
+
+**修复 timstamptz 错误:** 修复 timestamp with time zone 不支持 Date 和 number 类型
+
 # 3.5.16 - 3.5.17 (2018.9.19.)
 
 **修改 monitor config 返回数据:** 于 monitor config 中增加 groupName
