@@ -1,8 +1,14 @@
-# 3.5.16 (2018.9.19.)
+# 3.5.18 (2018.11.1.)
+
+**修复 timstamptz 错误:** 修复 timestamp with time zone 不支持 Date 和 number 类型
+
+# 3.5.16 - 3.5.17 (2018.9.19.)
 
 **修改 monitor config 返回数据:** 于 monitor config 中增加 groupName
 **新增 JSONB 类型:** 新增 JSONB 类型，如果为 MySql JSON 与v JSONB 皆为 JSON
 **修复 Default Value 为 Number 的问题:** 修复 Default Value 为 Number 的问题
+**修复产生 testing 的问题:** 修复 testing 没有带 header 的问题
+**新增产生 monitor config string 功能:** 新增产生 monitor config string 功能
 
 # 3.5.7 - 3.5.8 (2018.8.30.)
 

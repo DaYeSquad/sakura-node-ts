@@ -440,7 +440,7 @@ export class MySqlQueryBuilder implements QueryBuilder {
     } else if (sqlType === SqlType.DATE) {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
       value = `STR_TO_DATE('${valueAsDateInSql}', '%Y-%m-%d')`;
-    } else if (sqlType === SqlType.TIMESTAMP) {
+    } else if (sqlType === SqlType.TIMESTAMP || sqlType === SqlType.TIMESTAMP_WITH_TIMEZONE) {
       if (isNumber(value)) {
         value = `FROM_UNIXTIME(${value})`;
       } else if (isDate(value)) {

@@ -454,7 +454,7 @@ export class PgQueryBuilder implements QueryBuilder {
     } else if (sqlType === SqlType.DATE) {
       let valueAsDateInSql: string = DateFormatter.stringFromDate(value, DateFormtOption.YEAR_MONTH_DAY, "-");
       value = `'${valueAsDateInSql}'::date`;
-    } else if (sqlType === SqlType.TIMESTAMP) {
+    } else if (sqlType === SqlType.TIMESTAMP || sqlType === SqlType.TIMESTAMP_WITH_TIMEZONE) {
       if (isNumber(value)) {
         value = `to_timestamp(${value})`;
       } else if (isDate(value)) {
