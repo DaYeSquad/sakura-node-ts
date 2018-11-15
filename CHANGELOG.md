@@ -1,3 +1,7 @@
+# 3.5.19 (2018.11.15.)
+
+**于 generateMonitorConfig 新增 hiddenResponse 字段:** 新增脱敏的字段于输出的 monitor config 内
+
 # 3.5.18 (2018.11.1.)
 
 **修复 timstamptz 错误:** 修复 timestamp with time zone 不支持 Date 和 number 类型
