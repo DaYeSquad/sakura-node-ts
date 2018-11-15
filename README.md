@@ -216,7 +216,7 @@ const doc: ApiDoc = {
         {
           keyPath: "data/users/0/displayName",
           type: "KeyExist",
-          hiddenResponse: true  // 避免在输出 log 时，针对该字段脱敏
+          showErrorDetail: false,  // 当有错误是，只显示基本的错误信息，而不显示详细的错误原因，预设皆为 true
           valueRange: [0, 30]
         }
       ]

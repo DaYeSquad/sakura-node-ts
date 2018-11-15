@@ -129,7 +129,7 @@ describe("Test apiDoc to monitor config", () => {
             {
               keyPath: "data/users/0/username",
               type: "KeyExist",
-              hiddenResponse: true
+              showErrorDetail: true
             },
             {
               keyPath: "data/users/0/telephone",
@@ -376,7 +376,7 @@ describe("Test apiDoc to monitor config", () => {
             {
               keyPath: "data/users/0/username",
               type: "KeyExist",
-              hiddenResponse: true
+              showErrorDetail: true
             },
             {
               keyPath: "data/users/0/telephone",

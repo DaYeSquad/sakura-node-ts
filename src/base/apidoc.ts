@@ -28,9 +28,9 @@ export interface ApiDocComparator {
   type: "ValueEqual" | "KeyExist" | "Ignore" | "ValueRange";
 
   /**
-   * If the value could not be displayed in the monitor log, it needs to set hiddenResponse = true
+   * If the flag is set to true, it will show the detail error message. (Default value: true)
    */
-  hiddenResponse?: boolean;
+  showErrorDetail?: boolean;
 
   /**
    * If type is ValueRange, the range should be specified, it should be like [0, 30]
