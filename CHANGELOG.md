@@ -1,3 +1,7 @@
+# 3.5.19 (2018.11.15.)
+
+**于 generateMonitorConfig 新增 showErrorDetail 字段:** 当有错误时，showErrorDetail 设定为 false 则只显示基本的错误信息，而不显示详细的错误原因，预设皆为 true
+
 # 3.5.18 (2018.11.1.)
 
 **修复 timstamptz 错误:** 修复 timestamp with time zone 不支持 Date 和 number 类型

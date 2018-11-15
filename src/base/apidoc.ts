@@ -28,6 +28,11 @@ export interface ApiDocComparator {
   type: "ValueEqual" | "KeyExist" | "Ignore" | "ValueRange";
 
   /**
+   * If the flag is set to true, it will show the detail error message. (Default value: true)
+   */
+  showErrorDetail?: boolean;
+
+  /**
    * If type is ValueRange, the range should be specified, it should be like [0, 30]
    */
   valueRange?: number[];

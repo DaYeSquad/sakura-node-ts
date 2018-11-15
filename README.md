@@ -212,6 +212,12 @@ const doc: ApiDoc = {
           keyPath: "data/users/0/uid",
           type: "ValueRange",
           valueRange: [0, 30]
+        },
+        {
+          keyPath: "data/users/0/displayName",
+          type: "KeyExist",
+          showErrorDetail: false,  // 当有错误是，只显示基本的错误信息，而不显示详细的错误原因，预设皆为 true
+          valueRange: [0, 30]
         }
       ]
     }
