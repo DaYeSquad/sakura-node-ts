@@ -212,6 +212,12 @@ const doc: ApiDoc = {
           keyPath: "data/users/0/uid",
           type: "ValueRange",
           valueRange: [0, 30]
+        },
+        {
+          keyPath: "data/users/0/displayName",
+          type: "KeyExist",
+          hiddenResponse: true  // 避免在输出 log 时，针对该字段脱敏
+          valueRange: [0, 30]
         }
       ]
     }
