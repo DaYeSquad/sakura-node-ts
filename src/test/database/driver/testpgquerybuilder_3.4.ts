@@ -67,14 +67,12 @@ describe("PgQueryBuilder", () => {
   });
 
   it("Test buildReplaceQuery(GGModel) should take 3 default value at first time", () => {
-    let user: GGUser = new GGUser();
-    user.username = "franklin";
-
     const replaceQuery: ReplaceQuery = new ReplaceQuery()
-      .fromModel(user)
+      .fromClass(GGUser)
       .where(  `username="franklin"`)
       .set("username", "franklin", SqlType.VARCHAR_255);
     const result: string = queryBuilder.buildReplaceQuery(replaceQuery);
+    console.log(result);
     chai.expect(result.substr(0, 61)).to.equal("UPDATE users SET username='franklin',updated_at=to_timestamp(");
   });
 });

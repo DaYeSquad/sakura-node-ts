@@ -199,11 +199,8 @@ export class GPSDevice extends GGModel {
 ### REPLACE
 
 ```TypeScript
-   let user: GGUser = new GGUser();
-   user.username = "franklin";
-
    const replaceQuery: ReplaceQuery = new ReplaceQuery()
-     .fromModel(user)
+     .fromClass(GGUser)
      .where(  `username="franklin"`)
      .set("username", "franklin", SqlType.VARCHAR_255);
 ```

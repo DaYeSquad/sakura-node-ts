@@ -220,74 +220,56 @@ export class PgQueryBuilder implements QueryBuilder {
   }
 
   buildReplaceQuery(q: ReplaceQuery): string {
-    if (q.model_) { //use new method "new ReplaceQuery().fromModel()"
-      const modelRef: Model = q.model_;
-      const table: string = sqlContext.findTableByClass(modelRef.constructor);
+    let keysAry: string[] = [];
+    let valuesAry: any[] = [];
+    let updateKvs: any[] = [];
 
-      if (modelRef instanceof GGModel) {
-        if (modelRef.config.autoUpdateUpdatedAtUsingNow && modelRef.updatedAt === undefined) {
-          modelRef.updatedAt = DateUtil.nowInTimestamp();
+    let hasUpdatedAtInKeys: boolean = false;
+    let hasCreatedAtInKeys: boolean = false;
+    let hasIsDeletedInKeys: boolean = false;
 
-          q.newValues_.push({
-            key: GGModel.UPDATED_AT_COLUMN_PARAM.name,
-            value: DateUtil.nowInTimestamp(),
-            sqlType: SqlType.TIMESTAMP
-          });
-        }
+    q.newValues_.forEach((kv:{key: string, value: any, sqlType: SqlType}) => {
+      if (kv.key === GGModel.UPDATED_AT_COLUMN_PARAM.name) {
+        hasUpdatedAtInKeys = true;
+      } else if (kv.key === GGModel.CREATED_AT_COLUMN_PARAM.name) {
+        hasCreatedAtInKeys = true;
+      } else if (kv.key === GGModel.IS_DELETED_COLUMN_PARAM.name) {
+        hasIsDeletedInKeys = true;
       }
 
-      let keysAry: string[] = [];
-      let valuesAry: any[] = [];
-      let updateKvs: any[] = [];
+      keysAry.push(kv.key);
 
-      q.newValues_.forEach((kv:{key: string, value: any, sqlType: SqlType}) => {
-        keysAry.push(kv.key);
+      let value: string = this.valueAsStringByType(kv.value, kv.sqlType);
+      valuesAry.push(value);
+      updateKvs.push(`${kv.key}=${value}`);
+    });
 
-        let value: string = this.valueAsStringByType(kv.value, kv.sqlType);
-        valuesAry.push(value);
-        updateKvs.push(`${kv.key}=${value}`);
-      });
+    if (q.cls_.prototype instanceof GGModel) {
+      const nowTimestamp: number = DateUtil.nowInTimestamp();
 
-      if (modelRef instanceof GGModel) {
-        if (modelRef.config.autoInsertCreatedAtUsingNow && modelRef.createdAt === undefined) {
-          keysAry.push(GGModel.CREATED_AT_COLUMN_PARAM.name);
-          valuesAry.push(this.valueAsStringByType(DateUtil.nowInTimestamp(), SqlType.TIMESTAMP));
-        }
+      if (!hasUpdatedAtInKeys) {
+        updateKvs.push(`${GGModel.UPDATED_AT_COLUMN_PARAM.name}=${this.valueAsStringByType(nowTimestamp, SqlType.TIMESTAMP)}`)
+      }
 
+      if (!hasCreatedAtInKeys) {
+        keysAry.push(GGModel.CREATED_AT_COLUMN_PARAM.name);
+        valuesAry.push(this.valueAsStringByType(nowTimestamp, SqlType.TIMESTAMP));
+      }
+
+      if (!hasIsDeletedInKeys) {
         keysAry.push(GGModel.IS_DELETED_COLUMN_PARAM.name);
         valuesAry.push(this.valueAsStringByType(false, SqlType.BOOLEAN));
       }
+    }
 
-      let keys: string = keysAry.join(",");
-      let values: string = valuesAry.join(",");
-      let updateKvsStr: string = updateKvs.join(",");
+    let keys: string = keysAry.join(",");
+    let values: string = valuesAry.join(",");
+    let updateKvsStr: string = updateKvs.join(",");
 
-      return `UPDATE ${table} SET ${updateKvsStr} WHERE ${q.where_};
-            INSERT INTO ${table} (${keys})
-            SELECT ${values}
-            WHERE NOT EXISTS (SELECT 1 FROM ${q.table_} WHERE ${q.where_});`;
-    } else { //use old method "new ReplaceQuery().fromClass()", this doesn't work on GGModel
-      let keysAry: string[] = [];
-      let valuesAry: any[] = [];
-      let updateKvs: any[] = [];
-
-      q.newValues_.forEach((kv:{key: string, value: any, sqlType: SqlType}) => {
-        keysAry.push(kv.key);
-
-        let value: string = this.valueAsStringByType(kv.value, kv.sqlType);
-        valuesAry.push(value);
-        updateKvs.push(`${kv.key}=${value}`);
-      });
-
-      let keys: string = keysAry.join(",");
-      let values: string = valuesAry.join(",");
-      let updateKvsStr: string = updateKvs.join(",");
-
-      return `UPDATE ${q.table_} SET ${updateKvsStr} WHERE ${q.where_};
+    return `UPDATE ${q.table_} SET ${updateKvsStr} WHERE ${q.where_};
             INSERT INTO ${q.table_} (${keys})
             SELECT ${values}
             WHERE NOT EXISTS (SELECT 1 FROM ${q.table_} WHERE ${q.where_});`;
-    }
   }
 
   /**

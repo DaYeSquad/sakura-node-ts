@@ -19,8 +19,6 @@ export class ReplaceQuery extends Query {
   where_: string;
   newValues_: {key: string, value: any, sqlType: SqlType}[] = [];
 
-  model_: Model;
-
   type(): QueryType {
     return QueryType.REPLACE;
   }
@@ -32,11 +30,6 @@ export class ReplaceQuery extends Query {
     if (table) {
       this.table_ = table;
     }
-    return this;
-  }
-
-  fromModel(model: Model): this {
-    this.model_ = model;
     return this;
   }
 
