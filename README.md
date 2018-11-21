@@ -173,6 +173,42 @@ export class GPSDevice extends GGModel {
 
 更多的示例, 可以查看 `src/example`.
 
+## CRUD
+
+### INSERT
+
+```TypeScript
+   let user: TestInsertUser = new TestInsertUser();
+   user.initAsNewUser("pig");
+   const query: InsertQuery = new InsertQuery().fromModel(user);
+```
+
+### UPDATE
+
+```TypeScript
+   const query: UpdateQuery = new UpdateQuery().table("films").set("kind", "Dramatic").where(`kind='Drama'`);
+   const sql: string = queryBuilder.buildUpdateQuery(query);
+```
+
+### DELETE
+
+```TypeScript
+   let query: DeleteQuery = new DeleteQuery().from("users");
+```
+
+### REPLACE
+
+```TypeScript
+   let user: GGUser = new GGUser();
+   user.username = "franklin";
+
+   const replaceQuery: ReplaceQuery = new ReplaceQuery()
+     .fromModel(user)
+     .where(  `username="franklin"`)
+     .set("username", "franklin", SqlType.VARCHAR_255);
+```
+
+
 # DOC
 
 ```ts

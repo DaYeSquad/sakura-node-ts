@@ -9,6 +9,7 @@ import {InsertQuery} from "../../../sqlquery/insertquery";
 import {PgQueryBuilder} from "../../../database/postgres/pgquerybuilder";
 import {GGModel} from "../../../gg/ggmodel";
 import {UpdateQuery} from "../../../sqlquery/updatequery";
+import {ReplaceQuery} from "../../../sqlquery/replacequery";
 
 @TableName("users")
 class User extends Model {
@@ -63,5 +64,17 @@ describe("PgQueryBuilder", () => {
     const result: string = queryBuilder.buildUpdateQuery(updateQuery);
     chai.expect(result.substr(0, 61)).to.equal("UPDATE users SET username='franklin',updated_at=to_timestamp(");
     chai.expect(result.substr(71)).to.equal("),is_deleted=false WHERE uid=1;");
+  });
+
+  it("Test buildReplaceQuery(GGModel) should take 3 default value at first time", () => {
+    let user: GGUser = new GGUser();
+    user.username = "franklin";
+
+    const replaceQuery: ReplaceQuery = new ReplaceQuery()
+      .fromModel(user)
+      .where(  `username="franklin"`)
+      .set("username", "franklin", SqlType.VARCHAR_255);
+    const result: string = queryBuilder.buildReplaceQuery(replaceQuery);
+    chai.expect(result.substr(0, 61)).to.equal("UPDATE users SET username='franklin',updated_at=to_timestamp(");
   });
 });

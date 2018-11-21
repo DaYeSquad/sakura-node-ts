@@ -71,6 +71,7 @@ jspm_packages
 
 # --------- TypeScript ---------
 
+dist/
 lib/
 node_modules/
 built/*

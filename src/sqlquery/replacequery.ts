@@ -2,7 +2,7 @@
 // Use of this source code is governed a license that can be found in the LICENSE file.
 
 import {sqlContext} from "../util/sqlcontext";
-import {SqlType} from "../base/model";
+import {Model, SqlType} from "../base/model";
 import {Query, QueryType} from "./query";
 import {DBClient} from "../database/dbclient";
 
@@ -14,19 +14,29 @@ import {DBClient} from "../database/dbclient";
  *  PgDriver.getInstance().query(sql);
  */
 export class ReplaceQuery extends Query {
+  cls_: Function;
   table_: string;
   where_: string;
   newValues_: {key: string, value: any, sqlType: SqlType}[] = [];
+
+  model_: Model;
 
   type(): QueryType {
     return QueryType.REPLACE;
   }
 
   fromClass(cls: Function): this {
+    this.cls_ = cls;
+
     let table: string = sqlContext.findTableByClass(cls);
     if (table) {
       this.table_ = table;
     }
+    return this;
+  }
+
+  fromModel(model: Model): this {
+    this.model_ = model;
     return this;
   }
 
