@@ -249,6 +249,9 @@ export class PgQueryBuilder implements QueryBuilder {
 
       if (!hasUpdatedAtInKeys) {
         updateKvs.push(`${GGModel.UPDATED_AT_COLUMN_PARAM.name}=${this.valueAsStringByType(nowTimestamp, SqlType.TIMESTAMP)}`)
+
+        keysAry.push(GGModel.UPDATED_AT_COLUMN_PARAM.name);
+        valuesAry.push(this.valueAsStringByType(nowTimestamp, SqlType.TIMESTAMP));
       }
 
       if (!hasCreatedAtInKeys) {
