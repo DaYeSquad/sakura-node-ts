@@ -7,11 +7,11 @@ HOST: https://api.gagogroup.cn/api
 
 ### 新增所有用户信息 [POST]
 
-+ Parameters
-
-    + pid: 15 (number, required) - 产品 ID
-
 + Request (application/json)
+
+    + Headers
+
+            Token: it-is-a-token
 
     + Body
 
@@ -19,6 +19,10 @@ HOST: https://api.gagogroup.cn/api
                 "username": "linxiaoyi",
                 "displayName": "lindaxian"
             }
+
++ Parameters
+
+    + pid: 15 (number, required) - 产品 ID
 
 + Response 200 (application/json)
 
@@ -33,6 +37,12 @@ HOST: https://api.gagogroup.cn/api
 ## 删除所有用户信息 [/products/{pid}]
 
 ### 删除所有用户信息 [DELETE]
+
++ Request (application/json)
+
+    + Headers
+
+            Token: it-is-a-token
 
 + Parameters
 

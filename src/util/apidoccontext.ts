@@ -171,15 +171,23 @@ export class ApiDocContext {
       for (let apiDescription of doc.descriptions) {
         content += `## ${apiDescription.description} [${apiDescription.uri}]\n\n`;
         content += `### ${apiDescription.detailDescription ? apiDescription.detailDescription : apiDescription.description} [${apiDescription.method}]\n\n`;
-
-        if (apiDescription.queryParameters) {
-          content += `${this.queryParametersToString_(apiDescription)}`;
+        if (apiDescription.requestHeaders || apiDescription.requestBody) {
+          content += `+ Request (application/json)\n\n`;
+        }
+        if (apiDescription.requestHeaders) {
+          content += this.requestHeadersToString_(apiDescription);
         }
 
         if (apiDescription.requestBody) {
           content += `${this.requestBodyToString_(apiDescription.requestBody)}`;
           content += `\n\n`;
         }
+
+        if (apiDescription.queryParameters) {
+          content += `${this.queryParametersToString_(apiDescription)}`;
+        }
+
+
 
         if (apiDescription.responseBody) {
           content += `${this.responseBodyToString_(apiDescription.responseBody)}`;
@@ -189,6 +197,24 @@ export class ApiDocContext {
       }
     }
 
+    return content;
+  }
+
+  /**
+   * Return part of description like below
+   *
+   *+ Request
+   *    + Headers
+   *             token: the-token-in-the-response-of-auth
+   */
+  private static requestHeadersToString_(doc: ApiDescription): string {
+    let content: string = "";
+    // content += `+ Request\n\n`;
+    content += `    + Headers\n\n`;
+    for (let key in doc.requestHeaders) {
+      content += `            ${key}: ${doc.requestHeaders[key]}\n`;
+    }
+    content += `\n`;
     return content;
   }
 
@@ -220,7 +246,7 @@ export class ApiDocContext {
 
   private static requestBodyToString_(requestBody: any): string {
     let content: string = "";
-    content += `+ Request (application/json)\n\n`;
+    // content += `+ Request (application/json)\n\n`;
     content += `    + Body\n\n`;
     content += `            ${JSON.stringify(requestBody, null, 4)}\n\n`.replace(/\n\r?/g, "\n            ");
     content = content.slice(0, -26); // remove unused line
