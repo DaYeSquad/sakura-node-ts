@@ -7,6 +7,12 @@ HOST: https://api.gagogroup.cn/api
 
 ### 获得所有用户信息，以数组的形式返回 [GET]
 
++ Request (application/json)
+
+    + Headers
+
+            Token: it-is-a-token
+
 + Response 200 (application/json)
 
     + Body

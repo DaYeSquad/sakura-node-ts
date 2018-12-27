@@ -11,7 +11,7 @@ HOST: https://api.gagogroup.cn/api
 
     + Headers
 
-            Token: it-is-a-token
+            token: it-is-a-token
 
 + Parameters
 
