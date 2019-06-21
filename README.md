@@ -321,6 +321,11 @@ console.log(`there are ${result.rows.length} users`);
 Run `gulp` and all releases will be under `./lib`.
 
 
+# 已知问题
+
+不支持 MySQL 8.0 以上版本 (构建时没有使用 schema.table 语法)
+
+
 # 单元测试
 
 We highly recommend to use docker as test database container, for MySQL, you can use [this image](https://hub.docker.com/_/mysql/), 
