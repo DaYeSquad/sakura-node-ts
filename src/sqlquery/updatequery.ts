@@ -71,7 +71,7 @@ export class UpdateQuery extends Query {
         // String and Date need to add ''
         if (typeof sqlValues[key] === "string" || sqlValues[key] instanceof Date) {
           let value: string = DBClient.escape(sqlValues[key]);
-          sql = sql.replace(":" + key, `'${value}'`);
+          sql = sql.replace(":" + key, `${value}`);
         } else {
           sql = sql.replace(":" + key, sqlValues[key]);
         }
