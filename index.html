@@ -1,0 +1,615 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>sakura-node-3</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">sakura-node-3</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> sakura-node-3</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="-">概述</h1>
+				<p>Gago 后端最基础功能的库，以 ORM 为核心</p>
+				<h1 id="-">文件</h1>
+				<p><a href="https://dayesquad.github.io/sakura-node-ts/">https://dayesquad.github.io/sakura-node-ts/</a></p>
+				<h1 id="-">功能</h1>
+				<ul>
+					<li><p>轻量级 ORM: 支持 PostgreSQL、MySQL，支持空间数据格式</p>
+					</li>
+					<li><p>HTTP: Wrapper of Request/Response</p>
+					</li>
+					<li><p>常用的一些 Express 的 middleware，如 timeout、CORS 等</p>
+					</li>
+					<li><p>文档到 api blueprint、到 postman collection、到 unit test、到监控一波流</p>
+					</li>
+				</ul>
+				<h1 id="-">安装</h1>
+				<p><code>npm install sakura-node-3</code></p>
+				<h1 id="orm-example">ORM Example</h1>
+				<h2 id="-mapping">最基本的 Mapping</h2>
+				<h3 id="-model">基本的 model</h3>
+				<pre><code class="lang-TypeScript"><span class="hljs-meta">@TableName</span>(<span class="hljs-string">"users"</span>) <span class="hljs-comment">// 声明当前类对应的表</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> User <span class="hljs-keyword">extends</span> Model { <span class="hljs-comment">// 需要 ORM 的类必须继承自 Model 或者是 GGModel，GGModel 会自动添加 is_deleted、created_at 和 updated_at 三个字段</span>
+
+  <span class="hljs-comment">// 声明该属性对应的数据库中的属性，支持顺序罗列和 interface 两种形式</span>
+  <span class="hljs-comment">// name(必填) 用于声明数据库中字段的名字</span>
+  <span class="hljs-comment">// type(必填) 用于声明对应数据库中的类型，常见的有 INT、VARCHAR_255、VARCHAR_1024、TIMESTAMP、JSON、GEOMETRY</span>
+  <span class="hljs-comment">// flag(必填) 用于声明一些情况，如是否是主键、是否可以为空，可选的有 PRIMARY_KEY、NOT_NULL、NULLABLE</span>
+  <span class="hljs-comment">// comment(选填) 注释</span>
+  <span class="hljs-comment">// defaultValue (选填) 默认值，支持随机数(MAKE_RANDOM_ID)、自增(SERIAL)、UUID(UUID)，推荐尽可能用自增</span>
+  <span class="hljs-meta">@Column</span>({ name: <span class="hljs-string">"uid"</span>, <span class="hljs-keyword">type</span>: SqlType.INT, flag: SqlFlag.PRIMARY_KEY, comment: <span class="hljs-string">"主键"</span>})
+  uid: <span class="hljs-built_in">number</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"username"</span>, SqlType.VARCHAR_255, SqlFlag.NOT_NULL)
+  username: <span class="hljs-built_in">string</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"display_name"</span>, SqlType.VARCHAR_255, SqlFlag.NULLABLE, <span class="hljs-string">"真实姓名"</span>)
+  displayName: <span class="hljs-built_in">string</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"meta"</span>, SqlType.JSON, SqlFlag.NULLABLE)
+  meta: <span class="hljs-built_in">any</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"created_at"</span>, SqlType.TIMESTAMP, SqlFlag.NULLABLE)
+  createdAt: <span class="hljs-built_in">Date</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"updated_at"</span>, SqlType.TIMESTAMP, SqlFlag.NULLABLE)
+  updatedAt: <span class="hljs-built_in">number</span>;
+}
+</code></pre>
+				<h3 id="-created_at-updated_at-is_deleted-model">自带 created_at, updated_at, is_deleted 的 model</h3>
+				<p>Insert 时会自动更新 created_at, updated_at，Update 和 Delete 时会自动更新 updated_at</p>
+				<pre><code class="lang-TypeScript"><span class="hljs-meta">@TableName</span>(<span class="hljs-string">"gps_devices"</span>)
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> GPSDevice <span class="hljs-keyword">extends</span> GGModel {
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"gps_device_id"</span>, SqlType.BIGINT, SqlFlag.PRIMARY_KEY, <span class="hljs-string">"设备 id"</span>, SqlDefaultValue.SERIAL())
+  gpsDeviceId: <span class="hljs-built_in">number</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"gps_device_serial"</span>, SqlType.VARCHAR_255, SqlFlag.NULLABLE, <span class="hljs-string">"设备编号"</span>)
+  gpsDeviceSerial: <span class="hljs-built_in">string</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"gps_device_battery_level"</span>, SqlType.INT, SqlFlag.NULLABLE, <span class="hljs-string">"电池"</span>)
+  gpsDeviceBatteryLevel: <span class="hljs-built_in">number</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"gps_device_gsm_level"</span>, SqlType.INT, SqlFlag.NULLABLE, <span class="hljs-string">"信号"</span>)
+  gpsDeviceGsmLevel: <span class="hljs-built_in">number</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"gps_device_gps_status"</span>, SqlType.BOOLEAN, SqlFlag.NULLABLE, <span class="hljs-string">"设备状态"</span>)
+  gpsDeviceGpsStatus: <span class="hljs-built_in">boolean</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"cooperative_id"</span>, SqlType.BIGINT, SqlFlag.NULLABLE, <span class="hljs-string">"合作社 id"</span>)
+  cooperativeId: <span class="hljs-built_in">number</span>;
+
+  <span class="hljs-meta">@Column</span>(<span class="hljs-string">"gps_device_type"</span>, SqlType.VARCHAR_255, SqlFlag.NULLABLE, <span class="hljs-string">"gps服务类型"</span>)
+  gpsDeviceType: <span class="hljs-built_in">string</span>;
+}
+</code></pre>
+				<h2 id="migration-">Migration (数据库迁移)</h2>
+				<pre><code class="lang-TypeScript">(<span class="hljs-keyword">async</span> () =&gt; {
+  <span class="hljs-keyword">try</span> {
+    <span class="hljs-keyword">const</span> driverOptions: DriverOptions = {
+      <span class="hljs-keyword">type</span>: DriverType.MYSQL,
+      username: <span class="hljs-string">"root"</span>,
+      password: <span class="hljs-string">"111111"</span>,
+      host: <span class="hljs-string">"localhost"</span>,
+      database: <span class="hljs-string">"gagodata"</span>
+    };
+
+    <span class="hljs-comment">// 使用 Migration 新建 users 表</span>
+    <span class="hljs-keyword">let</span> migration: Migration = <span class="hljs-keyword">new</span> Migration({
+      version: <span class="hljs-number">7</span>,
+      appName: <span class="hljs-string">"api-server-6"</span>,
+      driverOptions: driverOptions
+    });
+
+    migration.addModel(User);
+
+    <span class="hljs-keyword">await</span> migration.migrate();
+
+    <span class="hljs-comment">// 创建 DBClient 全局单例</span>
+    DBClient.createClient(driverOptions);
+
+    <span class="hljs-keyword">const</span> fetchUsersQuery: SelectQuery = <span class="hljs-keyword">new</span> SelectQuery().fromClass(User).select();
+    <span class="hljs-keyword">const</span> result: QueryResult = <span class="hljs-keyword">await</span> DBClient.getClient().query(fetchUsersQuery);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`there are <span class="hljs-subst">${result.rows.length}</span> users`</span>);
+  } <span class="hljs-keyword">catch</span> (err) {
+    <span class="hljs-built_in">console</span>.log(err);
+  }
+})();
+</code></pre>
+				<h2 id="model-mapping-from-rows">Model mapping from rows</h2>
+				<h3 id="mapping-from-a-single-model">Mapping from a single model</h3>
+				<pre><code class="lang-TypeScript">  <span class="hljs-keyword">const</span> query: SelectQuery = <span class="hljs-keyword">new</span> SelectQuery()
+    .fromClass(User)
+    .select([<span class="hljs-string">"username"</span>]);
+  <span class="hljs-keyword">const</span> results: QueryResult = <span class="hljs-keyword">await</span> DBClient.getClient().query(query);
+  <span class="hljs-keyword">const</span> users: User[] = Model.modelsFromRows&lt;User&gt;(results.rows, Task);
+  <span class="hljs-built_in">console</span>.log(users); 
+  <span class="hljs-comment">// [  </span>
+  <span class="hljs-comment">//   { </span>
+  <span class="hljs-comment">//     "username": "aaa", </span>
+  <span class="hljs-comment">//     "display_name": undefined,</span>
+  <span class="hljs-comment">//     ...</span>
+  <span class="hljs-comment">//   } </span>
+  <span class="hljs-comment">//   ... </span>
+  <span class="hljs-comment">// ]</span>
+</code></pre>
+				<h3 id="mapping-from-multiple-models">Mapping from multiple models</h3>
+				<pre><code class="lang-TypeScript">   <span class="hljs-keyword">const</span> query: SelectQuery = <span class="hljs-keyword">new</span> SelectQuery()
+      .fromClass(GPSDevice)
+      .select([<span class="hljs-string">"gps_device_id"</span>, <span class="hljs-string">"gps_device_serial"</span>, <span class="hljs-string">"gps_device_type"</span>, <span class="hljs-string">"gps_device_battery_level"</span>, <span class="hljs-string">"users.connection_info"</span>, <span class="hljs-string">"users.username"</span>, <span class="hljs-string">"uid"</span>, <span class="hljs-string">"user_display_name"</span>])
+      .innerJoin(<span class="hljs-string">"users"</span>)
+      .on(<span class="hljs-string">"gps_devices.gps_device_id=users.device_id"</span>)
+  <span class="hljs-keyword">const</span> results: QueryResult = <span class="hljs-keyword">await</span> DBClient.getClient().query(query);
+  <span class="hljs-keyword">const</span> data: <span class="hljs-function">(<span class="hljs-params">User &amp; GPSDevice</span>)[] = <span class="hljs-params">results</span>.<span class="hljs-params">rows</span>.<span class="hljs-params">map</span>(<span class="hljs-params">(<span class="hljs-params">ele: <span class="hljs-built_in">any</span></span>) =&gt; {
+    <span class="hljs-keyword">return</span> Model.compositeModelFromRow&lt;User, GPSDevice&gt;(<span class="hljs-params">ele, User, GPSDevice</span>);
+  }</span>);
+  <span class="hljs-params">console</span>.<span class="hljs-params">log</span>(<span class="hljs-params">data</span>); 
+  // [  
+  //   { 
+  //     "<span class="hljs-params">username</span>": "<span class="hljs-params">aaa</span>", 
+  //     "<span class="hljs-params">displayName</span>": "<span class="hljs-params">bbb</span>",
+  //     "<span class="hljs-params">gpsDeviceSerial</span>": "<span class="hljs-params">ccc</span>",
+  //     ...
+  //   } 
+  //   ... 
+  // ]</span>
+</code></pre>
+				<p>更多的示例, 可以查看 <code>src/example</code>.</p>
+				<h2 id="crud">CRUD</h2>
+				<h3 id="insert">INSERT</h3>
+				<pre><code class="lang-TypeScript">   <span class="hljs-keyword">let</span> user: TestInsertUser = <span class="hljs-keyword">new</span> TestInsertUser();
+   user.initAsNewUser(<span class="hljs-string">"pig"</span>);
+   <span class="hljs-keyword">const</span> query: InsertQuery = <span class="hljs-keyword">new</span> InsertQuery().fromModel(user);
+</code></pre>
+				<h3 id="update">UPDATE</h3>
+				<pre><code class="lang-TypeScript">   <span class="hljs-keyword">const</span> query: UpdateQuery = <span class="hljs-keyword">new</span> UpdateQuery().table(<span class="hljs-string">"films"</span>).set(<span class="hljs-string">"kind"</span>, <span class="hljs-string">"Dramatic"</span>).where(<span class="hljs-string">`kind='Drama'`</span>);
+   <span class="hljs-keyword">const</span> sql: <span class="hljs-built_in">string</span> = queryBuilder.buildUpdateQuery(query);
+</code></pre>
+				<h3 id="delete">DELETE</h3>
+				<pre><code class="lang-TypeScript">   <span class="hljs-keyword">let</span> query: DeleteQuery = <span class="hljs-keyword">new</span> DeleteQuery().from(<span class="hljs-string">"users"</span>);
+</code></pre>
+				<h3 id="replace">REPLACE</h3>
+				<pre><code class="lang-TypeScript">   <span class="hljs-keyword">const</span> replaceQuery: ReplaceQuery = <span class="hljs-keyword">new</span> ReplaceQuery()
+     .fromClass(GGUser)
+     .where(  <span class="hljs-string">`username="franklin"`</span>)
+     .set(<span class="hljs-string">"username"</span>, <span class="hljs-string">"franklin"</span>, SqlType.VARCHAR_255);
+</code></pre>
+				<h1 id="doc">DOC</h1>
+				<pre><code class="lang-ts">const doc: ApiDoc = {
+  groupName: &quot;Monitor&quot;,
+  descriptions: [
+    {
+      function: UserController.getUserInfo, // 关联的 controller 方法、函数
+      description: &quot;获得所有用户信息&quot;, // 描述
+      detailDescription: &quot;获得所有用户信息，以数组的形式返回&quot;, // 详细描述(用于 API Blueprint 的详细描述部分)
+      method: &quot;GET&quot;, // HTTP 方法
+      uri: &quot;/products?pid={pid}&quot;, // URL
+      queryParameters: [ // 注入 {} 语法的参数
+        {
+          key: &quot;pid&quot;,
+          example: 5,
+          type: &quot;number&quot;,
+          description: &quot;产品的 ID&quot;
+        }
+      ],
+      responseBody: { // 期望的响应结果
+        &quot;data&quot;: {
+          &quot;users&quot;: [
+            {
+              &quot;uid&quot;: 1,
+              &quot;displayName&quot;: &quot;linxiaoyi&quot;
+            },
+            {
+              &quot;uid&quot;: 2,
+              &quot;displayName&quot;: &quot;huangtaihu&quot;
+            }
+          ]
+        }
+      },
+      additionalConditions: [ // 对结果的注解，默认为等于比较，也可以如下声明为范围比较，也可以声明为只比较 Key (type: KeyExist)
+        {
+          keyPath: &quot;data/users/0/uid&quot;,
+          type: &quot;ValueRange&quot;,
+          valueRange: [0, 30]
+        },
+        {
+          keyPath: &quot;data/users/0/displayName&quot;,
+          type: &quot;KeyExist&quot;,
+          showErrorDetail: false,  // 当有错误是，只显示基本的错误信息，而不显示详细的错误原因，预设皆为 true
+          valueRange: [0, 30]
+        }
+      ]
+    }
+  ]
+};
+</code></pre>
+				<p>通过编写一个 apiDoc，可以通过 <a href="http://git.azure.gagogroup.cn/efficiency/sakura-cli">sakura-cli</a> 来生成文档、单元测试、postman collection，也可以
+				参考 <code>src/base/testapidocdecorator.ts</code>、<code>testapidoctounittest.ts</code> 使用的方式来创建对应内容</p>
+				<h1 id="build">BUILD</h1>
+				<p>Run <code>gulp</code> and all releases will be under <code>./lib</code>.</p>
+				<h1 id="test">TEST</h1>
+				<p>We highly recommend to use docker as test database container, for MySQL, you can use <a href="https://hub.docker.com/_/mysql/">this image</a>,
+				run <code>docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -e MYSQL_DATABASE=gagotest -v /tmp/mysql:/var/lib/mysql -d mysql:latest</code></p>
+				<p><code>npm test</code></p>
+				<h1 id="install">INSTALL</h1>
+				<p><code>npm install sakura-node-3</code></p>
+				<h1 id="cluster">CLUSTER</h1>
+				<h2 id="mysql-cluster-">MySQL Cluster 模式</h2>
+				<pre><code class="lang-TypeScript"><span class="hljs-keyword">const</span> driverOptions: DriverOptions = {
+  <span class="hljs-keyword">type</span>: DriverType.MYSQL,
+  username: <span class="hljs-string">"root"</span>,
+  password: <span class="hljs-string">"111111"</span>,
+  database: <span class="hljs-string">"gago"</span>,
+  clusterOptions: {
+    master: {
+      host: <span class="hljs-string">"172.169.21.48"</span>
+    },
+    slaves: [
+      {
+        host: <span class="hljs-string">"172.169.21.49"</span>
+      },
+      {
+        host: <span class="hljs-string">"172.169.21.50"</span>
+      }
+    ]
+  }
+};
+
+<span class="hljs-comment">// 创建 DBClient 全局单例</span>
+DBClient.createClient(driverOptions);
+
+<span class="hljs-keyword">const</span> fetchUsersQuery: SelectQuery = <span class="hljs-keyword">new</span> SelectQuery().fromClass(User).select().whereWithParam(<span class="hljs-string">"name = :name"</span>,{name : <span class="hljs-string">"franklin"</span> });
+<span class="hljs-keyword">const</span> result: QueryResult = <span class="hljs-keyword">await</span> DBClient.getClient().query(fetchUsersQuery);
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`there are <span class="hljs-subst">${result.rows.length}</span> users`</span>);
+</code></pre>
+				<p>更多的示例, 可以查看 <code>src/example</code>.</p>
+				<h1 id="-">构建工程</h1>
+				<p>Run <code>gulp</code> and all releases will be under <code>./lib</code>.</p>
+				<h1 id="-">已知问题</h1>
+				<p>不支持 MySQL 8.0 以上版本 (构建时没有使用 schema.table 语法)</p>
+				<h1 id="-">单元测试</h1>
+				<p>We highly recommend to use docker as test database container, for MySQL, you can use <a href="https://hub.docker.com/_/mysql/">this image</a>,
+				run <code>docker run --name mysql-docker -p 3307:3306 -e MYSQL_ROOT_PASSWORD=111111 -e MYSQL_DATABASE=gagotest -v /tmp/mysql:/var/lib/mysql -d mysql:latest</code></p>
+				<p><code>npm test</code></p>
+				<h1 id="-">代码规范</h1>
+				<p>在提交代码前需要使用 tslint 在检查一次 <a href="https://palantir.github.io/tslint/usage/cli/">tslint</a>. (<code>sh ./bin/tslint.sh</code>)</p>
+				<h1 id="node-runtime">Node Runtime</h1>
+				<p>Node 6+</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_apierror_.html">"api/apierror"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_httpresponse_.html">"api/httpresponse"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_api_validator_.html">"api/validator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_base_apidoc_.html">"base/apidoc"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_base_decorator_.html">"base/decorator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_base_model_.html">"base/model"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_base_typedefines_.html">"base/typedefines"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_dbclient_.html">"database/dbclient"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_driver_.html">"database/driver"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_driveroptions_.html">"database/driveroptions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_error_internalerror_.html">"database/error/internalerror"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_error_sqlfieldnamenotfounderror_.html">"database/error/sqlfieldnamenotfounderror"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_error_unknowndrivererror_.html">"database/error/unknowndrivererror"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_error_unknownsqlfielderror_.html">"database/error/unknownsqlfielderror"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_migration_column_.html">"database/migration/column"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_migration_migration_.html">"database/migration/migration"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_migration_operation_.html">"database/migration/operation"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_migration_version_.html">"database/migration/version"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_mysql_mysqldriver_.html">"database/mysql/mysqldriver"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_mysql_mysqlquerybuilder_.html">"database/mysql/mysqlquerybuilder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_postgres_pgdriver_.html">"database/postgres/pgdriver"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_postgres_pgquerybuilder_.html">"database/postgres/pgquerybuilder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_querybuilder_.html">"database/querybuilder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_database_queryresult_.html">"database/queryresult"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_example_mysql_cluster_.html">"example/mysql/cluster"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_example_mysql_dbclient_.html">"example/mysql/dbclient"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_example_pg_dbclient_.html">"example/pg/dbclient"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_gg_ggmodel_.html">"gg/ggmodel"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_middleware_cors_.html">"middleware/cors"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_middleware_timeout_.html">"middleware/timeout"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_sqlquery_deletequery_.html">"sqlquery/deletequery"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_sqlquery_insertquery_.html">"sqlquery/insertquery"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_sqlquery_query_.html">"sqlquery/query"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_sqlquery_replacequery_.html">"sqlquery/replacequery"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_sqlquery_selectquery_.html">"sqlquery/selectquery"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_sqlquery_updatequery_.html">"sqlquery/updatequery"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_api_testhttpresponse_.html">"test/api/testhttpresponse"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_api_testvalidator_.html">"test/api/testvalidator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_test_apidoc_generate_apib_with_header_.html">"test/base/test-<wbr>apidoc-<wbr>generate-<wbr>apib-<wbr>with-<wbr>header"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_test_apidoc_generate_unittest_string_.html">"test/base/test-<wbr>apidoc-<wbr>generate-<wbr>unittest-<wbr>string"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_test_apidoc_generate_unittest_throw_error_.html">"test/base/test-<wbr>apidoc-<wbr>generate-<wbr>unittest-<wbr>throw-<wbr>error"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_test_apidoc_unittest_file_replace_space_with_dash_.html">"test/base/test-<wbr>apidoc-<wbr>unittest-<wbr>file-<wbr>replace-<wbr>space-<wbr>with-<wbr>dash"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_test_apidoc_unittest_handle_request_headers_.html">"test/base/test-<wbr>apidoc-<wbr>unittest-<wbr>handle-<wbr>request-<wbr>headers"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_test_apidoc_unittest_issue_unknown_.html">"test/base/test-<wbr>apidoc-<wbr>unittest-<wbr>issue-<wbr>unknown"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_testapidocdecorator_.html">"test/base/testapidocdecorator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_testapidoctounittest_.html">"test/base/testapidoctounittest"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_testapidocunittest_issue_stringbeingtreadasarray_.html">"test/base/testapidocunittest-<wbr>issue-<wbr>stringbeingtreadasarray"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_testcompositemodel_.html">"test/base/testcompositemodel"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_testmodel_.html">"test/base/testmodel"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_base_testmonitorconfig_.html">"test/base/testmonitorconfig"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_database_driver_testmysqlquerybuilder_.html">"test/database/driver/testmysqlquerybuilder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_database_driver_testmysqlquerybuilder_3_4_.html">"test/database/driver/testmysqlquerybuilder_<wbr>3.4"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_database_driver_testpgquerybuilder_.html">"test/database/driver/testpgquerybuilder"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_database_driver_testpgquerybuilder_3_4_.html">"test/database/driver/testpgquerybuilder_<wbr>3.4"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_database_driver_testpgquerybuilder_issues_.html">"test/database/driver/testpgquerybuilder_<wbr>issues"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_database_testmysqldbclient_issue23_.html">"test/database/testmysqldbclient_<wbr>issue23"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_model_inherentggmodel_.html">"test/model/inherentggmodel"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_model_user_.html">"test/model/user"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_testcontext_.html">"test/testcontext"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_test_validator_testvalidator_.html">"test/validator/testvalidator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_apidoccontext_.html">"util/apidoccontext"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_dateformatter_.html">"util/dateformatter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_dateutil_.html">"util/dateutil"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_keypatherror_.html">"util/keypatherror"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_logger_.html">"util/logger"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_sqlcontext_.html">"util/sqlcontext"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_stringutil_.html">"util/stringutil"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
